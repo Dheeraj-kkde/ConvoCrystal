@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvoCrystal — Figma Make Prompts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #F7F6F3;
+    --bg2:       #EEECEA;
+    --bg3:       #E5E3DF;
+    --ink:       #1A1916;
+    --ink2:      #2D2B27;
+    --ink3:      #504E49;
+    --muted:     #8C8980;
+    --muted2:    #B8B5AE;
+    --rule:      #D9D6D0;
+
+    --blue:      #3B5BDB;
+    --blue-lt:   #4C6EF5;
+    --blue-bg:   rgba(59,91,219,0.08);
+    --blue-bd:   rgba(59,91,219,0.2);
+
+    --violet:    #7048E8;
+    --violet-bg: rgba(112,72,232,0.07);
+
+    --teal:      #0C8599;
+    --teal-bg:   rgba(12,133,153,0.07);
+
+    --amber:     #D4820A;
+    --amber-bg:  rgba(212,130,10,0.08);
+
+    --rose:      #C92A2A;
+    --rose-bg:   rgba(201,42,42,0.07);
+
+    --emerald:   #087F5B;
+    --emerald-bg:rgba(8,127,91,0.07);
+
+    --serif:     'Instrument Serif', Georgia, serif;
+    --sans:      'DM Sans', system-ui, sans-serif;
+    --mono:      'Fira Code', monospace;
+
+    --r:    6px;
+    --r-lg: 12px;
+    --r-xl: 18px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── READING PROGRESS ── */
+  .progress-rail {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--rule); z-index: 1000;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--violet));
+    width: 0%; transition: width 0.08s linear;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--ink);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 52px 64px;
+    position: relative; overflow: hidden;
+  }
+  .cover-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+  }
+  .cover-glow {
+    position: absolute;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(59,91,219,0.18) 0%, transparent 65%);
+    top: -250px; right: -150px;
+    pointer-events: none;
+  }
+  .cover-glow2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(112,72,232,0.12) 0%, transparent 65%);
+    bottom: -100px; left: 80px;
+    pointer-events: none;
+  }
+  .cover-top {
+    position: relative; z-index: 1;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .cover-wordmark {
+    font-family: var(--sans);
+    font-size: 14px; font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: -0.01em;
+  }
+  .cover-wordmark span { color: #748FFC; }
+  .cover-doc-id {
+    font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    text-align: right; line-height: 1.8;
+  }
+  .cover-body { position: relative; z-index: 1; }
+  .cover-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #748FFC;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .cover-eyebrow::before {
+    content: ''; display: block;
+    width: 28px; height: 1px; background: #748FFC;
+  }
+  .cover-h1 {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400; line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: white;
+    margin-bottom: 28px;
+  }
+  .cover-h1 em { font-style: italic; color: #748FFC; }
+  .cover-desc {
+    font-family: var(--sans);
+    font-size: 15px; color: rgba(255,255,255,0.4);
+    max-width: 560px; line-height: 1.75;
+    margin-bottom: 48px;
+  }
+  .cover-pills {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .cover-pill {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px; padding: 4px 14px;
+  }
+  .cover-pill.hi { color: #748FFC; border-color: rgba(116,143,252,0.3); }
+  .cover-footer { position: relative; z-index: 1; }
+  .cover-stats {
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+  .cover-stat-item {
+    font-family: var(--mono);
+    font-size: 10px; color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.8;
+  }
+  .cover-stat-item strong {
+    display: block; font-family: var(--serif);
+    font-size: 28px; font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: -0.02em; font-style: italic;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: sticky; top: 0; z-index: 800;
+    background: rgba(247,246,243,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center;
+    padding: 0 40px; height: 50px;
+    gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-brand {
+    font-family: var(--sans);
+    font-size: 13px; font-weight: 600;
+    color: var(--ink); letter-spacing: -0.01em;
+    margin-right: 24px; flex-shrink: 0;
+  }
+  .nav-brand span { color: var(--blue); }
+  .nav-sep { width: 1px; height: 16px; background: var(--rule); margin-right: 20px; flex-shrink: 0; }
+  .nav-a {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    padding: 0 12px; height: 50px;
+    display: flex; align-items: center; white-space: nowrap;
+    flex-shrink: 0; transition: color 0.15s;
+  }
+  .nav-a:hover { color: var(--blue); }
+
+  /* ── PAGE ── */
+  .page { max-width: 1060px; margin: 0 auto; padding: 80px 40px; }
+  .page + .page { border-top: 1px solid var(--rule); }
+
+  /* ── INTRO SECTION ── */
+  .intro-grid {
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 48px; align-items: start;
+    margin-bottom: 64px;
+  }
+  .intro-h2 {
+    font-family: var(--serif);
+    font-size: 42px; font-weight: 400;
+    line-height: 1.05; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 16px;
+  }
+  .intro-h2 em { font-style: italic; color: var(--blue); }
+  .intro-body {
+    font-size: 15px; color: var(--ink3);
+    line-height: 1.8; max-width: 560px;
+  }
+  .intro-aside {
+    background: var(--bg2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-xl);
+    padding: 20px;
+  }
+  .aside-title {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--rule);
+  }
+  .aside-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12px; color: var(--ink3); line-height: 1.5;
+    margin-bottom: 8px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .aside-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .aside-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+  /* ── PROMPT CARD ── */
+  .prompt-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
+    transition: box-shadow 0.2s;
+  }
+  .prompt-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.05); }
+
+  .prompt-card-header {
+    display: flex; align-items: stretch; gap: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .prompt-num-block {
+    display: flex; align-items: center; justify-content: center;
+    width: 72px; flex-shrink: 0;
+    font-family: var(--serif);
+    font-size: 36px; font-weight: 400; font-style: italic;
+    border-right: 1px solid var(--rule);
+    padding: 20px 0;
+  }
+  .prompt-header-body {
+    flex: 1; padding: 18px 24px;
+  }
+  .prompt-focus-tag {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+    border-radius: 4px; padding: 3px 9px;
+    margin-bottom: 8px; display: inline-block;
+  }
+  .prompt-title {
+    font-family: var(--sans);
+    font-size: 18px; font-weight: 700;
+    color: var(--ink); letter-spacing: -0.02em;
+    line-height: 1.2; margin-bottom: 4px;
+  }
+  .prompt-intent {
+    font-size: 12px; color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .prompt-header-meta {
+    display: flex; align-items: center; gap: 8px;
+    padding: 18px 20px; flex-wrap: wrap;
+    border-left: 1px solid var(--rule);
+    flex-direction: column; justify-content: center;
+    min-width: 120px;
+  }
+  .meta-chip {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  /* THE PROMPT ITSELF */
+  .prompt-body { padding: 0; }
+
+  .prompt-output-label {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); padding: 14px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .prompt-output-label::before {
+    content: '';
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--emerald); flex-shrink: 0;
+  }
+
+  .prompt-text-block {
+    padding: 28px 32px;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: var(--ink2);
+    position: relative;
+  }
+  .prompt-text-block::before {
+    content: '"';
+    font-family: var(--serif);
+    font-size: 100px;
+    color: var(--rule);
+    position: absolute;
+    top: 8px; left: 20px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .pt-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--bg3);
+  }
+  .pt-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+  .pt-label {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted2); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pt-label-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  .pt-text { color: var(--ink2); }
+
+  /* Copy button */
+  .copy-row {
+    padding: 14px 24px;
+    background: var(--bg);
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .copy-stats {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .copy-stat {
+    font-family: var(--mono);
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .copy-btn {
+    font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--ink); color: white;
+    border: none; border-radius: var(--r);
+    padding: 8px 18px; cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .copy-btn:hover { background: var(--blue); }
+  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn.copied { background: var(--emerald); }
+
+  /* ── ANNOTATION PANEL ── */
+  .annotation-grid {
+    display: grid; grid-template-columns: 1fr 280px;
+    gap: 24px; margin-top: -8px; margin-bottom: 24px;
+  }
+  .ann-panel {
+    background: var(--ink);
+    border-radius: var(--r-xl);
+    padding: 20px;
+    position: sticky; top: 70px;
+  }
+  .ann-title {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .ann-item { margin-bottom: 12px; }
+  .ann-item:last-child { margin-bottom: 0; }
+  .ann-key {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #748FFC; margin-bottom: 3px;
+  }
+  .ann-val {
+    font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.55;
+  }
+
+  /* ── PROMPT BREAKDOWN TABS ── */
+  .breakdown-block {
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    overflow: hidden; margin-top: 16px;
+  }
+  .breakdown-header {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg2);
+  }
+  .breakdown-tab {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 8px;
+    text-align: center;
+    border-right: 1px solid var(--rule);
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .breakdown-tab:last-child { border-right: none; }
+  .breakdown-tab.active { background: white; color: var(--blue); }
+  .breakdown-body {
+    padding: 18px 20px; background: white;
+    font-size: 12px; color: var(--ink3); line-height: 1.7;
+    min-height: 80px;
+  }
+  .breakdown-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ── INGREDIENT PILLS ── */
+  .ingredient-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 14px 24px;
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .ingredient-pill {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.08em;
+    border-radius: 100px; padding: 3px 11px;
+    border: 1px solid; white-space: nowrap;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .divider-row {
+    display: flex; align-items: center; gap: 16px;
+    margin: 56px 0 40px;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--rule); }
+  .divider-label {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted2);
+    background: var(--bg3);
+    border: 1px solid var(--rule);
+    border-radius: 100px; padding: 4px 14px; white-space: nowrap;
+  }
+
+  /* ── BRAND TOKENS REFERENCE ── */
+  .tokens-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin: 24px 0;
+  }
+  .token-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .token-swatch { height: 44px; }
+  .token-info { padding: 10px 12px; }
+  .token-name {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .token-val {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--ink2);
+  }
+
+  /* ── QUICK REFERENCE ── */
+  .qref-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin: 24px 0;
+  }
+  .qref-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    padding: 18px;
+  }
+  .qref-title {
+    font-family: var(--mono);
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--rule);
+  }
+  .qref-item {
+    font-size: 11px; color: var(--ink3);
+    line-height: 1.65; margin-bottom: 4px;
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .qref-item::before { content: '—'; color: var(--muted2); flex-shrink: 0; }
+
+  /* ── USAGE GUIDE STRIP ── */
+  .usage-strip {
+    background: var(--ink);
+    border-radius: var(--r-xl);
+    padding: 28px 32px;
+    margin: 40px 0;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 24px; align-items: center;
+  }
+  .usage-strip-title {
+    font-family: var(--serif);
+    font-size: 20px; font-weight: 400;
+    color: white; margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .usage-strip-title em { font-style: italic; color: #748FFC; }
+  .usage-strip-desc {
+    font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.6;
+  }
+  .usage-strip-steps {
+    display: flex; flex-direction: column; gap: 6px;
+    min-width: 220px;
+  }
+  .usage-step {
+    font-family: var(--mono);
+    font-size: 10px; color: rgba(255,255,255,0.35);
+    display: flex; align-items: center; gap: 8px; letter-spacing: 0.04em;
+  }
+  .usage-step-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; flex-shrink: 0;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:900px) {
+    .cover { padding: 32px 24px; }
+    .page { padding: 56px 24px; }
+    .intro-grid { grid-template-columns: 1fr; }
+    .annotation-grid { grid-template-columns: 1fr; }
+    .ann-panel { position: static; }
+    .tokens-grid { grid-template-columns: repeat(2, 1fr); }
+    .qref-grid { grid-template-columns: 1fr; }
+    .usage-strip { grid-template-columns: 1fr; }
+    .breakdown-header { grid-template-columns: repeat(3, 1fr); }
+    .breakdown-tab:nth-child(4), .breakdown-tab:nth-child(5) { display: none; }
+    .prompt-card-header { flex-wrap: wrap; }
+    .prompt-num-block { width: 48px; }
+    .prompt-header-meta { min-width: auto; flex-direction: row; border-left: none; border-top: 1px solid var(--rule); width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-rail"><div class="progress-fill" id="pbar"></div></div>
+
+<!-- ══════════ COVER ══════════ -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="cover-glow2"></div>
+
+  <div class="cover-top">
+    <div class="cover-wordmark">Convo<span>Crystal</span></div>
+    <div class="cover-doc-id">
+      Figma Make Prompts · v1.0<br>
+      5 Precision Prompts · Full UI Coverage
+    </div>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-eyebrow">Prompt Engineering Specification</div>
+    <h1 class="cover-h1">Figma Make<br><em>Prompts.</em></h1>
+    <p class="cover-desc">Five precision-engineered Figma Make prompts for ConvoCrystal's full UI surface. Each prompt is anatomized across outcome, brand identity, interaction behaviors, responsive behavior, and structural completeness — ready to paste directly into Figma Make.</p>
+    <div class="cover-pills">
+      <span class="cover-pill hi">P1 · Three-Panel Dashboard</span>
+      <span class="cover-pill hi">P2 · Upload Flow</span>
+      <span class="cover-pill hi">P3 · Chat Interface</span>
+      <span class="cover-pill hi">P4 · Live Editor</span>
+      <span class="cover-pill hi">P5 · Version Control + Auth</span>
+      <span class="cover-pill">Brand Identity Embedded</span>
+      <span class="cover-pill">Interaction Behaviors Specified</span>
+      <span class="cover-pill">Responsive Rules Included</span>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-stats">
+      <div class="cover-stat-item"><strong>5</strong>Prompts</div>
+      <div class="cover-stat-item"><strong>5</strong>Prompt Ingredients Each</div>
+      <div class="cover-stat-item"><strong>~320</strong>Avg. Words Per Prompt</div>
+      <div class="cover-stat-item"><strong>100%</strong>UI Coverage</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-brand">Convo<span>Crystal</span></div>
+  <div class="nav-sep"></div>
+  <a href="#guide" class="nav-a">Usage Guide</a>
+  <a href="#p1" class="nav-a">P1 · Dashboard</a>
+  <a href="#p2" class="nav-a">P2 · Upload</a>
+  <a href="#p3" class="nav-a">P3 · Chat</a>
+  <a href="#p4" class="nav-a">P4 · Editor</a>
+  <a href="#p5" class="nav-a">P5 · Version + Auth</a>
+  <a href="#tokens" class="nav-a">Brand Tokens</a>
+</nav>
+
+<!-- ══════════ USAGE GUIDE ══════════ -->
+<div class="page" id="guide">
+  <div class="intro-grid">
+    <div>
+      <h2 class="intro-h2">Five Prompts.<br><em>One Complete UI.</em></h2>
+      <p class="intro-body">Each prompt below is a complete, self-contained Figma Make instruction that can be run independently or in sequence. They are ordered from macro to micro: start with P1 to establish the full dashboard shell, then run P2–P5 to generate each functional module in detail. Prompts are designed to reference the same brand token system, so outputs will naturally cohese.</p>
+    </div>
+    <div class="intro-aside">
+      <div class="aside-title">Prompt Anatomy — 5 Required Ingredients</div>
+      <div class="aside-item">
+        <div class="aside-dot" style="background:var(--blue)"></div>
+        <div><strong style="color:var(--ink)">① Visual Outcome</strong><br>The final deliverable stated first</div>
+      </div>
+      <div class="aside-item">
+        <div class="aside-dot" style="background:var(--violet)"></div>
+        <div><strong style="color:var(--ink)">② Brand Identity</strong><br>Colors, typography, aesthetic direction</div>
+      </div>
+      <div class="aside-item">
+        <div class="aside-dot" style="background:var(--teal)"></div>
+        <div><strong style="color:var(--ink)">③ Interaction Behaviors</strong><br>Hover states, animations, transitions</div>
+      </div>
+      <div class="aside-item">
+        <div class="aside-dot" style="background:var(--amber)"></div>
+        <div><strong style="color:var(--ink)">④ Responsive Rules</strong><br>Breakpoints, layout adaptation</div>
+      </div>
+      <div class="aside-item">
+        <div class="aside-dot" style="background:var(--emerald)"></div>
+        <div><strong style="color:var(--ink)">⑤ Structural Sections</strong><br>All required UI components named</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-strip">
+    <div>
+      <div class="usage-strip-title">How to use these <em>prompts.</em></div>
+      <div class="usage-strip-desc">Open Figma → Plugins → Figma Make. Paste a prompt as-is. Each prompt is independently runnable. For a full product build, run P1 first to establish the shell, then use P2–P5 to populate individual modules. Paste brand tokens from the reference section as context before running if you want tighter token adherence.</div>
+    </div>
+    <div class="usage-strip-steps">
+      <div class="usage-step"><div class="usage-step-num">1</div>Open Figma Make plugin</div>
+      <div class="usage-step"><div class="usage-step-num">2</div>Start with Prompt 1 (dashboard shell)</div>
+      <div class="usage-step"><div class="usage-step-num">3</div>Run Prompts 2–5 for each module</div>
+      <div class="usage-step"><div class="usage-step-num">4</div>Use brand tokens table for consistency</div>
+      <div class="usage-step"><div class="usage-step-num">5</div>Iterate with follow-up variant prompts</div>
+    </div>
+  </div>
+
+  <!-- Brand Token Quick Reference -->
+  <div class="divider-row" id="tokens">
+    <div class="divider-line"></div>
+    <div class="divider-label">Brand Token Quick Reference</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="tokens-grid">
+    <div class="token-card">
+      <div class="token-swatch" style="background:#0B0C10"></div>
+      <div class="token-info">
+        <div class="token-name">Surface / Base</div>
+        <div class="token-val">#0B0C10</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#1A1D2E"></div>
+      <div class="token-info">
+        <div class="token-name">Surface / Raised</div>
+        <div class="token-val">#1A1D2E</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#6366F1"></div>
+      <div class="token-info">
+        <div class="token-name">Crystal Blue / Primary</div>
+        <div class="token-val">#6366F1</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#818CF8"></div>
+      <div class="token-info">
+        <div class="token-name">Crystal Blue / Light</div>
+        <div class="token-val">#818CF8</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#06B6D4"></div>
+      <div class="token-info">
+        <div class="token-name">Ice Teal / Secondary</div>
+        <div class="token-val">#06B6D4</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#8B5CF6"></div>
+      <div class="token-info">
+        <div class="token-name">Violet / Accent</div>
+        <div class="token-val">#8B5CF6</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#E8EAF6"></div>
+      <div class="token-info">
+        <div class="token-name">Text / Primary</div>
+        <div class="token-val">#E8EAF6</div>
+      </div>
+    </div>
+    <div class="token-card">
+      <div class="token-swatch" style="background:#2A2D42;border:1px solid #3a3d52"></div>
+      <div class="token-info">
+        <div class="token-name">Border / Default</div>
+        <div class="token-val">#2A2D42</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qref-grid">
+    <div class="qref-card">
+      <div class="qref-title">Typography Stack</div>
+      <div class="qref-item">Display / headings: Cabinet Grotesk 800</div>
+      <div class="qref-item">Body / UI labels: DM Sans 400–600</div>
+      <div class="qref-item">Code / timestamps: JetBrains Mono 400</div>
+      <div class="qref-item">Accent / serif: Fraunces italic 400</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Spacing + Radii</div>
+      <div class="qref-item">Base grid: 8px unit system</div>
+      <div class="qref-item">Panel radius: 12px</div>
+      <div class="qref-item">Card radius: 16px</div>
+      <div class="qref-item">Badge radius: 100px (pill)</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Layout Breakpoints</div>
+      <div class="qref-item">Mobile: &lt;768px — single panel, tabbed</div>
+      <div class="qref-item">Tablet: 768–1023px — two panels</div>
+      <div class="qref-item">Desktop: 1280px+ — three-panel full</div>
+      <div class="qref-item">Sidebar: 240px fixed on desktop</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PROMPT 1 — THREE-PANEL DASHBOARD
+══════════════════════════════════════════════ -->
+<div class="page" id="p1">
+  <div class="divider-row" style="margin-top:0">
+    <div class="divider-line"></div>
+    <div class="divider-label">Prompt 01 of 05</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div class="prompt-num-block" style="color:var(--blue)">1</div>
+      <div class="prompt-header-body">
+        <div class="prompt-focus-tag" style="background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)">Dashboard Shell · Layout Architecture</div>
+        <div class="prompt-title">Full Three-Panel Dashboard Layout</div>
+        <div class="prompt-intent">Establishes the complete application frame — sidebar, chat panel, live editor — with all layout rules, navigation architecture, and global design language baked in from the first generation</div>
+      </div>
+      <div class="prompt-header-meta">
+        <span class="meta-chip" style="background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)">Foundation</span>
+        <span class="meta-chip" style="background:var(--bg2);color:var(--muted);border:1px solid var(--rule)">Run First</span>
+        <span class="meta-chip" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.2)">~340 words</span>
+      </div>
+    </div>
+
+    <div class="prompt-body">
+      <div class="prompt-output-label">Final Figma Make Prompt — copy exactly as written</div>
+
+      <div class="prompt-text-block">
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--blue)"></span>Visual Outcome</div>
+          <div class="pt-text">Create a production-ready SaaS web application dashboard for ConvoCrystal, an AI-powered meeting transcript analysis platform. The final output is a fully realized three-panel desktop interface showing a populated, active state: the left sidebar contains a navigation hierarchy and file library, the center panel shows an active LLM chat session with streaming responses, and the right panel shows a live rich-text document being edited. This is the master application shell — every design decision made here cascades to all sub-components.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--violet)"></span>Brand Identity</div>
+          <div class="pt-text">Apply a dark, technical-minimal aesthetic throughout. Base background: near-black deep navy (#0B0C10). Panel surfaces: slightly lighter (#1A1D2E). Primary accent: electric indigo-blue (#6366F1) used sparingly on interactive elements, active states, and focus rings only. Secondary accent: ice teal (#06B6D4) on streaming indicators and live states. All borders are 1px at low opacity (#2A2D42). Typography: Cabinet Grotesk ExtraBold for headings, DM Sans for body and UI labels, JetBrains Mono for timestamps, token counts, and code-adjacent metadata. Text hierarchy: primary (#E8EAF6), secondary (#9BA3C8), tertiary/muted (#5C6490). The overall palette reads as a precision instrument — deep, focused, zero decoration noise. No gradients on backgrounds. Subtle 1px grid lines may be used as structural dividers. The only glow effect allowed is a soft radial behind the primary CTA button and active sidebar items (3px radius, 15% opacity indigo).</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--teal)"></span>Interaction Behaviors</div>
+          <div class="pt-text">Sidebar items: on hover, show a left-side 2px indigo border reveal with a background tint transition (160ms ease-out). Active state: filled indigo background at 15% opacity, white text, left border solid. Collapsed sidebar: icons only at 56px width with tooltip on hover. Top navigation bar: 48px fixed height, brand wordmark left-aligned, user avatar + workspace switcher right-aligned. Panel resize handles: show on hover at panel boundaries, draggable with 200ms spring animation. The entire layout must feel engineered — transitions are never decorative, always purposeful and sub-200ms.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--amber)"></span>Responsive Adaptation</div>
+          <div class="pt-text">Desktop (1280px+): Three-panel layout. Left sidebar 240px fixed. Center and right panels share remaining space at approximately 1:1.4 ratio, both resizable. Tablet (768–1023px): Two panels — sidebar collapses to icon rail, center expands. Right editor panel slides in as overlay drawer (360px) triggered by document icon. Mobile (&lt;768px): Single panel with bottom tab bar (4 tabs: Library, Chat, Editor, Settings). Panel switching is a horizontal slide animation (320ms cubic-bezier decelerate). No panel should be visible simultaneously below 1024px.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--emerald)"></span>Structural Sections Required</div>
+          <div class="pt-text">Left Sidebar: ConvoCrystal brand mark at top, collapsible nav sections (Library, Workspaces, Recent, Settings), transcript file list with confidence score badges, user avatar + plan indicator at bottom. Center Panel: Topbar with transcript context label and session controls, message thread with both user and AI bubble variants, processing stage indicator strip above the latest AI message (Extracting / Analyzing / Generating steps), input composer at bottom with send button and interrupt button. Right Panel: Document title field, formatting toolbar (bold, italic, headings, lists, AI Refine button highlighted in indigo), rich text editing area with section highlights, export dropdown (PDF, DOCX, Notion, Markdown), version commit button in toolbar. Show the interface in a populated, mid-session state — not empty, not loading.</div>
+        </div>
+      </div>
+
+      <div class="ingredient-row">
+        <span class="ingredient-pill" style="background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd)">① Outcome: three-panel dashboard</span>
+        <span class="ingredient-pill" style="background:var(--violet-bg);color:var(--violet);border-color:rgba(112,72,232,0.2)">② Brand: dark navy + electric indigo</span>
+        <span class="ingredient-pill" style="background:var(--teal-bg);color:var(--teal);border-color:rgba(12,133,153,0.2)">③ Interaction: hover + resize + collapse</span>
+        <span class="ingredient-pill" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(212,130,10,0.2)">④ Responsive: 3 breakpoints defined</span>
+        <span class="ingredient-pill" style="background:var(--emerald-bg);color:var(--emerald);border-color:rgba(8,127,91,0.2)">⑤ Sections: sidebar + chat + editor</span>
+      </div>
+
+      <div class="copy-row">
+        <div class="copy-stats">
+          <span class="copy-stat">Words: ~340</span>
+          <span class="copy-stat">Sections: 5</span>
+          <span class="copy-stat">Scope: Full dashboard</span>
+          <span class="copy-stat">Run order: First</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'p1-text')">
+          <span>Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PROMPT 2 — UPLOAD FLOW
+══════════════════════════════════════════════ -->
+<div class="page" id="p2">
+  <div class="divider-row" style="margin-top:0">
+    <div class="divider-line"></div>
+    <div class="divider-label">Prompt 02 of 05</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div class="prompt-num-block" style="color:var(--teal)">2</div>
+      <div class="prompt-header-body">
+        <div class="prompt-focus-tag" style="background:var(--teal-bg);color:var(--teal);border:1px solid rgba(12,133,153,0.22)">Upload Flow · Progress States · Format Detection</div>
+        <div class="prompt-title">Multi-Step Transcript Upload Flow</div>
+        <div class="prompt-intent">Generates the complete file upload experience across all five states: idle drop zone, validation, uploading with progress, processing with stage indicators, and completion — including error and empty states</div>
+      </div>
+      <div class="prompt-header-meta">
+        <span class="meta-chip" style="background:var(--teal-bg);color:var(--teal);border:1px solid rgba(12,133,153,0.22)">Module</span>
+        <span class="meta-chip" style="background:var(--bg2);color:var(--muted);border:1px solid var(--rule)">Run Second</span>
+        <span class="meta-chip" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.2)">~320 words</span>
+      </div>
+    </div>
+
+    <div class="prompt-body">
+      <div class="prompt-output-label">Final Figma Make Prompt — copy exactly as written</div>
+
+      <div class="prompt-text-block">
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--teal)"></span>Visual Outcome</div>
+          <div class="pt-text">Create a multi-step file upload modal and embedded upload flow panel for ConvoCrystal, an AI transcript analysis SaaS. The output is a complete UI showing all five upload states as separate screens or artboards: (1) Idle drop zone, (2) File selected with validation feedback, (3) Active upload with live progress, (4) Backend processing with stage tracker, (5) Upload complete with first-analysis preview. This component appears both as a full-page onboarding flow for new users and as an inline panel within the existing three-panel dashboard layout.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--violet)"></span>Brand Identity</div>
+          <div class="pt-text">Maintain the ConvoCrystal dark technical aesthetic: deep navy surfaces (#0B0C10 base, #1A1D2E panels), electric indigo (#6366F1) as the primary active accent, ice teal (#06B6D4) on the processing stage indicator's active step, DM Sans for all copy, JetBrains Mono for file size, byte counts, percentage values, SHA hashes, and format badges (VTT, SRT, TXT, DOCX, JSON). The drop zone should feel like a clean terminal input area — not playful or rounded. Use a dashed 1px border (2px dash, 4px gap pattern) that becomes solid indigo on drag-over. Format detection chips (the file type labels) are small monospaced pill badges in ice teal on hover.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--teal)"></span>Interaction Behaviors</div>
+          <div class="pt-text">Idle state: Dashed border animates with a slow rotating dash-offset (8s loop, subtle). On drag-over: border becomes solid indigo, background tints to 4% indigo, drop zone icon scales 1.08x with spring ease. File selected: Card slides in from below (200ms decelerate) showing filename, format badge, and file size. Validation phases animate sequentially — each check marks done with a checkmark before the next begins. Upload progress: SVG ring progress indicator with smooth stroke-dashoffset animation, percentage in JetBrains Mono at center. Processing stages: Vertical timeline, active step pulses with a 1.5s ease-in-out opacity animation. Completed stages show a filled checkmark in emerald green (#10B981).</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--amber)"></span>Responsive Adaptation</div>
+          <div class="pt-text">Desktop: Upload component appears as a centered modal overlay (640px max-width) or as a right-drawer panel within the sidebar. The five state screens can be presented as a horizontal scroll carousel on desktop for design reference. Tablet: Modal adapts to 90% viewport width, stage tracker switches from horizontal to vertical layout below 640px. Mobile: Full-screen overlay with bottom sheet for file metadata. The drop zone becomes a tap-to-browse button only (no drag on mobile — the drag zone is hidden entirely). Progress ring shrinks to 64px diameter. Stage tracker text truncates to single-word labels.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--emerald)"></span>Structural Sections Required</div>
+          <div class="pt-text">State 1 — Drop Zone: Large centered dashed container with cloud-upload icon, headline ("Drop your transcript here"), accepted format chips, "or browse files" secondary link, and "Try a sample transcript" ghost CTA. State 2 — Validation: File preview card (icon, name, size, detected format badge), three-phase validation ticker (Format Check ✓, Size Check ✓, Content Scan…), cancel button. State 3 — Upload Progress: Circular progress ring with byte counter and estimated time, file name header, cancel/pause button row, progress percentage. State 4 — Processing Stages: Vertical 5-step timeline (Queued → Parsing → Extracting → Analyzing → Scoring) with active step highlighted in indigo, elapsed time counter, animated connecting lines. State 5 — Complete: Success checkmark animation, transcript title + duration + speaker count metadata, "View Analysis" primary CTA in indigo, "Upload Another" ghost CTA. Error state: Red-bordered card with error type, explanation, and retry or contact-support options.</div>
+        </div>
+      </div>
+
+      <div class="ingredient-row">
+        <span class="ingredient-pill" style="background:var(--teal-bg);color:var(--teal);border-color:rgba(12,133,153,0.22)">① Outcome: 5-state upload flow</span>
+        <span class="ingredient-pill" style="background:var(--violet-bg);color:var(--violet);border-color:rgba(112,72,232,0.2)">② Brand: mono badges + dashed zones</span>
+        <span class="ingredient-pill" style="background:var(--teal-bg);color:var(--teal);border-color:rgba(12,133,153,0.22)">③ Interaction: drag + ring progress + stage pulse</span>
+        <span class="ingredient-pill" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(212,130,10,0.2)">④ Responsive: modal + full-screen mobile</span>
+        <span class="ingredient-pill" style="background:var(--emerald-bg);color:var(--emerald);border-color:rgba(8,127,91,0.2)">⑤ Sections: 5 states + error state</span>
+      </div>
+
+      <div class="copy-row">
+        <div class="copy-stats">
+          <span class="copy-stat">Words: ~320</span>
+          <span class="copy-stat">States: 5 + error</span>
+          <span class="copy-stat">Scope: Upload module</span>
+          <span class="copy-stat">Run order: Second</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'p2-text')">
+          <span>Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PROMPT 3 — CHAT INTERFACE
+══════════════════════════════════════════════ -->
+<div class="page" id="p3">
+  <div class="divider-row" style="margin-top:0">
+    <div class="divider-line"></div>
+    <div class="divider-label">Prompt 03 of 05</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div class="prompt-num-block" style="color:var(--violet)">3</div>
+      <div class="prompt-header-body">
+        <div class="prompt-focus-tag" style="background:var(--violet-bg);color:var(--violet);border:1px solid rgba(112,72,232,0.22)">Chat UI · Token Streaming · Stage Indicators · Confidence Scoring</div>
+        <div class="prompt-title">Real-Time LLM Chat Interface</div>
+        <div class="prompt-intent">Designs the complete chat panel including the streaming message experience, LangGraph orchestration stage bar, RAGAS confidence scoring display, citation links, suggested prompt chips, and the full input composer</div>
+      </div>
+      <div class="prompt-header-meta">
+        <span class="meta-chip" style="background:var(--violet-bg);color:var(--violet);border:1px solid rgba(112,72,232,0.22)">Module</span>
+        <span class="meta-chip" style="background:var(--bg2);color:var(--muted);border:1px solid var(--rule)">Run Third</span>
+        <span class="meta-chip" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.2)">~350 words</span>
+      </div>
+    </div>
+
+    <div class="prompt-body">
+      <div class="prompt-output-label">Final Figma Make Prompt — copy exactly as written</div>
+
+      <div class="prompt-text-block">
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--violet)"></span>Visual Outcome</div>
+          <div class="pt-text">Create the complete LLM chat panel for ConvoCrystal, showing a realistic mid-conversation state with three to five message pairs visible, one AI message currently streaming (partially generated text with a blinking cursor), and a processing stage indicator bar actively showing the "Generating" step. The panel must convey the feeling of a live, intelligent system mid-thought — not a static chat mockup. Include the full message thread, an active input composer, a chip row of suggested prompts, and a confidence score indicator attached to the most recent completed AI response. This is the center panel of the three-panel layout.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--violet)"></span>Brand Identity</div>
+          <div class="pt-text">Chat interface inherits ConvoCrystal's dark technical palette. User message bubbles: right-aligned, indigo (#6366F1) filled background, white DM Sans text, 12px border radius, maximum 72% panel width. AI message bubbles: left-aligned, panel surface (#1A1D2E) background, 1px indigo border on active/streaming messages (transitions off when complete), text in #E8EAF6. Streaming AI message has a 2px left border in ice teal (#06B6D4) that disappears on completion. The blinking cursor is a 2px × 14px indigo rectangle, 1s blink cycle. Stage indicator bar: compact 28px tall strip above the streaming message, showing icons and labels for each orchestration step (Extracting context, Analyzing semantics, Generating response) with the active step in indigo and completed steps in emerald. Confidence score badge: small pill below completed messages showing the RAGAS composite score (0–100%), color-coded: ≥85% emerald, 65–84% amber, &lt;65% rose.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--teal)"></span>Interaction Behaviors</div>
+          <div class="pt-text">Streaming animation: New tokens appear with a micro-fade from opacity 0.4 to 1 over 60ms with a 1px upward translate — giving the feeling of words materializing rather than appearing. The text container grows smoothly as content accumulates (no jumpy height shifts). Auto-scroll: the message list follows the bottom of streaming content smoothly; a "↑ Scroll to read" chip appears if the user manually scrolls up during streaming. Hover on completed AI messages: reveals three action icons (copy, push to editor, cite) in the message's top-right corner, fading in at 150ms. Input composer: Expands vertically from 1 line to 4 lines max as content grows. Send button is indigo, switches to an animated "stop" square during active streaming. Suggested prompt chips: horizontal scrollable rail, hover state shifts border to indigo and text brightens.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--amber)"></span>Responsive Adaptation</div>
+          <div class="pt-text">Desktop: Chat panel is the center column, fixed width bounded by sidebar and editor panel. No horizontal scroll. Stage indicator collapses to icon-only with tooltip labels below 960px panel width. Tablet: Chat panel expands to fill most of the viewport when editor is hidden. Suggested prompts collapse to a "Suggestions ▾" expandable button. Mobile: Full-screen chat view, input composer fixed to bottom of viewport, message list scrolls above it. Stage indicator is a single-line compact bar with abbreviated stage name. Bottom safe area padding for devices with home bar.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--emerald)"></span>Structural Sections Required</div>
+          <div class="pt-text">Chat Header: Transcript context label (filename + duration), connection status dot (green = connected), session controls (new session, clear, export chat). Message Thread: Three completed exchange pairs showing realistic questions and structured AI responses. One streaming message in progress — show approximately 40% of a response generated with cursor active. Stage Indicator Bar: Compact three-step horizontal strip (Extracting ✓ / Analyzing ✓ / Generating →) directly above the streaming bubble. Confidence Panel: Below a completed AI message, a row showing: overall score pill (e.g. 91%), and three sub-scores (Faithfulness 94%, Relevance 88%, Precision 92%) each with a small bar indicator. Citation Links: Numbered reference chips below AI message text linking to transcript segments (e.g. [1] Speaker A · 14:32). Suggested Prompts Rail: Horizontal scrollable chip row with 4–5 context-aware questions. Input Composer: Multi-line textarea with send and interrupt buttons, character/token counter in mono, context-pin toggle button.</div>
+        </div>
+      </div>
+
+      <div class="ingredient-row">
+        <span class="ingredient-pill" style="background:var(--violet-bg);color:var(--violet);border-color:rgba(112,72,232,0.2)">① Outcome: live mid-session chat state</span>
+        <span class="ingredient-pill" style="background:var(--violet-bg);color:var(--violet);border-color:rgba(112,72,232,0.2)">② Brand: bubble variants + stage colors</span>
+        <span class="ingredient-pill" style="background:var(--teal-bg);color:var(--teal);border-color:rgba(12,133,153,0.22)">③ Interaction: token fade + autoscroll + hover actions</span>
+        <span class="ingredient-pill" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(212,130,10,0.2)">④ Responsive: panel + full-screen + mobile</span>
+        <span class="ingredient-pill" style="background:var(--emerald-bg);color:var(--emerald);border-color:rgba(8,127,91,0.2)">⑤ Sections: header + thread + stage + confidence</span>
+      </div>
+
+      <div class="copy-row">
+        <div class="copy-stats">
+          <span class="copy-stat">Words: ~350</span>
+          <span class="copy-stat">States: streaming + complete + empty</span>
+          <span class="copy-stat">Scope: Chat module</span>
+          <span class="copy-stat">Run order: Third</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'p3-text')">
+          <span>Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PROMPT 4 — LIVE EDITOR
+══════════════════════════════════════════════ -->
+<div class="page" id="p4">
+  <div class="divider-row" style="margin-top:0">
+    <div class="divider-line"></div>
+    <div class="divider-label">Prompt 04 of 05</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div class="prompt-num-block" style="color:var(--emerald)">4</div>
+      <div class="prompt-header-body">
+        <div class="prompt-focus-tag" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.22)">Live Editor · LLM Refinement · Inline Streaming · Export Pipeline</div>
+        <div class="prompt-title">Live Document Editor with AI Refinement</div>
+        <div class="prompt-intent">Generates the right-panel rich text editor with section highlighting, the floating LLM refinement popover, inline streaming token insertion, accept/reject preview UI, and the complete export workflow</div>
+      </div>
+      <div class="prompt-header-meta">
+        <span class="meta-chip" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.22)">Module</span>
+        <span class="meta-chip" style="background:var(--bg2);color:var(--muted);border:1px solid var(--rule)">Run Fourth</span>
+        <span class="meta-chip" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.2)">~335 words</span>
+      </div>
+    </div>
+
+    <div class="prompt-body">
+      <div class="prompt-output-label">Final Figma Make Prompt — copy exactly as written</div>
+
+      <div class="prompt-text-block">
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--emerald)"></span>Visual Outcome</div>
+          <div class="pt-text">Create the live document editor panel for ConvoCrystal, shown in an active mid-editing state. The document contains four to six structured sections generated from a meeting transcript (Summary, Key Decisions, Action Items, Open Questions, Risks Flagged). One section of text is currently selected and the AI Refinement popover is open above it, showing refinement action options. A second section shows an inline streaming state — AI-generated replacement text materializing character-by-character with a blinking cursor. A third section shows the accept/reject preview banner. The editor is the right panel of the three-panel dashboard layout and shares the same dark design system.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--violet)"></span>Brand Identity</div>
+          <div class="pt-text">Editor background: same surface (#1A1D2E) as other panels. Document content area has a subtle inset inner shadow (1px, 10% opacity) to distinguish it from the panel chrome. Toolbar: 48px height strip, icon buttons at 32×32px with 6px radius. Active toolbar button: filled indigo background, white icon. The AI Refine button in the toolbar is always highlighted with a 1px indigo border and indigo icon — it is the primary editor CTA. Selected text: background highlight in indigo at 18% opacity. Section with inline streaming: left border 2px indigo, background at 5% indigo opacity, original text dimmed to 35% opacity while replacement streams in. AI-generated text mark: subtle underline in indigo at 30% opacity to indicate provenance. Section labels (Summary, Decisions) in JetBrains Mono uppercase 10px, letter-spacing 0.15em, color: muted (#5C6490).</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--teal)"></span>Interaction Behaviors</div>
+          <div class="pt-text">Text selection: The refinement popover appears 8px above the selection midpoint, fading in at 120ms with a slight upward translate. Popover contains six action buttons: Refine, Expand, Shorten, Formalize, Simplify, Rephrase — each 28px tall with hover fill in indigo at 10%. Inline streaming: The selected text fades to 35% opacity simultaneously as the replacement text streams in character-by-character to its right in a separate text run. Streaming cursor: same 2px rectangle blink as in chat. Accept/Reject: A compact two-button banner (emerald Accept, rose Reject) pins to the bottom edge of the streaming section. On accept, the dimmed original text cross-dissolves out and replacement snaps to full opacity at 200ms. On reject, original text snaps back to full opacity, replacement fades out. Commit button in toolbar triggers a modal with commit message input and branch selector.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--amber)"></span>Responsive Adaptation</div>
+          <div class="pt-text">Desktop: Right panel, fixed position, minimum width 320px, resizable. Toolbar stays horizontal at all widths. Below 360px panel width, toolbar wraps into two rows. Tablet: Editor appears as a slide-in drawer from the right side (360px wide), triggered by a document icon in the center panel header. Drawer has its own close button and overlay backdrop. Refinement popover is repositioned to bottom of selection (not above) to avoid viewport clipping. Mobile: Editor is a full-screen tab accessed from the bottom tab bar. Toolbar scrolls horizontally. The refinement popover becomes a bottom sheet with the same six action options displayed as full-width buttons (44px each touch target).</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--emerald)"></span>Structural Sections Required</div>
+          <div class="pt-text">Editor Toolbar: Document title (editable inline), separator, format buttons (B, I, U, H1, H2, H3, UL, OL, Quote), separator, AI Refine button (highlighted), separator, Commit button, Export menu button. Editor Content Area: Five structured sections with section-type labels, realistic meeting intelligence content. Section highlight states: normal, selected (highlighted), streaming (active), and committed (with AI mark underline). Refinement Popover: Floating card with six action buttons and a close X. Inline Streaming Section: Show the before-state (dimmed original) and during-state (streaming replacement) simultaneously for design reference. Accept/Reject Banner: Two-button row pinned to streaming section bottom edge. Collaborator Presence Bar: Three avatar chips in the top-right of the editor showing live cursor positions (different colors per user). Export Dropdown: PDF, DOCX, Notion push, Markdown copy, Slack post — each with a platform icon.</div>
+        </div>
+      </div>
+
+      <div class="ingredient-row">
+        <span class="ingredient-pill" style="background:var(--emerald-bg);color:var(--emerald);border-color:rgba(8,127,91,0.22)">① Outcome: mid-edit active editor panel</span>
+        <span class="ingredient-pill" style="background:var(--violet-bg);color:var(--violet);border-color:rgba(112,72,232,0.2)">② Brand: selection highlight + mono labels</span>
+        <span class="ingredient-pill" style="background:var(--teal-bg);color:var(--teal);border-color:rgba(12,133,153,0.22)">③ Interaction: popover + streaming + accept/reject</span>
+        <span class="ingredient-pill" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(212,130,10,0.2)">④ Responsive: panel + drawer + full-screen</span>
+        <span class="ingredient-pill" style="background:var(--emerald-bg);color:var(--emerald);border-color:rgba(8,127,91,0.2)">⑤ Sections: toolbar + content + refinement + export</span>
+      </div>
+
+      <div class="copy-row">
+        <div class="copy-stats">
+          <span class="copy-stat">Words: ~335</span>
+          <span class="copy-stat">States: normal + streaming + preview</span>
+          <span class="copy-stat">Scope: Editor module</span>
+          <span class="copy-stat">Run order: Fourth</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'p4-text')">
+          <span>Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PROMPT 5 — VERSION CONTROL + AUTH
+══════════════════════════════════════════════ -->
+<div class="page" id="p5">
+  <div class="divider-row" style="margin-top:0">
+    <div class="divider-line"></div>
+    <div class="divider-label">Prompt 05 of 05</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-card-header">
+      <div class="prompt-num-block" style="color:var(--amber)">5</div>
+      <div class="prompt-header-body">
+        <div class="prompt-focus-tag" style="background:var(--amber-bg);color:var(--amber);border:1px solid rgba(212,130,10,0.22)">Version Timeline · Diff View · Auth Lifecycle · Onboarding</div>
+        <div class="prompt-title">Version Control Timeline + Full Auth Lifecycle</div>
+        <div class="prompt-intent">Generates the version control timeline panel with branching visualization, side-by-side diff comparison, and restore flow — plus the complete authentication suite: login, registration, password recovery, and onboarding screens</div>
+      </div>
+      <div class="prompt-header-meta">
+        <span class="meta-chip" style="background:var(--amber-bg);color:var(--amber);border:1px solid rgba(212,130,10,0.22)">Module</span>
+        <span class="meta-chip" style="background:var(--bg2);color:var(--muted);border:1px solid var(--rule)">Run Fifth</span>
+        <span class="meta-chip" style="background:var(--emerald-bg);color:var(--emerald);border:1px solid rgba(8,127,91,0.2)">~360 words</span>
+      </div>
+    </div>
+
+    <div class="prompt-body">
+      <div class="prompt-output-label">Final Figma Make Prompt — copy exactly as written</div>
+
+      <div class="prompt-text-block">
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--amber)"></span>Visual Outcome</div>
+          <div class="pt-text">Create two distinct UI surface groups for ConvoCrystal: (A) The version control timeline panel, shown as a full-screen modal overlaying the dashboard — displaying a Git-style commit history graph with branches, a selected commit's diff comparison view (side-by-side), and a restore flow confirmation screen. (B) The complete authentication lifecycle as separate full-page screens: Login, Register (3-step), Email Verification holding screen, and Password Recovery (request + reset). Both groups share the ConvoCrystal design system but serve very different visual moods — the version timeline is dense and data-rich; the auth screens are spacious and focused.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--violet)"></span>Brand Identity</div>
+          <div class="pt-text">Version timeline: same dark panel surfaces as the main app. Commit nodes on the graph are 12px circles — filled indigo (#6366F1) for HEAD, filled surface (#2A2D42) for older commits, filled violet (#8B5CF6) for branch points. Branch lines are 1px SVG paths in matching colors. Diff view: removed lines have a subtle rose (#F43F5E) background tint at 10%; added lines have emerald (#10B981) at 10%. Changed characters within a line are highlighted at 20% opacity. Line numbers in JetBrains Mono 11px, muted color. Auth screens: invert the palette — use a light background (#F7F6F3 warm off-white) with the ConvoCrystal wordmark centered at top in dark ink. Input fields: white background, 1px border (#D0D0E0), 4px radius, indigo (#6366F1) focus ring (3px offset). Primary button: solid indigo fill, white DM Sans 600 text. OAuth buttons (Google, GitHub): white background, dark border, icon + label. The auth screens feel like the light-mode counterpart of the dark dashboard — same brand DNA, different energy.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--teal)"></span>Interaction Behaviors</div>
+          <div class="pt-text">Version timeline scrubbing: hovering over a commit node highlights the connected branch lines and shows a tooltip card with commit metadata (SHA hash, author, message, timestamp, diff stats). Clicking a node selects it and slides the diff panel in from the right at 280ms ease-out. The restore button in the diff panel triggers a confirmation dialog with a warning about creating an automatic backup branch before proceeding. Diff view: a toggle button switches between "Split" and "Unified" view — the panel cross-fades between the two layouts at 200ms. Auth forms: Input validation shows inline beneath each field on blur (not on change). Submit button disables and shows a small spinner during submission. Rate-limited state shows a countdown timer beneath the submit button. OAuth flow: clicking an OAuth button fades the form out and shows a loading state while the redirect occurs.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--amber)"></span>Responsive Adaptation</div>
+          <div class="pt-text">Version timeline modal: Full-screen overlay on all breakpoints. On desktop: two-column layout (commit list left, diff panel right). On tablet: commit list collapses to a slim timeline strip, diff takes most of the space. On mobile: commit list is a bottom drawer that expands up; diff view is single-column unified mode only (side-by-side is hidden on mobile). Auth screens: all auth pages are single-column centered on all breakpoints. Maximum content width 480px. On mobile, the ConvoCrystal wordmark is smaller and the form fills 90% viewport width. Keyboard-aware layout: form shifts up when virtual keyboard appears on iOS/Android.</div>
+        </div>
+
+        <div class="pt-section">
+          <div class="pt-label"><span class="pt-label-dot" style="background:var(--emerald)"></span>Structural Sections Required</div>
+          <div class="pt-text">Version Timeline Modal: Header with document title + branch selector dropdown + Close button. Left column: Branch selector tabs, vertical commit list with SVG branch graph (show one main branch and one feature branch diverging and merging), each commit item showing: abbreviated SHA hash chip (JetBrains Mono), commit message, author avatar + name, relative timestamp, diff stats (+N -N). Right column: Diff header (comparing commit A to commit B), Toggle split/unified button, File path label, Side-by-side diff with line numbers and change highlighting, Restore button (indigo), "Restoring will auto-backup current state to a new branch" warning note. Restore Confirmation Dialog: Warning icon, message explaining the backup branch that will be created, input for commit message, Confirm (indigo) and Cancel buttons. Auth — Login Screen: Wordmark, H1 "Welcome back", email + password fields, "Forgot password?" link, Sign In button, divider "or continue with", Google + GitHub OAuth buttons, "Don't have an account? Register" link. Auth — Register Screen: Wordmark, 3-step stepper indicator, Step 1 fields (name, email, password with strength indicator), Step 2 email verification holding state (envelope icon, check email message, resend link with 60s cooldown), Step 3 workspace setup (workspace name input, invite teammates optional). Auth — Password Recovery: Request screen (email field, "Send reset link" button, generic success message). Reset screen (new password + confirm fields, strength meter, "Set new password" button).</div>
+        </div>
+      </div>
+
+      <div class="ingredient-row">
+        <span class="ingredient-pill" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(212,130,10,0.22)">① Outcome: version timeline + auth suite</span>
+        <span class="ingredient-pill" style="background:var(--violet-bg);color:var(--violet);border-color:rgba(112,72,232,0.2)">② Brand: dark timeline + light auth dual-palette</span>
+        <span class="ingredient-pill" style="background:var(--teal-bg);color:var(--teal);border-color:rgba(12,133,153,0.22)">③ Interaction: scrub + diff toggle + form validation</span>
+        <span class="ingredient-pill" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(212,130,10,0.22)">④ Responsive: modal + bottom drawer + single-col auth</span>
+        <span class="ingredient-pill" style="background:var(--emerald-bg);color:var(--emerald);border-color:rgba(8,127,91,0.2)">⑤ Sections: timeline + diff + restore + login + register + recovery</span>
+      </div>
+
+      <div class="copy-row">
+        <div class="copy-stats">
+          <span class="copy-stat">Words: ~360</span>
+          <span class="copy-stat">Screens: 7 distinct screens</span>
+          <span class="copy-stat">Scope: Versions + Auth</span>
+          <span class="copy-stat">Run order: Fifth</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'p5-text')">
+          <span>Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ VARIANT PROMPTS SUPPLEMENT ══════════ -->
+<div class="page">
+  <div class="divider-row" style="margin-top:0">
+    <div class="divider-line"></div>
+    <div class="divider-label">Supplement · Variant + Follow-Up Prompts</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2 class="intro-h2" style="margin-bottom:8px">Iteration <em>Prompts.</em></h2>
+  <p class="intro-body" style="margin-bottom:32px">After running the five core prompts, use these short variant prompts as follow-up instructions within the same Figma Make session to refine, extend, or generate alternative states.</p>
+
+  <div class="qref-grid" style="grid-template-columns: repeat(2,1fr)">
+    <div class="qref-card">
+      <div class="qref-title">Light Mode Variant</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono);background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:4px">"Generate a light-mode variant of the ConvoCrystal dashboard using a warm off-white base (#F7F6F3), dark ink text (#1A1916), and the same indigo (#6366F1) accent. All panel borders become visible at higher contrast. The typing indicator and streaming cursor remain indigo. Maintain the same component structure and layout — only the color palette changes."</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Empty State Screens</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono);background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:4px">"Create empty state screens for ConvoCrystal's three main panels: (1) Empty transcript library with illustrated drop zone and sample file CTA, (2) Empty chat session with 5 suggested prompt chips and a welcome message from the AI, (3) Empty document editor with a ghost placeholder for each of the 5 expected sections. Apply the same dark technical aesthetic with subtle illustrated icons in indigo."</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Mobile Tab Bar + Bottom Nav</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono);background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:4px">"Design the mobile navigation system for ConvoCrystal: a 4-tab bottom bar (Library, Chat, Editor, Settings) with 24px icons and 10px monospaced labels. Active tab: filled indigo circle behind icon. Add a floating action button (FAB) in indigo for the primary upload action, positioned above the tab bar at the right edge. Include the transition animation spec for panel switches."</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Confidence Score Dashboard</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono);background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:4px">"Create a standalone Confidence Score Dashboard panel for ConvoCrystal showing RAGAS metrics: a large circular gauge (0–100) for overall confidence with gradient stroke (rose → amber → emerald), three sub-metric bars (Faithfulness, Answer Relevance, Context Precision), a per-section confidence breakdown table, and a trend sparkline showing confidence improvement over 10 sessions."</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Notification + Toast System</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono);background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:4px">"Design a toast notification system for ConvoCrystal appearing in the top-right corner. Four variants: success (emerald left border + checkmark), warning (amber), error (rose), info (indigo). Each toast: 320px wide, dark surface (#1A1D2E), 8px radius, icon circle + title + body text + optional CTA link + close X. Slide-in animation from right. Stack up to 3 toasts with 8px gap."</div>
+    </div>
+    <div class="qref-card">
+      <div class="qref-title">Onboarding Walkthrough Overlay</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--mono);background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:4px">"Create a 4-step product tour overlay for ConvoCrystal new users, showing spotlight highlights on different UI sections with a popover tooltip (title, description, step counter, Next/Skip buttons). Dark overlay at 60% opacity with spotlight cutout (circular radial gradient clearing) that moves between panels. Step 1: Upload zone. Step 2: Chat input. Step 3: AI refinement button. Step 4: Version history."</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── READING PROGRESS ── */
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+});
+
+/* ── COPY BUTTON ── */
+const promptTexts = {
+  'p1-text': `Create a production-ready SaaS web application dashboard for ConvoCrystal, an AI-powered meeting transcript analysis platform. The final output is a fully realized three-panel desktop interface showing a populated, active state: the left sidebar contains a navigation hierarchy and file library, the center panel shows an active LLM chat session with streaming responses, and the right panel shows a live rich-text document being edited. This is the master application shell — every design decision made here cascades to all sub-components.
+
+Apply a dark, technical-minimal aesthetic throughout. Base background: near-black deep navy (#0B0C10). Panel surfaces: slightly lighter (#1A1D2E). Primary accent: electric indigo-blue (#6366F1) used sparingly on interactive elements, active states, and focus rings only. Secondary accent: ice teal (#06B6D4) on streaming indicators and live states. All borders are 1px at low opacity (#2A2D42). Typography: Cabinet Grotesk ExtraBold for headings, DM Sans for body and UI labels, JetBrains Mono for timestamps, token counts, and code-adjacent metadata. Text hierarchy: primary (#E8EAF6), secondary (#9BA3C8), tertiary/muted (#5C6490). The overall palette reads as a precision instrument — deep, focused, zero decoration noise. No gradients on backgrounds. Subtle 1px grid lines may be used as structural dividers. The only glow effect allowed is a soft radial behind the primary CTA button and active sidebar items (3px radius, 15% opacity indigo).
+
+Sidebar items: on hover, show a left-side 2px indigo border reveal with a background tint transition (160ms ease-out). Active state: filled indigo background at 15% opacity, white text, left border solid. Collapsed sidebar: icons only at 56px width with tooltip on hover. Top navigation bar: 48px fixed height, brand wordmark left-aligned, user avatar + workspace switcher right-aligned. Panel resize handles: show on hover at panel boundaries, draggable with 200ms spring animation. The entire layout must feel engineered — transitions are never decorative, always purposeful and sub-200ms.
+
+Desktop (1280px+): Three-panel layout. Left sidebar 240px fixed. Center and right panels share remaining space at approximately 1:1.4 ratio, both resizable. Tablet (768–1023px): Two panels — sidebar collapses to icon rail, center expands. Right editor panel slides in as overlay drawer (360px) triggered by document icon. Mobile (<768px): Single panel with bottom tab bar (4 tabs: Library, Chat, Editor, Settings). Panel switching is a horizontal slide animation (320ms cubic-bezier decelerate). No panel should be visible simultaneously below 1024px.
+
+Left Sidebar: ConvoCrystal brand mark at top, collapsible nav sections (Library, Workspaces, Recent, Settings), transcript file list with confidence score badges, user avatar + plan indicator at bottom. Center Panel: Topbar with transcript context label and session controls, message thread with both user and AI bubble variants, processing stage indicator strip above the latest AI message (Extracting / Analyzing / Generating steps), input composer at bottom with send button and interrupt button. Right Panel: Document title field, formatting toolbar (bold, italic, headings, lists, AI Refine button highlighted in indigo), rich text editing area with section highlights, export dropdown (PDF, DOCX, Notion, Markdown), version commit button in toolbar. Show the interface in a populated, mid-session state — not empty, not loading.`,
+
+  'p2-text': `Create a multi-step file upload modal and embedded upload flow panel for ConvoCrystal, an AI transcript analysis SaaS. The output is a complete UI showing all five upload states as separate screens or artboards: (1) Idle drop zone, (2) File selected with validation feedback, (3) Active upload with live progress, (4) Backend processing with stage tracker, (5) Upload complete with first-analysis preview. This component appears both as a full-page onboarding flow for new users and as an inline panel within the existing three-panel dashboard layout.
+
+Maintain the ConvoCrystal dark technical aesthetic: deep navy surfaces (#0B0C10 base, #1A1D2E panels), electric indigo (#6366F1) as the primary active accent, ice teal (#06B6D4) on the processing stage indicator's active step, DM Sans for all copy, JetBrains Mono for file size, byte counts, percentage values, SHA hashes, and format badges (VTT, SRT, TXT, DOCX, JSON). The drop zone should feel like a clean terminal input area — not playful or rounded. Use a dashed 1px border (2px dash, 4px gap pattern) that becomes solid indigo on drag-over. Format detection chips (the file type labels) are small monospaced pill badges in ice teal on hover.
+
+Idle state: Dashed border animates with a slow rotating dash-offset (8s loop, subtle). On drag-over: border becomes solid indigo, background tints to 4% indigo, drop zone icon scales 1.08x with spring ease. File selected: Card slides in from below (200ms decelerate) showing filename, format badge, and file size. Validation phases animate sequentially — each check marks done with a checkmark before the next begins. Upload progress: SVG ring progress indicator with smooth stroke-dashoffset animation, percentage in JetBrains Mono at center. Processing stages: Vertical timeline, active step pulses with a 1.5s ease-in-out opacity animation. Completed stages show a filled checkmark in emerald green (#10B981).
+
+Desktop: Upload component appears as a centered modal overlay (640px max-width) or as a right-drawer panel within the sidebar. The five state screens can be presented as a horizontal scroll carousel on desktop for design reference. Tablet: Modal adapts to 90% viewport width, stage tracker switches from horizontal to vertical layout below 640px. Mobile: Full-screen overlay with bottom sheet for file metadata. The drop zone becomes a tap-to-browse button only (no drag on mobile — the drag zone is hidden entirely). Progress ring shrinks to 64px diameter. Stage tracker text truncates to single-word labels.
+
+State 1 — Drop Zone: Large centered dashed container with cloud-upload icon, headline ("Drop your transcript here"), accepted format chips, "or browse files" secondary link, and "Try a sample transcript" ghost CTA. State 2 — Validation: File preview card (icon, name, size, detected format badge), three-phase validation ticker (Format Check ✓, Size Check ✓, Content Scan…), cancel button. State 3 — Upload Progress: Circular progress ring with byte counter and estimated time, file name header, cancel/pause button row, progress percentage. State 4 — Processing Stages: Vertical 5-step timeline (Queued → Parsing → Extracting → Analyzing → Scoring) with active step highlighted in indigo, elapsed time counter, animated connecting lines. State 5 — Complete: Success checkmark animation, transcript title + duration + speaker count metadata, "View Analysis" primary CTA in indigo, "Upload Another" ghost CTA. Error state: Red-bordered card with error type, explanation, and retry or contact-support options.`,
+
+  'p3-text': `Create the complete LLM chat panel for ConvoCrystal, showing a realistic mid-conversation state with three to five message pairs visible, one AI message currently streaming (partially generated text with a blinking cursor), and a processing stage indicator bar actively showing the "Generating" step. The panel must convey the feeling of a live, intelligent system mid-thought — not a static chat mockup. Include the full message thread, an active input composer, a chip row of suggested prompts, and a confidence score indicator attached to the most recent completed AI response. This is the center panel of the three-panel layout.
+
+Chat interface inherits ConvoCrystal's dark technical palette. User message bubbles: right-aligned, indigo (#6366F1) filled background, white DM Sans text, 12px border radius, maximum 72% panel width. AI message bubbles: left-aligned, panel surface (#1A1D2E) background, 1px indigo border on active/streaming messages (transitions off when complete), text in #E8EAF6. Streaming AI message has a 2px left border in ice teal (#06B6D4) that disappears on completion. The blinking cursor is a 2px × 14px indigo rectangle, 1s blink cycle. Stage indicator bar: compact 28px tall strip above the streaming message, showing icons and labels for each orchestration step (Extracting context, Analyzing semantics, Generating response) with the active step in indigo and completed steps in emerald. Confidence score badge: small pill below completed messages showing the RAGAS composite score (0–100%), color-coded: ≥85% emerald, 65–84% amber, <65% rose.
+
+Streaming animation: New tokens appear with a micro-fade from opacity 0.4 to 1 over 60ms with a 1px upward translate — giving the feeling of words materializing rather than appearing. The text container grows smoothly as content accumulates (no jumpy height shifts). Auto-scroll: the message list follows the bottom of streaming content smoothly; a "↑ Scroll to read" chip appears if the user manually scrolls up during streaming. Hover on completed AI messages: reveals three action icons (copy, push to editor, cite) in the message's top-right corner, fading in at 150ms. Input composer: Expands vertically from 1 line to 4 lines max as content grows. Send button is indigo, switches to an animated "stop" square during active streaming. Suggested prompt chips: horizontal scrollable rail, hover state shifts border to indigo and text brightens.
+
+Desktop: Chat panel is the center column, fixed width bounded by sidebar and editor panel. No horizontal scroll. Stage indicator collapses to icon-only with tooltip labels below 960px panel width. Tablet: Chat panel expands to fill most of the viewport when editor is hidden. Suggested prompts collapse to a "Suggestions ▾" expandable button. Mobile: Full-screen chat view, input composer fixed to bottom of viewport, message list scrolls above it. Stage indicator is a single-line compact bar with abbreviated stage name. Bottom safe area padding for devices with home bar.
+
+Chat Header: Transcript context label (filename + duration), connection status dot (green = connected), session controls (new session, clear, export chat). Message Thread: Three completed exchange pairs showing realistic questions and structured AI responses. One streaming message in progress — show approximately 40% of a response generated with cursor active. Stage Indicator Bar: Compact three-step horizontal strip (Extracting ✓ / Analyzing ✓ / Generating →) directly above the streaming bubble. Confidence Panel: Below a completed AI message, a row showing: overall score pill (e.g. 91%), and three sub-scores (Faithfulness 94%, Relevance 88%, Precision 92%) each with a small bar indicator. Citation Links: Numbered reference chips below AI message text linking to transcript segments (e.g. [1] Speaker A · 14:32). Suggested Prompts Rail: Horizontal scrollable chip row with 4–5 context-aware questions. Input Composer: Multi-line textarea with send and interrupt buttons, character/token counter in mono, context-pin toggle button.`,
+
+  'p4-text': `Create the live document editor panel for ConvoCrystal, shown in an active mid-editing state. The document contains four to six structured sections generated from a meeting transcript (Summary, Key Decisions, Action Items, Open Questions, Risks Flagged). One section of text is currently selected and the AI Refinement popover is open above it, showing refinement action options. A second section shows an inline streaming state — AI-generated replacement text materializing character-by-character with a blinking cursor. A third section shows the accept/reject preview banner. The editor is the right panel of the three-panel dashboard layout and shares the same dark design system.
+
+Editor background: same surface (#1A1D2E) as other panels. Document content area has a subtle inset inner shadow (1px, 10% opacity) to distinguish it from the panel chrome. Toolbar: 48px height strip, icon buttons at 32×32px with 6px radius. Active toolbar button: filled indigo background, white icon. The AI Refine button in the toolbar is always highlighted with a 1px indigo border and indigo icon — it is the primary editor CTA. Selected text: background highlight in indigo at 18% opacity. Section with inline streaming: left border 2px indigo, background at 5% indigo opacity, original text dimmed to 35% opacity while replacement streams in. AI-generated text mark: subtle underline in indigo at 30% opacity to indicate provenance. Section labels (Summary, Decisions) in JetBrains Mono uppercase 10px, letter-spacing 0.15em, color: muted (#5C6490).
+
+Text selection: The refinement popover appears 8px above the selection midpoint, fading in at 120ms with a slight upward translate. Popover contains six action buttons: Refine, Expand, Shorten, Formalize, Simplify, Rephrase — each 28px tall with hover fill in indigo at 10%. Inline streaming: The selected text fades to 35% opacity simultaneously as the replacement text streams in character-by-character to its right in a separate text run. Streaming cursor: same 2px rectangle blink as in chat. Accept/Reject: A compact two-button banner (emerald Accept, rose Reject) pins to the bottom edge of the streaming section. On accept, the dimmed original text cross-dissolves out and replacement snaps to full opacity at 200ms. On reject, original text snaps back to full opacity, replacement fades out. Commit button in toolbar triggers a modal with commit message input and branch selector.
+
+Desktop: Right panel, fixed position, minimum width 320px, resizable. Toolbar stays horizontal at all widths. Below 360px panel width, toolbar wraps into two rows. Tablet: Editor appears as a slide-in drawer from the right side (360px wide), triggered by a document icon in the center panel header. Drawer has its own close button and overlay backdrop. Refinement popover is repositioned to bottom of selection (not above) to avoid viewport clipping. Mobile: Editor is a full-screen tab accessed from the bottom tab bar. Toolbar scrolls horizontally. The refinement popover becomes a bottom sheet with the same six action options displayed as full-width buttons (44px each touch target).
+
+Editor Toolbar: Document title (editable inline), separator, format buttons (B, I, U, H1, H2, H3, UL, OL, Quote), separator, AI Refine button (highlighted), separator, Commit button, Export menu button. Editor Content Area: Five structured sections with section-type labels, realistic meeting intelligence content. Section highlight states: normal, selected (highlighted), streaming (active), and committed (with AI mark underline). Refinement Popover: Floating card with six action buttons and a close X. Inline Streaming Section: Show the before-state (dimmed original) and during-state (streaming replacement) simultaneously for design reference. Accept/Reject Banner: Two-button row pinned to streaming section bottom edge. Collaborator Presence Bar: Three avatar chips in the top-right of the editor showing live cursor positions (different colors per user). Export Dropdown: PDF, DOCX, Notion push, Markdown copy, Slack post — each with a platform icon.`,
+
+  'p5-text': `Create two distinct UI surface groups for ConvoCrystal: (A) The version control timeline panel, shown as a full-screen modal overlaying the dashboard — displaying a Git-style commit history graph with branches, a selected commit's diff comparison view (side-by-side), and a restore flow confirmation screen. (B) The complete authentication lifecycle as separate full-page screens: Login, Register (3-step), Email Verification holding screen, and Password Recovery (request + reset). Both groups share the ConvoCrystal design system but serve very different visual moods — the version timeline is dense and data-rich; the auth screens are spacious and focused.
+
+Version timeline: same dark panel surfaces as the main app. Commit nodes on the graph are 12px circles — filled indigo (#6366F1) for HEAD, filled surface (#2A2D42) for older commits, filled violet (#8B5CF6) for branch points. Branch lines are 1px SVG paths in matching colors. Diff view: removed lines have a subtle rose (#F43F5E) background tint at 10%; added lines have emerald (#10B981) at 10%. Changed characters within a line are highlighted at 20% opacity. Line numbers in JetBrains Mono 11px, muted color. Auth screens: invert the palette — use a light background (#F7F6F3 warm off-white) with the ConvoCrystal wordmark centered at top in dark ink. Input fields: white background, 1px border (#D0D0E0), 4px radius, indigo (#6366F1) focus ring (3px offset). Primary button: solid indigo fill, white DM Sans 600 text. OAuth buttons (Google, GitHub): white background, dark border, icon + label. The auth screens feel like the light-mode counterpart of the dark dashboard — same brand DNA, different energy.
+
+Version timeline scrubbing: hovering over a commit node highlights the connected branch lines and shows a tooltip card with commit metadata (SHA hash, author, message, timestamp, diff stats). Clicking a node selects it and slides the diff panel in from the right at 280ms ease-out. The restore button in the diff panel triggers a confirmation dialog with a warning about creating an automatic backup branch before proceeding. Diff view: a toggle button switches between "Split" and "Unified" view — the panel cross-fades between the two layouts at 200ms. Auth forms: Input validation shows inline beneath each field on blur (not on change). Submit button disables and shows a small spinner during submission. Rate-limited state shows a countdown timer beneath the submit button. OAuth flow: clicking an OAuth button fades the form out and shows a loading state while the redirect occurs.
+
+Version timeline modal: Full-screen overlay on all breakpoints. On desktop: two-column layout (commit list left, diff panel right). On tablet: commit list collapses to a slim timeline strip, diff takes most of the space. On mobile: commit list is a bottom drawer that expands up; diff view is single-column unified mode only (side-by-side is hidden on mobile). Auth screens: all auth pages are single-column centered on all breakpoints. Maximum content width 480px. On mobile, the ConvoCrystal wordmark is smaller and the form fills 90% viewport width. Keyboard-aware layout: form shifts up when virtual keyboard appears on iOS/Android.
+
+Version Timeline Modal: Header with document title + branch selector dropdown + Close button. Left column: Branch selector tabs, vertical commit list with SVG branch graph (show one main branch and one feature branch diverging and merging), each commit item showing: abbreviated SHA hash chip (JetBrains Mono), commit message, author avatar + name, relative timestamp, diff stats (+N -N). Right column: Diff header (comparing commit A to commit B), Toggle split/unified button, File path label, Side-by-side diff with line numbers and change highlighting, Restore button (indigo), "Restoring will auto-backup current state to a new branch" warning note. Restore Confirmation Dialog: Warning icon, message explaining the backup branch that will be created, input for commit message, Confirm (indigo) and Cancel buttons. Auth — Login Screen: Wordmark, H1 "Welcome back", email + password fields, "Forgot password?" link, Sign In button, divider "or continue with", Google + GitHub OAuth buttons, "Don't have an account? Register" link. Auth — Register Screen: Wordmark, 3-step stepper indicator, Step 1 fields (name, email, password with strength indicator), Step 2 email verification holding state (envelope icon, check email message, resend link with 60s cooldown), Step 3 workspace setup (workspace name input, invite teammates optional). Auth — Password Recovery: Request screen (email field, "Send reset link" button, generic success message). Reset screen (new password + confirm fields, strength meter, "Set new password" button).`
+};
+
+function copyPrompt(btn, key) {
+  const text = promptTexts[key];
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✓ Copied!</span>';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = orig;
+    }, 2000);
+  }).catch(() => {
+    // Fallback for environments without clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const orig = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✓ Copied!</span>';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = orig;
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
