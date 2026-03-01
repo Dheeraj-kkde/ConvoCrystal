@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useTheme } from "./ThemeContext";
 import { useUser } from "./UserContext";
+import { useAuth } from "../stores/authStore";
+import { useNavigate } from "react-router";
 import {
   User,
   Palette,
@@ -19,6 +21,7 @@ import {
   Keyboard,
   Info,
   BarChart3,
+  LogOut,
 } from "lucide-react";
 
 type SettingsSection =
@@ -101,6 +104,8 @@ function SelectDropdown({
 export function SettingsPage() {
   const { isDark, toggle, colors } = useTheme();
   const { isNewUser } = useUser();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<SettingsSection>("profile");
 
   // Settings state
@@ -531,6 +536,20 @@ export function SettingsPage() {
                   Export Archive
                 </button>
               </div>
+            </div>
+
+            {/* Sign out */}
+            <div className="flex items-center justify-between p-4 rounded-lg"
+              style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}>
+              <div>
+                <div className="text-[12px]" style={{ fontWeight: 500, color: colors.textPrimary }}>Sign Out</div>
+                <div className="text-[11px]" style={{ color: colors.textSecondary }}>Sign out of your account on this device</div>
+              </div>
+              <button onClick={() => { logout(); navigate("/login"); }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] transition-colors"
+                style={{ border: `1px solid ${cardBorder}`, color: colors.textSecondary, fontWeight: 500 }}>
+                <LogOut className="w-3.5 h-3.5" /> Sign Out
+              </button>
             </div>
 
             {/* Danger zone */}

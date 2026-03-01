@@ -419,7 +419,7 @@ export function NewUserTour({ isOpen, onClose }: NewUserTourProps) {
 
       {/* Modal */}
       <motion.div
-        className="relative w-[420px] max-w-[92vw] max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl"
+        className="relative w-[420px] max-w-[95vw] max-h-[85vh] rounded-2xl overflow-hidden overflow-y-auto shadow-2xl"
         style={{ backgroundColor: panelBg, border: `1px solid ${panelBorder}` }}
         initial={{ opacity: 0, scale: 0.92, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

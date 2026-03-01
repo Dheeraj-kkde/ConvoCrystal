@@ -2,103 +2,105 @@
 
 > **Your Meetings, Finally Understood.**
 
-ConvoCrystal is an AI-powered meeting intelligence SaaS that turns raw transcripts into structured insights, action items, and living documents — in under 60 seconds. Built for developers, PMs, and technical team leads who run a lot of meetings and need to extract, document, and share what matters fast.
+ConvoCrystal is an open-source, AI-powered meeting intelligence app that turns raw transcripts into structured insights, action items, and living documents — in under 60 seconds. Built for developers, PMs, and technical team leads who run a lot of meetings and need to extract, document, and share what matters fast.
 
 ---
 
 ## ✨ Features
 
-- **Transcript Upload & Processing** — Drag-and-drop upload supporting `.vtt`, `.srt`, `.txt`, and `.docx` formats with real-time chunked upload progress and stage indicators.
-- **AI-Powered Analysis** — Streaming analysis powered by Claude API: summaries, action items, decisions, open questions, and risk flags.
+- **Transcript Upload & Processing** — Drag-and-drop upload supporting `.vtt`, `.srt`, `.txt`, and `.docx` formats with real-time progress and processing stage indicators.
+- **AI-Powered Analysis** — Streaming analysis via Ollama (local LLMs): summaries, action items, decisions, open questions, and risk flags.
 - **LLM Chat Interface** — Ask follow-up questions about any transcript (e.g. "Extract only items assigned to me", "Draft a follow-up email").
-- **Live Document Editor** — ProseMirror-based collaborative editor to turn AI output into a shareable, version-controlled document.
-- **Version Control** — Branch and commit history for every document, so you can track how your notes evolved.
+- **Live Document Editor** — ProseMirror-based editor to turn AI output into a shareable, version-controlled document.
+- **Version Control** — Branch and commit history for every document so you can track how notes evolved.
 - **Semantic Search** — Global search across all transcripts and documents using pgvector cosine similarity.
 - **Cross-Meeting Analytics** — Quality scoring, confidence metrics, topic trends, and sentiment over time.
-- **Integrations** — Connects with Microsoft Teams, Zoom, and Google Meet.
 
 ---
 
 ## 🏗️ Tech Stack
 
+Everything here is free and open-source.
+
 ### Frontend
 
-| Tool                    | Purpose                                      |
-| ----------------------- | -------------------------------------------- |
-| Next.js 15 (App Router) | Framework — RSC + streaming, edge-ready, ISR |
-| TypeScript 5.5+         | Strict mode throughout                       |
-| Tailwind CSS 4          | Utility-first styling with CSS variables     |
-| shadcn/ui (Radix UI)    | Component primitives                         |
-| ProseMirror + Y.js      | Live collaborative document editor with CRDT |
-| Zustand                 | Client-side state management                 |
-| TanStack Query v5       | Server state, caching, and streaming         |
-| Framer Motion           | Animations and transitions                   |
-| D3.js + Recharts        | Charts and data visualizations               |
+| Tool                    | Purpose                                   |
+| ----------------------- | ----------------------------------------- |
+| Next.js 15 (App Router) | Framework — RSC + streaming               |
+| TypeScript              | Strict mode throughout                    |
+| Tailwind CSS            | Utility-first styling                     |
+| shadcn/ui (Radix UI)    | Accessible component primitives           |
+| ProseMirror + Y.js      | Live collaborative document editor (CRDT) |
+| Zustand                 | Client-side state management              |
+| TanStack Query v5       | Server state, caching, and streaming      |
+| Framer Motion           | Animations and transitions                |
+| Recharts                | Charts and data visualizations            |
 
-### Backend & API
+### Backend
 
-| Tool                     | Purpose                                        |
-| ------------------------ | ---------------------------------------------- |
-| Next.js API Routes       | REST endpoints and SSE handlers                |
-| Hono.js                  | Edge API for high-throughput routes            |
-| Supabase                 | Auth, Realtime, Row-Level Security             |
-| PostgreSQL 16 + pgvector | Primary database + semantic search embeddings  |
-| Prisma                   | Type-safe DB access with migrations            |
-| BullMQ + Redis           | Background job queue for transcript processing |
+| Tool                 | Purpose                                    |
+| -------------------- | ------------------------------------------ |
+| FastAPI              | REST API + WebSocket + SSE endpoints       |
+| PostgreSQL           | Primary database                           |
+| pgvector             | Semantic search via vector embeddings      |
+| SQLAlchemy + Alembic | ORM and database migrations                |
+| Redis                | Background job queue + caching             |
+| Celery               | Async task queue for transcript processing |
+| MinIO                | S3-compatible local file storage           |
 
 ### AI / ML
 
-| Tool                                         | Purpose                                 |
-| -------------------------------------------- | --------------------------------------- |
-| Anthropic Claude API (`claude-3-7-sonnet`)   | Primary LLM for analysis and chat       |
-| OpenAI Embeddings (`text-embedding-3-small`) | Embeddings for pgvector semantic search |
-| Vercel AI SDK                                | Unified streaming interface             |
-| LangChain (optional)                         | Complex multi-step reasoning chains     |
+| Tool                  | Purpose                                 |
+| --------------------- | --------------------------------------- |
+| Ollama                | Local LLM inference (no API key needed) |
+| LangChain             | LLM chaining, RAG pipelines             |
+| sentence-transformers | Local embeddings for pgvector           |
+| RAGAS                 | Evaluation framework for RAG quality    |
 
-### Infrastructure
+### Dev & Testing
 
-| Tool           | Purpose                                  |
-| -------------- | ---------------------------------------- |
-| Vercel         | Hosting, edge functions, preview deploys |
-| Supabase Cloud | Managed Postgres + Auth + Realtime       |
-| Cloudflare R2  | Transcript file storage (S3-compatible)  |
-| Cloudflare CDN | Static asset caching                     |
-| Upstash Redis  | Edge cache, rate limiting, session store |
-| Railway        | BullMQ worker hosting                    |
-| Stripe         | Billing and subscriptions                |
-| Resend         | Transactional email                      |
-| Sentry         | Error tracking + performance monitoring  |
-| PostHog        | Product analytics + session replay       |
-
-### Testing
-
-| Tool       | Purpose                        |
-| ---------- | ------------------------------ |
-| Vitest     | Unit and integration tests     |
-| Playwright | E2E tests + visual regression  |
-| MSW        | API mocking                    |
-| Storybook  | Component development and docs |
+| Tool                    | Purpose                                            |
+| ----------------------- | -------------------------------------------------- |
+| Docker + Docker Compose | Local environment (Postgres, Redis, MinIO, Ollama) |
+| pytest                  | Backend unit and integration tests                 |
+| Vitest                  | Frontend unit tests                                |
+| Playwright              | E2E tests                                          |
 
 ---
 
 ## 🗂️ Project Structure
 
 ```
-/
-├── app/                  # Next.js App Router pages
-│   ├── (marketing)/      # Public pages: /, /features, /pricing, /blog, /docs
-│   ├── (auth)/           # /signup, /login, /onboarding
-│   └── (app)/            # Authenticated workspace
-│       ├── transcripts/  # Upload, view, and edit transcripts
-│       ├── analysis/     # AI insights + chat interface
-│       ├── documents/    # Live editor + version history
-│       ├── insights/     # Cross-meeting analytics
-│       ├── search/       # Global semantic search
-│       └── settings/     # Profile, team, billing, API keys
-├── components/           # Shared UI components
-├── lib/                  # Utilities, API clients, helpers
-├── prisma/               # Database schema and migrations
-└── workers/              # BullMQ background processing workers
+convocrystal/
+├── frontend/                 # Next.js app
+│   ├── app/                  # App Router pages
+│   │   ├── (marketing)/      # Public pages: /, /features, /pricing
+│   │   ├── (auth)/           # /signup, /login, /onboarding
+│   │   └── (app)/            # Authenticated workspace
+│   │       ├── transcripts/  # Upload, view, and edit transcripts
+│   │       ├── analysis/     # AI insights + chat interface
+│   │       ├── documents/    # Live editor + version history
+│   │       ├── insights/     # Cross-meeting analytics
+│   │       └── settings/     # Profile, team, API keys
+│   └── components/           # Shared UI components
+│
+├── backend/                  # FastAPI app
+│   ├── api/                  # Route handlers
+│   │   ├── transcripts.py
+│   │   ├── analysis.py
+│   │   ├── documents.py
+│   │   └── auth.py
+│   ├── core/                 # Config, security, dependencies
+│   ├── models/               # SQLAlchemy models
+│   ├── schemas/              # Pydantic schemas
+│   ├── services/             # Business logic
+│   │   ├── ai/               # Ollama + LangChain pipeline
+│   │   ├── storage.py        # MinIO file handling
+│   │   └── search.py         # pgvector semantic search
+│   ├── workers/              # Celery tasks
+│   └── alembic/              # Database migrations
+│
+└── docker-compose.yml        # Local dev environment
 ```
 
 ---
@@ -107,13 +109,10 @@ ConvoCrystal is an AI-powered meeting intelligence SaaS that turns raw transcrip
 
 ### Prerequisites
 
-- Node.js 20+
-- pnpm (recommended) or npm
-- A [Supabase](https://supabase.com) project
-- An [Anthropic API key](https://console.anthropic.com)
-- An [OpenAI API key](https://platform.openai.com) (for embeddings)
-- Redis (local via Docker, or [Upstash](https://upstash.com))
-- Cloudflare R2 bucket (or any S3-compatible storage)
+- [Docker & Docker Compose](https://docs.docker.com/get-docker/)
+- [Node.js 20+](https://nodejs.org/) and pnpm (`npm i -g pnpm`)
+- [Python 3.11+](https://www.python.org/)
+- [Ollama](https://ollama.com/) installed locally
 
 ### 1. Clone the repo
 
@@ -122,70 +121,105 @@ git clone https://github.com/your-username/convocrystal.git
 cd convocrystal
 ```
 
-### 2. Install dependencies
+### 2. Pull an Ollama model
+
+Ollama runs LLMs locally — no API key required. Pull a model before starting:
 
 ```bash
-pnpm install
+# Recommended — good balance of speed and quality
+ollama pull llama3.1
+
+# Lighter option for lower-spec machines
+ollama pull mistral
 ```
 
-### 3. Set up environment variables
+### 3. Start infrastructure with Docker
 
-Copy the example env file and fill in your values:
+This spins up PostgreSQL, Redis, and MinIO:
 
 ```bash
-cp .env.example .env.local
+docker compose up -d
 ```
+
+### 4. Set up the backend
+
+```bash
+cd backend
+
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy and configure environment variables
+cp .env.example .env
+```
+
+Edit `backend/.env`:
 
 ```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# AI
-ANTHROPIC_API_KEY=your_anthropic_key
-OPENAI_API_KEY=your_openai_key
+# Database
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/convocrystal
 
 # Redis
 REDIS_URL=redis://localhost:6379
-UPSTASH_REDIS_REST_URL=your_upstash_url       # if using Upstash
-UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 
-# Storage
-CLOUDFLARE_R2_ACCOUNT_ID=your_r2_account_id
-CLOUDFLARE_R2_ACCESS_KEY_ID=your_r2_key
-CLOUDFLARE_R2_SECRET_ACCESS_KEY=your_r2_secret
-CLOUDFLARE_R2_BUCKET_NAME=transcripts
+# MinIO (local file storage)
+MINIO_ENDPOINT=localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET_NAME=transcripts
 
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_key
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
+# Ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.1
 
-# Resend
-RESEND_API_KEY=your_resend_key
-
-# App
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_secret
+# Auth
+SECRET_KEY=your-secret-key-change-this
+ACCESS_TOKEN_EXPIRE_MINUTES=10080
 ```
-
-### 4. Set up the database
 
 ```bash
-# Run Prisma migrations
-pnpm prisma migrate dev
+# Run database migrations
+alembic upgrade head
 
-# Seed the database (optional)
-pnpm prisma db seed
+# Start the FastAPI server
+uvicorn app.main:app --reload --port 8000
 ```
 
-Make sure the `pgvector` extension is enabled in your Supabase project:
+The API will be running at [http://localhost:8000](http://localhost:8000)  
+Interactive API docs at [http://localhost:8000/docs](http://localhost:8000/docs)
 
-```sql
-create extension if not exists vector;
+### 5. Start the Celery worker (separate terminal)
+
+The transcript processing pipeline runs as a background Celery task:
+
+```bash
+cd backend
+source venv/bin/activate
+celery -A app.workers.celery worker --loglevel=info
 ```
 
-### 5. Start the development server
+### 6. Set up the frontend
+
+```bash
+cd frontend
+
+# Install dependencies
+pnpm install
+
+# Copy and configure environment variables
+cp .env.example .env.local
+```
+
+Edit `frontend/.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_WS_URL=ws://localhost:8000
+```
 
 ```bash
 pnpm dev
@@ -193,27 +227,34 @@ pnpm dev
 
 The app will be running at [http://localhost:3000](http://localhost:3000).
 
-### 6. Start the background worker (separate terminal)
+---
 
-The transcript processing pipeline runs in a separate BullMQ worker:
+## 🐳 Running Everything with Docker Compose
+
+To run the full stack (frontend, backend, workers, and all services) in one command:
 
 ```bash
-pnpm worker:dev
+docker compose --profile full up
 ```
+
+> **Note:** Make sure Ollama is running on your host machine before starting. The backend connects to it at `host.docker.internal:11434`.
 
 ---
 
 ## 🧪 Running Tests
 
 ```bash
-# Unit and integration tests
+# Backend tests
+cd backend
+pytest
+
+# Frontend unit tests
+cd frontend
 pnpm test
 
-# E2E tests (requires dev server running)
+# E2E tests (requires full stack running)
+cd frontend
 pnpm test:e2e
-
-# Component development
-pnpm storybook
 ```
 
 ---
@@ -222,44 +263,39 @@ pnpm storybook
 
 ConvoCrystal is built around five core modules:
 
-1. **Upload Flow** — A 5-phase state machine (`IDLE → SELECTING → VALIDATING → UPLOADING → PROCESSING`) with chunked uploads, magic-byte format detection, and real-time WebSocket stage updates.
+1. **Upload Flow** — A 5-phase state machine (`IDLE → SELECTING → VALIDATING → UPLOADING → PROCESSING`) with chunked uploads, magic-byte format detection, and real-time WebSocket stage updates from the Celery worker.
 
-2. **WebSocket Chat** — Streaming LLM chat interface scoped to a specific transcript, with message history and context management.
+2. **WebSocket Chat** — Streaming LLM chat (FastAPI WebSocket + Ollama streaming) scoped to a specific transcript, with full message history.
 
-3. **Live Editor** — Collaborative ProseMirror document editor with Y.js CRDT, supporting real-time multi-user editing.
+3. **Live Editor** — ProseMirror document editor with Y.js CRDT for real-time collaborative editing.
 
-4. **Version Control** — Git-inspired branching and commit history for documents, so teams can track changes over time.
+4. **Version Control** — Git-inspired branching and commit history for documents stored in PostgreSQL.
 
-5. **Auth Lifecycle** — Supabase Auth with GitHub OAuth + magic link, protected routes, and workspace-level permissions.
+5. **Auth** — JWT-based authentication with optional OAuth (GitHub/Google) via FastAPI and python-jose.
 
 ---
 
 ## ⚡ Performance Targets
 
-| Metric                                | Target                             |
-| ------------------------------------- | ---------------------------------- |
-| LCP                                   | < 1.2s (desktop) / < 1.8s (mobile) |
-| INP                                   | < 80ms P75                         |
-| TTFB                                  | < 120ms                            |
-| LLM First Token                       | < 800ms                            |
-| Transcript Processing (60min meeting) | P50 < 45s, P95 < 90s               |
-| API Response (CRUD)                   | P50 < 35ms                         |
-| Initial JS Bundle                     | < 180KB gzipped                    |
+| Metric                                 | Target     |
+| -------------------------------------- | ---------- |
+| LLM First Token                        | < 800ms    |
+| Transcript Processing (60-min meeting) | P50 < 45s  |
+| API Response (CRUD)                    | P50 < 50ms |
+| Semantic Search                        | < 200ms    |
+
+> Performance varies based on your machine specs and which Ollama model you're running. A GPU will significantly improve LLM response times.
 
 ---
 
 ## 🎨 Design System
 
-ConvoCrystal uses a custom design system built on an 8px grid with the following token system:
+ConvoCrystal uses a custom design system built on an 8px grid:
 
-- **Primary Color:** Crystal Blue `#5C6CF5`
+- **Primary:** Crystal Blue `#5C6CF5`
 - **Secondary:** Ice Teal `#00C9D6`
 - **Typography:** Syne (display) + Lora (body) + DM Mono (code/metadata)
-- **Type Scale:** 9-step Major Third scale
-- **Radii:** Panels `12px`, Cards `16px`, Pills `100px`
 - **Supports:** Light and dark mode, WCAG AA compliant
-
-Full design system documentation is available in [`convocrystal-design-system.html`](./docs/convocrystal-design-system.html).
 
 ---
 
@@ -268,8 +304,8 @@ Full design system documentation is available in [`convocrystal-design-system.ht
 - [ ] Slack integration for automatic action item posting
 - [ ] Zoom / Teams native bot for in-meeting transcription
 - [ ] Mobile app (React Native)
-- [ ] Custom AI model fine-tuning per workspace
-- [ ] Public API + webhook support
+- [ ] Support for more Ollama models + model switching in UI
+- [ ] Public REST API
 
 ---
 

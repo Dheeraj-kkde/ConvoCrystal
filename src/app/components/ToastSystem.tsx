@@ -45,7 +45,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
 
   return (
     <div
-      className={`w-80 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 ${
+      className={`w-[min(320px,calc(100vw-1.5rem))] rounded-lg shadow-2xl overflow-hidden transition-all duration-300 ${
         exiting ? "opacity-0 translate-x-full" : "opacity-100 translate-x-0"
       }`}
       style={{
@@ -100,7 +100,7 @@ export function ToastContainer() {
   }, [removeToast]);
 
   return (
-    <div className="fixed top-14 right-4 z-[9999] flex flex-col gap-2 pointer-events-auto">
+    <div className="fixed top-14 right-2 sm:right-4 z-[9999] flex flex-col gap-2 pointer-events-auto max-w-[calc(100vw-1rem)]">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={handleRemove} />
       ))}

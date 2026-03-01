@@ -20,40 +20,15 @@ import {
 } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import { useUser } from "./UserContext";
+import { useDocumentsQuery, useDeleteDocumentMutation, type DocumentItem } from "../lib/queries";
+import { useToast } from "./ToastSystem";
 
 type DocStatus = "processed" | "processing" | "failed";
 type DocDirection = "uploaded" | "exported";
 
-interface Document {
-  id: string;
-  name: string;
-  type: "transcript" | "analysis" | "summary" | "audio" | "video" | "pdf" | "docx";
-  direction: DocDirection;
-  status: DocStatus;
-  format: string;
-  size: string;
-  date: string;
-  confidence?: number;
-  speakers?: number;
-  versions: number;
-}
+// DocumentItem type imported from queries.ts — data comes from useDocumentsQuery()
 
-const documents: Document[] = [
-  { id: "1", name: "Q4 Strategy Review", type: "transcript", direction: "uploaded", status: "processed", format: "MP4", size: "248 MB", date: "2h ago", confidence: 94, speakers: 6, versions: 4 },
-  { id: "2", name: "Q4 Strategy Review — Analysis", type: "analysis", direction: "exported", status: "processed", format: "PDF", size: "1.2 MB", date: "12 min ago", versions: 2 },
-  { id: "3", name: "Product Sync — Sprint 14", type: "transcript", direction: "uploaded", status: "processed", format: "M4A", size: "86 MB", date: "5h ago", confidence: 88, speakers: 4, versions: 3 },
-  { id: "4", name: "Product Sync — Summary", type: "summary", direction: "exported", status: "processed", format: "DOCX", size: "340 KB", date: "4h ago", versions: 1 },
-  { id: "5", name: "Customer Discovery — Acme", type: "transcript", direction: "uploaded", status: "processed", format: "WAV", size: "420 MB", date: "1d ago", confidence: 91, speakers: 3, versions: 2 },
-  { id: "6", name: "Board Meeting — Feb", type: "transcript", direction: "uploaded", status: "processed", format: "MP4", size: "1.8 GB", date: "2d ago", confidence: 76, speakers: 8, versions: 5 },
-  { id: "7", name: "Board Meeting — Action Items", type: "analysis", direction: "exported", status: "processed", format: "PDF", size: "890 KB", date: "2d ago", versions: 1 },
-  { id: "8", name: "1:1 — Engineering Lead", type: "transcript", direction: "uploaded", status: "processed", format: "M4A", size: "42 MB", date: "3d ago", confidence: 97, speakers: 2, versions: 1 },
-  { id: "9", name: "Design Critique — v2.3", type: "transcript", direction: "uploaded", status: "processing", format: "MP4", size: "620 MB", date: "4h ago", speakers: 5, versions: 0 },
-  { id: "10", name: "Weekly Standup — W9", type: "audio", direction: "uploaded", status: "failed", format: "OGG", size: "28 MB", date: "5d ago", versions: 0 },
-  { id: "11", name: "Acme Discovery — Notes", type: "summary", direction: "exported", status: "processed", format: "MD", size: "24 KB", date: "1d ago", versions: 1 },
-  { id: "12", name: "Sprint 14 — Full Transcript", type: "transcript", direction: "exported", status: "processed", format: "TXT", size: "156 KB", date: "5h ago", versions: 1 },
-];
-
-function getFileIcon(type: Document["type"]) {
+function getFileIcon(type: DocumentItem["type"]) {
   switch (type) {
     case "audio": return FileAudio;
     case "video": return FileVideo;
@@ -99,11 +74,16 @@ function DirectionBadge({ direction }: { direction: DocDirection }) {
 export function DocumentsPage() {
   const { isDark, colors } = useTheme();
   const { isNewUser } = useUser();
+  const { addToast } = useToast();
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [filterDir, setFilterDir] = useState<"all" | "uploaded" | "exported">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState<"date" | "name" | "size">("date");
   const [showContextMenu, setShowContextMenu] = useState<string | null>(null);
+
+  // React Query — cached document list
+  const { data: documents = [], isLoading, isError, refetch } = useDocumentsQuery();
+  const deleteMutation = useDeleteDocumentMutation();
 
   const cardBg = isDark ? "#111320" : "#FFFFFF";
   const cardBorder = colors.border;
@@ -116,6 +96,14 @@ export function DocumentsPage() {
   const uploadCount = isNewUser ? 0 : documents.filter((d) => d.direction === "uploaded").length;
   const exportCount = isNewUser ? 0 : documents.filter((d) => d.direction === "exported").length;
   const totalCount = isNewUser ? 0 : documents.length;
+
+  const handleDelete = (docId: string) => {
+    setShowContextMenu(null);
+    deleteMutation.mutate(docId, {
+      onSuccess: () => addToast({ variant: "success", title: "Document deleted" }),
+      onError: () => addToast({ variant: "error", title: "Delete failed", message: "Please try again." }),
+    });
+  };
 
   return (
     <div
@@ -352,7 +340,9 @@ export function DocumentsPage() {
                                 <Download className="w-3.5 h-3.5" /> Download
                               </button>
                               <button className="w-full text-left px-3 py-1.5 text-[11px] flex items-center gap-2 hover:bg-[#F43F5E]/10 transition-colors"
-                                style={{ color: "#F43F5E" }}>
+                                style={{ color: "#F43F5E" }}
+                                onClick={() => handleDelete(doc.id)}
+                              >
                                 <Trash2 className="w-3.5 h-3.5" /> Delete
                               </button>
                             </div>
@@ -370,7 +360,7 @@ export function DocumentsPage() {
                     return (
                       <div
                         key={doc.id}
-                        className="px-4 py-3 transition-colors"
+                        className="px-4 py-3 transition-colors relative"
                         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = hoverBg)}
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                       >
@@ -414,16 +404,39 @@ export function DocumentsPage() {
                               </span>
                             </div>
                           </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setShowContextMenu(showContextMenu === doc.id ? null : doc.id);
-                            }}
-                            className="p-1 rounded transition-colors hover:bg-[#5C6CF5]/10 shrink-0"
-                            style={{ color: colors.textMuted }}
-                          >
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
+                          <div className="relative shrink-0">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowContextMenu(showContextMenu === doc.id ? null : doc.id);
+                              }}
+                              className="p-1 rounded transition-colors hover:bg-[#5C6CF5]/10"
+                              style={{ color: colors.textMuted }}
+                            >
+                              <MoreHorizontal className="w-4 h-4" />
+                            </button>
+                            {showContextMenu === doc.id && (
+                              <div
+                                className="absolute right-0 top-full mt-1 w-36 rounded-lg py-1 shadow-xl z-50"
+                                style={{ backgroundColor: isDark ? "#1A1D2E" : "#FFFFFF", border: `1px solid ${cardBorder}` }}
+                              >
+                                <button className="w-full text-left px-3 py-1.5 text-[11px] flex items-center gap-2 transition-colors"
+                                  style={{ color: colors.textSecondary }}>
+                                  <Eye className="w-3.5 h-3.5" /> View
+                                </button>
+                                <button className="w-full text-left px-3 py-1.5 text-[11px] flex items-center gap-2 transition-colors"
+                                  style={{ color: colors.textSecondary }}>
+                                  <Download className="w-3.5 h-3.5" /> Download
+                                </button>
+                                <button className="w-full text-left px-3 py-1.5 text-[11px] flex items-center gap-2 hover:bg-[#F43F5E]/10 transition-colors"
+                                  style={{ color: "#F43F5E" }}
+                                  onClick={() => handleDelete(doc.id)}
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" /> Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     );

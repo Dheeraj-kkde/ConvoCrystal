@@ -8,6 +8,7 @@ import { SettingsPage } from "./components/SettingsPage";
 import { LoginPage } from "./components/auth/LoginPage";
 import { RegisterPage } from "./components/auth/RegisterPage";
 import { ForgotPasswordPage } from "./components/auth/ForgotPasswordPage";
+import { NotFoundPage } from "./components/NotFoundPage";
 
 export const router = createBrowserRouter([
   {
@@ -30,4 +31,6 @@ export const router = createBrowserRouter([
   { path: "/login", Component: LoginPage },
   { path: "/register", Component: RegisterPage },
   { path: "/forgot-password", Component: ForgotPasswordPage },
+  // Catch-all 404
+  { path: "*", Component: NotFoundPage },
 ]);

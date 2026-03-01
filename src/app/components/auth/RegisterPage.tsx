@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Eye, EyeOff, Loader2, Mail, Check, Users } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useTheme } from "../../stores/themeStore";
+import { useAuth } from "../../stores/authStore";
 
 const strengthLevels = [
   { label: "Weak", color: "#F43F5E", width: 25 },
@@ -22,6 +23,7 @@ function getPasswordStrength(pw: string) {
 export function RegisterPage() {
   const navigate = useNavigate();
   const { colors, isDark } = useTheme();
+  const { status, login } = useAuth();
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,6 +44,11 @@ export function RegisterPage() {
     }
   }, [resendCooldown]);
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (status === "authenticated") navigate("/", { replace: true });
+  }, [status, navigate]);
+
   const handleStep1Submit = () => {
     const newErrors: Record<string, string> = {};
     if (!name.trim()) newErrors.name = "Name is required";
@@ -52,7 +59,22 @@ export function RegisterPage() {
     if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
     setErrors({});
     setLoading(true);
+    // Simulated — in production: POST /api/v1/auth/register
     setTimeout(() => { setLoading(false); setStep(2); setResendCooldown(60); }, 1000);
+  };
+
+  // Step 3 completion: login and navigate
+  const handleComplete = async () => {
+    setLoading(true);
+    try {
+      await login(email, password);
+      navigate("/", { replace: true });
+    } catch {
+      // If login fails after registration, just navigate to login
+      navigate("/login");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const bgPage = isDark ? colors.bgBase : "#F7F6F3";
@@ -222,12 +244,14 @@ export function RegisterPage() {
               />
             </div>
 
-            <button onClick={() => navigate("/")}
-              className="w-full py-2 sm:py-2.5 rounded-md text-white text-[13px] transition-all hover:opacity-90" style={{ fontWeight: 600, backgroundColor: colors.crystal }}>
+            <button onClick={handleComplete}
+              disabled={loading}
+              className="w-full py-2 sm:py-2.5 rounded-md text-white text-[13px] transition-all hover:opacity-90 flex items-center justify-center gap-2 disabled:opacity-70" style={{ fontWeight: 600, backgroundColor: colors.crystal }}>
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               Launch ConvoCrystal
             </button>
 
-            <button onClick={() => navigate("/")} className="w-full text-center mt-3 text-[11px] sm:text-[12px] transition-colors" style={{ color: textMuted }}>
+            <button onClick={() => handleComplete()} className="w-full text-center mt-3 text-[11px] sm:text-[12px] transition-colors" style={{ color: textMuted }}>
               Skip for now
             </button>
           </>

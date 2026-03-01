@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Loader2, ArrowLeft, Eye, EyeOff, Check } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useTheme } from "../../stores/themeStore";
+import { useAuth } from "../../stores/authStore";
 
 const strengthLevels = [
   { label: "Weak", color: "#F43F5E", width: 25 },
@@ -22,6 +23,7 @@ function getPasswordStrength(pw: string) {
 export function ForgotPasswordPage() {
   const navigate = useNavigate();
   const { colors, isDark } = useTheme();
+  const { login } = useAuth();
   const [view, setView] = useState<"request" | "sent" | "reset">("request");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,14 +53,24 @@ export function ForgotPasswordPage() {
     setTimeout(() => { setLoading(false); setView("sent"); }, 1200);
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     const newErrors: Record<string, string> = {};
     if (!password || password.length < 8) newErrors.password = "Must be at least 8 characters";
     if (password !== confirmPassword) newErrors.confirm = "Passwords do not match";
     if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
     setErrors({});
     setLoading(true);
-    setTimeout(() => { setLoading(false); navigate("/login"); }, 1200);
+    try {
+      // In production: POST /api/v1/auth/reset-password with token + new password
+      // Then auto-login with new credentials
+      await login(email, password);
+      navigate("/", { replace: true });
+    } catch {
+      // If auto-login fails, redirect to login page
+      navigate("/login");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

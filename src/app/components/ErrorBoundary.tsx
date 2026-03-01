@@ -63,10 +63,10 @@ function DefaultFallback({
       >
         <span className="text-[20px]">⚠</span>
       </div>
-      <h2 className="text-[15px] mb-1" style={{ fontWeight: 600, color: "#E8EAF6" }}>
+      <h2 className="text-[15px] mb-1" style={{ fontWeight: 600, color: "var(--cc-text-primary, #E8EAF6)" }}>
         {module ? `${module} encountered an error` : "Something went wrong"}
       </h2>
-      <p className="text-[12px] mb-4" style={{ color: "#9BA3C8", maxWidth: 400 }}>
+      <p className="text-[12px] mb-4" style={{ color: "var(--cc-text-secondary, #9BA3C8)", maxWidth: 400 }}>
         {error.message || "An unexpected error occurred. Try refreshing or click below to retry."}
       </p>
       <button
