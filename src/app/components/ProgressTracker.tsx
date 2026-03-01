@@ -24,9 +24,9 @@ const stepIcons: Record<OnboardingStep, typeof Upload> = {
 };
 
 const stepColors: Record<OnboardingStep, string> = {
-  upload: "#6366F1",
-  chat: "#06B6D4",
-  refine: "#8B5CF6",
+  upload: "#5C6CF5",
+  chat: "#00C9D6",
+  refine: "#00C9D6",
   export: "#10B981",
   versions: "#F59E0B",
 };
@@ -97,10 +97,10 @@ export function ProgressTracker() {
 
             {/* Progress bar */}
             <div className="px-4 pt-3 pb-1">
-              <div className="w-full h-1.5 rounded-full" style={{ backgroundColor: `${colors.indigo}15` }}>
+              <div className="w-full h-1.5 rounded-full" style={{ backgroundColor: `${colors.crystal}15` }}>
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ backgroundColor: allDone ? "#10B981" : colors.indigo }}
+                  style={{ backgroundColor: allDone ? "#10B981" : colors.crystal }}
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
@@ -243,7 +243,7 @@ export function ProgressTracker() {
                   cy="14"
                   r="11"
                   fill="none"
-                  stroke={allDone ? "#10B981" : colors.indigo}
+                  stroke={allDone ? "#10B981" : colors.crystal}
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeDasharray={`${2 * Math.PI * 11}`}

@@ -10,6 +10,7 @@ import { OnboardingOverlay } from "./OnboardingOverlay";
 import { NewUserTour } from "./NewUserTour";
 import { WelcomePage } from "./WelcomePage";
 import { ProgressTracker } from "./ProgressTracker";
+import { ErrorBoundary } from "./ErrorBoundary";
 import { useTheme } from "./ThemeContext";
 import { useToast } from "./ToastSystem";
 import { useUser } from "./UserContext";
@@ -133,7 +134,7 @@ export function MainLayout() {
               <motion.div
                 key="mode-flash"
                 className="absolute inset-0 z-50 pointer-events-none"
-                style={{ backgroundColor: `${colors.indigo}08` }}
+                style={{ backgroundColor: `${colors.crystal}08` }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -166,7 +167,9 @@ export function MainLayout() {
                 exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <Outlet context={{ isMobile, isTablet, sidebarCollapsed }} />
+                <ErrorBoundary module="Page">
+                  <Outlet context={{ isMobile, isTablet, sidebarCollapsed }} />
+                </ErrorBoundary>
               </motion.div>
             )}
           </AnimatePresence>
@@ -196,6 +199,7 @@ export function MainLayout() {
             collapsed={sidebarCollapsed}
             onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
             onNavigate={handleSidebarNav}
+            onUpload={() => setShowUpload(true)}
           />
         </div>
         <div className="flex-1 overflow-hidden relative">
@@ -205,7 +209,7 @@ export function MainLayout() {
               <motion.div
                 key="mode-flash"
                 className="absolute inset-0 z-50 pointer-events-none"
-                style={{ backgroundColor: `${colors.indigo}08` }}
+                style={{ backgroundColor: `${colors.crystal}08` }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -238,7 +242,9 @@ export function MainLayout() {
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
               >
-                <Outlet context={{ isMobile, isTablet, sidebarCollapsed, setSidebarCollapsed }} />
+                <ErrorBoundary module="Page">
+                  <Outlet context={{ isMobile, isTablet, sidebarCollapsed, setSidebarCollapsed }} />
+                </ErrorBoundary>
               </motion.div>
             )}
           </AnimatePresence>

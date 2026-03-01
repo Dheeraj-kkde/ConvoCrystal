@@ -1,42 +1,37 @@
-import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from "react";
+/**
+ * Re-exports the useToast hook from the store, plus renders the
+ * toast UI (ToastContainer). Kept for backward-compatible imports.
+ */
+import { useState, useEffect, useCallback } from "react";
 import { CheckCircle2, AlertTriangle, XCircle, Info, X } from "lucide-react";
+import { useTheme } from "../stores/themeStore";
+import { useToastStore } from "../stores/toastStore";
+import type { Toast, ToastVariant } from "../stores/toastStore";
 
-type ToastVariant = "success" | "warning" | "error" | "info";
+// Re-export hook so existing `import { useToast } from "./ToastSystem"` works
+export { useToast, useToastStore } from "../stores/toastStore";
+export type { Toast, ToastVariant } from "../stores/toastStore";
 
-interface Toast {
-  id: string;
-  variant: ToastVariant;
-  title: string;
-  message?: string;
-  cta?: { label: string; onClick: () => void };
-  duration?: number;
-}
+// ─── UI Components ───────────────────────────────────────────────
 
-interface ToastContextType {
-  addToast: (toast: Omit<Toast, "id">) => void;
-  removeToast: (id: string) => void;
-}
-
-const ToastContext = createContext<ToastContextType>({
-  addToast: () => {},
-  removeToast: () => {},
-});
-
-export function useToast() {
-  return useContext(ToastContext);
-}
-
-const variantConfig: Record<ToastVariant, { icon: typeof CheckCircle2; color: string; borderColor: string; bgTint: string }> = {
-  success: { icon: CheckCircle2, color: "#10B981", borderColor: "#10B981", bgTint: "rgba(16,185,129,0.08)" },
-  warning: { icon: AlertTriangle, color: "#F59E0B", borderColor: "#F59E0B", bgTint: "rgba(245,158,11,0.08)" },
-  error: { icon: XCircle, color: "#F43F5E", borderColor: "#F43F5E", bgTint: "rgba(244,63,94,0.08)" },
-  info: { icon: Info, color: "#6366F1", borderColor: "#6366F1", bgTint: "rgba(99,102,241,0.08)" },
+const variantConfig: Record<ToastVariant, { icon: typeof CheckCircle2; color: string }> = {
+  success: { icon: CheckCircle2, color: "#10B981" },
+  warning: { icon: AlertTriangle, color: "#F59E0B" },
+  error: { icon: XCircle, color: "#F43F5E" },
+  info: { icon: Info, color: "#5C6CF5" },
 };
 
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) => void }) {
   const config = variantConfig[toast.variant];
   const Icon = config.icon;
   const [exiting, setExiting] = useState(false);
+  const { isDark, colors } = useTheme();
+
+  const bg = isDark ? colors.bgPanel : "#FFFFFF";
+  const borderColor = isDark ? colors.border : "#E2E0DB";
+  const titleColor = isDark ? colors.textPrimary : "#1A1916";
+  const messageColor = isDark ? colors.textSecondary : "#57554F";
+  const closeColor = isDark ? colors.textMuted : "#928F87";
 
   useEffect(() => {
     const dur = toast.duration || 5000;
@@ -50,26 +45,27 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
 
   return (
     <div
-      className={`w-80 rounded-lg border border-[#2A2D42] shadow-2xl overflow-hidden transition-all duration-300 ${
+      className={`w-80 rounded-lg shadow-2xl overflow-hidden transition-all duration-300 ${
         exiting ? "opacity-0 translate-x-full" : "opacity-100 translate-x-0"
       }`}
       style={{
-        background: "#1A1D2E",
-        borderLeft: `3px solid ${config.borderColor}`,
+        background: bg,
+        border: `1px solid ${borderColor}`,
+        borderLeft: `3px solid ${config.color}`,
         animation: exiting ? undefined : "slideInRight 0.3s ease-out",
       }}
     >
       <div className="flex items-start gap-3 p-3">
         <div
           className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-          style={{ backgroundColor: config.bgTint }}
+          style={{ backgroundColor: `${config.color}10` }}
         >
           <Icon className="w-3.5 h-3.5" style={{ color: config.color }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[12px] text-[#E8EAF6]" style={{ fontWeight: 600 }}>{toast.title}</div>
+          <div className="text-[12px]" style={{ fontWeight: 600, color: titleColor }}>{toast.title}</div>
           {toast.message && (
-            <div className="text-[11px] text-[#9BA3C8] mt-0.5 leading-relaxed">{toast.message}</div>
+            <div className="text-[11px] mt-0.5 leading-relaxed" style={{ color: messageColor }}>{toast.message}</div>
           )}
           {toast.cta && (
             <button
@@ -85,34 +81,29 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
           onClick={() => { setExiting(true); setTimeout(() => onRemove(toast.id), 300); }}
           className="p-0.5 rounded hover:bg-white/5 transition-colors shrink-0"
         >
-          <X className="w-3 h-3 text-[#5C6490]" />
+          <X className="w-3 h-3" style={{ color: closeColor }} />
         </button>
       </div>
     </div>
   );
 }
 
-export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+/**
+ * Renders the toast stack. Drop this anywhere in your tree — no provider wrapping needed.
+ */
+export function ToastContainer() {
+  const toasts = useToastStore((s) => s.toasts);
+  const removeToast = useToastStore((s) => s.removeToast);
 
-  const addToast = useCallback((toast: Omit<Toast, "id">) => {
-    const id = Date.now().toString() + Math.random().toString(36).substr(2, 5);
-    setToasts((prev) => [...prev.slice(-2), { ...toast, id }]);
-  }, []);
-
-  const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
+  const handleRemove = useCallback((id: string) => {
+    removeToast(id);
+  }, [removeToast]);
 
   return (
-    <ToastContext.Provider value={{ addToast, removeToast }}>
-      {children}
-      {/* Toast container */}
-      <div className="fixed top-14 right-4 z-[9999] flex flex-col gap-2 pointer-events-auto">
-        {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
-        ))}
-      </div>
-    </ToastContext.Provider>
+    <div className="fixed top-14 right-4 z-[9999] flex flex-col gap-2 pointer-events-auto">
+      {toasts.map((toast) => (
+        <ToastItem key={toast.id} toast={toast} onRemove={handleRemove} />
+      ))}
+    </div>
   );
 }

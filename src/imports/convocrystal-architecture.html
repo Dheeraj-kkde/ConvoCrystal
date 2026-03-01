@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvoCrystal — Frontend Systems Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Cabinet+Grotesk:wght@300;400;500;700;800;900&family=Fraunces:ital,wght@0,400;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0B0C10;
+  --bg2: #0F1117;
+  --bg3: #161823;
+  --bg4: #1E2130;
+  --surface: #1A1D2E;
+  --surface2: #222538;
+  --border: #2A2D42;
+  --border2: #343756;
+
+  --text: #E8EAF6;
+  --text2: #9BA3C8;
+  --text3: #5C6490;
+  --text4: #3A3F5C;
+
+  --indigo: #6366F1;
+  --indigo-bright: #818CF8;
+  --indigo-dim: #3730A3;
+  --indigo-glow: rgba(99,102,241,0.15);
+  --violet: #8B5CF6;
+  --cyan: #06B6D4;
+  --cyan-dim: rgba(6,182,212,0.12);
+  --emerald: #10B981;
+  --emerald-dim: rgba(16,185,129,0.12);
+  --amber: #F59E0B;
+  --amber-dim: rgba(245,158,11,0.12);
+  --rose: #F43F5E;
+  --rose-dim: rgba(244,63,94,0.12);
+
+  --font-display: 'Cabinet Grotesk', sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+  --ease-out: cubic-bezier(0.16,1,0.3,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ COVER ═══ */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 60px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.cover::before {
+  content:'';
+  position: absolute;
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 65%);
+  top: -300px; right: -200px;
+  pointer-events: none;
+}
+.cover::after {
+  content:'';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 65%);
+  bottom: -200px; left: 100px;
+  pointer-events: none;
+}
+.cover-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative; z-index: 1;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cover-body {
+  position: relative; z-index: 1;
+}
+.cover-kicker {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--indigo-bright);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.cover-kicker::before {
+  content:'';
+  display: block;
+  width: 32px; height: 1px;
+  background: var(--indigo);
+}
+.cover-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem,7vw,6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.cover-title em {
+  font-style: italic;
+  font-family: var(--font-serif);
+  color: var(--indigo-bright);
+  font-weight: 400;
+}
+.cover-sub {
+  font-size: 13px;
+  color: var(--text3);
+  max-width: 500px;
+  line-height: 1.8;
+  margin-bottom: 40px;
+}
+.cover-stats {
+  display: flex; gap: 24px; flex-wrap: wrap;
+}
+.cover-stat {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  font-size: 11px;
+  color: var(--text3);
+}
+.cover-stat strong { display: block; font-size: 20px; font-family: var(--font-display); font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.cover-footer {
+  position: relative; z-index: 1;
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.chip {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px 12px;
+}
+
+/* ═══ NAV ═══ */
+.nav {
+  position: sticky; top: 0; z-index: 900;
+  background: rgba(11,12,16,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 32px;
+  height: 48px;
+  gap: 0;
+  overflow-x: auto;
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 800;
+  color: var(--text);
+  margin-right: 24px; flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.nav-logo span { color: var(--indigo-bright); }
+.nav-divider { width: 1px; height: 16px; background: var(--border); margin-right: 20px; flex-shrink: 0; }
+.nav-link {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text3); text-decoration: none;
+  padding: 0 12px; height: 48px;
+  display: flex; align-items: center;
+  white-space: nowrap; flex-shrink: 0;
+  transition: color 0.15s;
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover { color: var(--indigo-bright); }
+
+/* ═══ PAGE SECTIONS ═══ */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 56px; padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+  gap: 24px;
+}
+.section-meta { flex: 1; }
+.section-num {
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--indigo); margin-bottom: 10px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 900; letter-spacing: -0.03em;
+  line-height: 1.1; color: var(--text);
+}
+.section-title em {
+  font-style: italic;
+  font-family: var(--font-serif);
+  color: var(--indigo-bright);
+  font-weight: 400;
+}
+.section-side {
+  font-size: 11px; color: var(--text3);
+  line-height: 1.7; max-width: 220px; text-align: right;
+}
+.section-intro {
+  font-size: 13px; color: var(--text2);
+  line-height: 1.9; max-width: 760px;
+  margin-bottom: 40px;
+}
+
+/* ═══ MODULE CARDS ═══ */
+.module-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+.module-card-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 24px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.module-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.module-card-title {
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 700;
+  color: var(--text); letter-spacing: -0.01em;
+}
+.module-card-sub {
+  font-size: 10px; color: var(--text3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-top: 2px;
+}
+.module-card-body { padding: 0; }
+
+/* ═══ ACCORDION ═══ */
+.accordion-item {
+  border-bottom: 1px solid var(--border);
+}
+.accordion-item:last-child { border-bottom: none; }
+.accordion-trigger {
+  width: 100%;
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px;
+  background: none; border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+.accordion-trigger:hover { background: var(--bg4); color: var(--text); }
+.accordion-trigger.open { color: var(--indigo-bright); background: var(--indigo-glow); }
+.accordion-arrow {
+  margin-left: auto;
+  font-size: 10px;
+  transition: transform 0.25s var(--ease-out);
+  flex-shrink: 0;
+}
+.accordion-trigger.open .accordion-arrow { transform: rotate(180deg); }
+.accordion-content {
+  display: none;
+  padding: 24px;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+.accordion-content.open { display: block; }
+.acc-tag {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+/* ═══ CODE BLOCKS ═══ */
+.code-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: 16px 0;
+}
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.code-header-label {
+  font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text3);
+}
+.code-lang {
+  font-size: 9px; letter-spacing: 0.08em;
+  color: var(--indigo-bright); background: var(--indigo-glow);
+  border-radius: 4px; padding: 2px 8px;
+  text-transform: uppercase;
+}
+.code-body {
+  padding: 20px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text2);
+}
+.code-body pre { white-space: pre; font-family: var(--font-mono); }
+
+/* Syntax tokens */
+.tk { color: var(--indigo-bright); }
+.tv { color: #86EFAC; }
+.ts { color: #FCA5A5; }
+.tc { color: #52525B; font-style: italic; }
+.tp { color: var(--cyan); }
+.tm { color: #F9A8D4; }
+.ttype { color: #FCD34D; }
+.tfn { color: #C4B5FD; }
+.tstr { color: #86EFAC; }
+.tconst { color: var(--amber); }
+
+/* ═══ STATE MACHINE DIAGRAM ═══ */
+.state-machine {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.sm-title {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sm-title::before {
+  content:'';
+  display: block;
+  width: 3px; height: 12px;
+  background: var(--indigo);
+  border-radius: 2px;
+}
+.sm-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+.sm-state {
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 11px; font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.sm-state.initial { background: var(--bg3); border-color: var(--border); color: var(--text3); }
+.sm-state.active { background: var(--indigo-glow); border-color: var(--indigo); color: var(--indigo-bright); }
+.sm-state.success { background: var(--emerald-dim); border-color: var(--emerald); color: var(--emerald); }
+.sm-state.error { background: var(--rose-dim); border-color: var(--rose); color: var(--rose); }
+.sm-state.warning { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+.sm-state.info { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+.sm-arrow {
+  font-size: 11px; color: var(--text4);
+  padding: 0 6px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 4px;
+  flex-direction: column;
+  font-size: 9px; color: var(--text3); letter-spacing: 0.06em;
+}
+.sm-arrow span { font-size: 14px; color: var(--border2); line-height: 1; }
+.sm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  background: var(--bg3);
+  min-width: 180px;
+}
+.sm-group-title {
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text4); margin-bottom: 4px;
+}
+.sm-sub-states {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.sm-sub-state {
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  font-size: 10px;
+  color: var(--text2);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.sm-sub-state::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text4);
+  flex-shrink: 0;
+}
+.sm-sub-state.current::before { background: var(--indigo); }
+
+/* ═══ DATA FLOW ═══ */
+.dataflow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  align-items: stretch;
+  margin: 16px 0;
+}
+.df-col {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+.df-col-title {
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.df-item {
+  font-size: 11px; color: var(--text2);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  margin-bottom: 4px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.df-item::before {
+  content: '·';
+  color: var(--indigo-bright);
+  font-weight: 900;
+}
+.df-center {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 12px; gap: 8px;
+}
+.df-arrow-block {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+}
+.df-arrow-label { font-size: 9px; color: var(--text3); letter-spacing: 0.06em; white-space: nowrap; }
+.df-arrow-sym { font-size: 18px; color: var(--border2); line-height: 1; }
+
+/* ═══ ERROR TABLE ═══ */
+.err-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin: 12px 0;
+}
+.err-table th {
+  text-align: left; padding: 8px 14px;
+  background: var(--bg3); color: var(--text3);
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.err-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.err-table tr:last-child td { border-bottom: none; }
+.err-table tr:hover td { background: var(--bg4); }
+.err-table td:first-child { color: var(--rose); font-weight: 500; }
+.err-table td:nth-child(2) { color: var(--amber); }
+
+/* ═══ HOOK GRID ═══ */
+.hook-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 12px 0;
+}
+.hook-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+.hook-type {
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text4); margin-bottom: 8px;
+}
+.hook-name {
+  font-family: var(--font-mono);
+  font-size: 12px; color: var(--cyan);
+  font-weight: 500; margin-bottom: 6px;
+}
+.hook-desc {
+  font-size: 10px; color: var(--text3);
+  line-height: 1.6;
+}
+
+/* ═══ COMPONENT TREE ═══ */
+.comp-tree {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 2;
+  color: var(--text2);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+.ct-comp { color: var(--cyan); }
+.ct-hook { color: var(--violet); }
+.ct-handler { color: var(--amber); }
+.ct-prop { color: var(--text3); font-size: 10px; }
+.ct-comment { color: var(--text4); font-style: italic; }
+.ct-file { color: var(--indigo-bright); text-decoration: none; }
+.ct-type { color: #FCD34D; font-size: 10px; }
+
+/* ═══ EDGE CASE GRID ═══ */
+.edge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 12px 0;
+}
+.edge-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.edge-icon {
+  font-size: 14px; flex-shrink: 0; margin-top: 1px;
+}
+.edge-label {
+  font-size: 11px; font-weight: 500; color: var(--text);
+  margin-bottom: 3px;
+}
+.edge-desc {
+  font-size: 10px; color: var(--text3); line-height: 1.6;
+}
+
+/* ═══ LOADING PATTERN ═══ */
+.loading-pattern {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin: 12px 0;
+}
+.lp-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 11px; color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+  flex: 1; min-width: 180px;
+}
+.lp-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ═══ INLINE TAGS ═══ */
+.tag {
+  display: inline-block;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: 4px; padding: 2px 8px;
+  font-weight: 600; vertical-align: middle; margin-left: 6px;
+}
+.tag-i { background: var(--indigo-glow); color: var(--indigo-bright); }
+.tag-c { background: var(--cyan-dim); color: var(--cyan); }
+.tag-e { background: var(--emerald-dim); color: var(--emerald); }
+.tag-r { background: var(--rose-dim); color: var(--rose); }
+.tag-a { background: var(--amber-dim); color: var(--amber); }
+
+/* ═══ PROGRESS BAR ═══ */
+.reading-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--bg3); z-index: 9999;
+}
+.reading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--indigo), var(--cyan));
+  width: 0%; transition: width 0.1s;
+}
+
+/* ═══ DIVIDER ═══ */
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+.sub-header {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--indigo-bright); margin: 28px 0 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sub-header::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width: 900px) {
+  .cover { padding: 32px 24px; }
+  .section { padding: 60px 24px; }
+  .hook-grid { grid-template-columns: 1fr 1fr; }
+  .edge-grid { grid-template-columns: 1fr; }
+  .dataflow { grid-template-columns: 1fr; }
+  .df-center { flex-direction: row; padding: 12px 0; }
+}
+@media(max-width: 600px) {
+  .hook-grid { grid-template-columns: 1fr; }
+  .cover-stats { flex-direction: column; }
+}
+
+/* ═══ SUMMARY GRID (Global) ═══ */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 40px;
+}
+.sg-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-decoration: none;
+  display: block;
+}
+.sg-card:hover { border-color: var(--indigo); background: var(--indigo-glow); }
+.sg-num {
+  font-size: 10px; letter-spacing: 0.15em; color: var(--text4);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.sg-title {
+  font-family: var(--font-display);
+  font-size: 13px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 6px;
+}
+.sg-desc {
+  font-size: 10px; color: var(--text3); line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<div class="reading-bar"><div class="reading-bar-fill" id="rbar"></div></div>
+
+<!-- ══════════ COVER ══════════ -->
+<section class="cover">
+  <div class="cover-top">
+    <span>ConvoCrystal · Frontend Systems Architecture</span>
+    <span>v1.0 · Senior Engineer Spec · React + FastAPI + WS</span>
+  </div>
+  <div class="cover-body">
+    <div class="cover-kicker">Frontend Systems Architecture</div>
+    <h1 class="cover-title">Module<br><em>Blueprints.</em></h1>
+    <p class="cover-sub">Complete state machines, data flows, React component outlines, error strategies, and edge case handling for all five interactive modules. Stack: React · FastAPI · PostgreSQL · WebSocket · Ollama · LangGraph · RAGAS</p>
+    <div class="cover-stats">
+      <div class="cover-stat"><strong>5</strong>Modules</div>
+      <div class="cover-stat"><strong>25+</strong>State Machines</div>
+      <div class="cover-stat"><strong>60+</strong>Custom Hooks</div>
+      <div class="cover-stat"><strong>100+</strong>Edge Cases</div>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <span class="chip">M1 · Upload Flow</span>
+    <span class="chip">M2 · WS Chat</span>
+    <span class="chip">M3 · Live Editor</span>
+    <span class="chip">M4 · Version Control</span>
+    <span class="chip">M5 · Auth Lifecycle</span>
+  </div>
+</section>
+
+<!-- ══════ NAV ══════ -->
+<nav class="nav">
+  <div class="nav-logo">Convo<span>Crystal</span></div>
+  <div class="nav-divider"></div>
+  <a href="#m1" class="nav-link">M1 · Upload</a>
+  <a href="#m2" class="nav-link">M2 · Chat</a>
+  <a href="#m3" class="nav-link">M3 · Editor</a>
+  <a href="#m4" class="nav-link">M4 · Versions</a>
+  <a href="#m5" class="nav-link">M5 · Auth</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════
+     M1 — TRANSCRIPT UPLOAD FLOW
+════════════════════════════════════════════════════ -->
+<section class="section" id="m1">
+  <div class="section-header">
+    <div class="section-meta">
+      <div class="section-num">Module 01 / 05</div>
+      <h2 class="section-title">Transcript<br><em>Upload Flow</em></h2>
+    </div>
+    <div class="section-side">Multi-step upload with file validation, format detection, progress tracking, and processing stage indicators</div>
+  </div>
+
+  <p class="section-intro">The upload flow is a 5-phase state machine: <strong>IDLE → SELECTING → VALIDATING → UPLOADING → PROCESSING</strong>. It handles chunked uploads for large files, detects transcript format (VTT, SRT, TXT, DOCX) via magic-byte sniffing and extension parsing, tracks real upload progress via XHR, then hands off to the backend processing pipeline with WebSocket-based stage updates.</p>
+
+  <!-- STATE MACHINE -->
+  <div class="module-card">
+    <div class="module-card-header">
+      <div class="module-icon" style="background:var(--indigo-glow)">📤</div>
+      <div>
+        <div class="module-card-title">State Machine Structure</div>
+        <div class="module-card-sub">FSM · 5 primary states · 12 transitions</div>
+      </div>
+    </div>
+    <div class="module-card-body">
+      <div class="accordion-item">
+        <button class="accordion-trigger open" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">FSM</span>
+          Primary State Flow
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content open">
+          <div class="state-machine">
+            <div class="sm-title">Upload State Machine — Primary Flow</div>
+            <div class="sm-flow">
+              <div class="sm-state initial">IDLE</div>
+              <div class="sm-arrow"><span>→</span><small>fileDrop / fileSelect</small></div>
+              <div class="sm-state info">SELECTING</div>
+              <div class="sm-arrow"><span>→</span><small>fileChosen</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">VALIDATING</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">format_check</div>
+                  <div class="sm-sub-state">size_check</div>
+                  <div class="sm-sub-state">mime_sniff</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>valid</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">UPLOADING</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">signing_url</div>
+                  <div class="sm-sub-state">chunking</div>
+                  <div class="sm-sub-state">progress</div>
+                  <div class="sm-sub-state">confirming</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>upload_ok</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">PROCESSING</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">queued</div>
+                  <div class="sm-sub-state">parsing</div>
+                  <div class="sm-sub-state">extracting</div>
+                  <div class="sm-sub-state">analyzing</div>
+                  <div class="sm-sub-state">scoring</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>done</small></div>
+              <div class="sm-state success">COMPLETE</div>
+            </div>
+            <div class="divider" style="margin:20px 0"></div>
+            <div class="sm-flow">
+              <div class="sm-state initial">ANY STATE</div>
+              <div class="sm-arrow"><span>→</span><small>error / cancel</small></div>
+              <div class="sm-state error">FAILED</div>
+              <div class="sm-arrow"><span>→</span><small>retry</small></div>
+              <div class="sm-state initial">IDLE</div>
+              <div style="width:32px"></div>
+              <div class="sm-state warning">CANCELLED</div>
+              <div class="sm-arrow"><span>→</span><small>reset</small></div>
+              <div class="sm-state initial">IDLE</div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">uploadMachine.ts — XState / useReducer state definition</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// State discriminated union — exhaustive pattern match on status</tc>
+<tk>type</tk> <ttype>UploadState</ttype> =
+  | { <tp>status</tp>: <tstr>'idle'</tstr> }
+  | { <tp>status</tp>: <tstr>'selecting'</tstr>; <tp>dragActive</tp>: <ttype>boolean</ttype> }
+  | { <tp>status</tp>: <tstr>'validating'</tstr>; <tp>file</tp>: <ttype>File</ttype>; <tp>phase</tp>: <ttype>ValidationPhase</ttype> }
+  | { <tp>status</tp>: <tstr>'uploading'</tstr>; <tp>file</tp>: <ttype>File</ttype>; <tp>progress</tp>: <ttype>number</ttype>;
+      <tp>uploadId</tp>: <ttype>string</ttype>; <tp>bytesUploaded</tp>: <ttype>number</ttype> }
+  | { <tp>status</tp>: <tstr>'processing'</tstr>; <tp>transcriptId</tp>: <ttype>string</ttype>;
+      <tp>stage</tp>: <ttype>ProcessingStage</ttype>; <tp>stageProgress</tp>: <ttype>number</ttype> }
+  | { <tp>status</tp>: <tstr>'complete'</tstr>; <tp>transcriptId</tp>: <ttype>string</ttype>;
+      <tp>analysisId</tp>: <ttype>string</ttype>; <tp>confidenceScore</tp>: <ttype>number</ttype> }
+  | { <tp>status</tp>: <tstr>'failed'</tstr>; <tp>error</tp>: <ttype>UploadError</ttype>; <tp>retryCount</tp>: <ttype>number</ttype> }
+  | { <tp>status</tp>: <tstr>'cancelled'</tstr> };
+
+<tk>type</tk> <ttype>ValidationPhase</ttype> = <tstr>'format_check'</tstr> | <tstr>'size_check'</tstr> | <tstr>'mime_sniff'</tstr>;
+<tk>type</tk> <ttype>ProcessingStage</ttype> = <tstr>'queued'</tstr> | <tstr>'parsing'</tstr> | <tstr>'extracting'</tstr>
+  | <tstr>'analyzing'</tstr> | <tstr>'scoring'</tstr> | <tstr>'indexing'</tstr>;
+
+<tk>type</tk> <ttype>UploadAction</ttype> =
+  | { <tp>type</tp>: <tstr>'FILE_DROP'</tstr>; <tp>file</tp>: <ttype>File</ttype> }
+  | { <tp>type</tp>: <tstr>'VALIDATION_PHASE'</tstr>; <tp>phase</tp>: <ttype>ValidationPhase</ttype> }
+  | { <tp>type</tp>: <tstr>'VALIDATION_FAILED'</tstr>; <tp>error</tp>: <ttype>UploadError</ttype> }
+  | { <tp>type</tp>: <tstr>'UPLOAD_START'</tstr>; <tp>uploadId</tp>: <ttype>string</ttype> }
+  | { <tp>type</tp>: <tstr>'UPLOAD_PROGRESS'</tstr>; <tp>progress</tp>: <ttype>number</ttype>; <tp>bytes</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'UPLOAD_COMPLETE'</tstr>; <tp>transcriptId</tp>: <ttype>string</ttype> }
+  | { <tp>type</tp>: <tstr>'PROCESSING_STAGE'</tstr>; <tp>stage</tp>: <ttype>ProcessingStage</ttype>; <tp>pct</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'ANALYSIS_COMPLETE'</tstr>; <tp>analysisId</tp>: <ttype>string</ttype>; <tp>score</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'ERROR'</tstr>; <tp>error</tp>: <ttype>UploadError</ttype> }
+  | { <tp>type</tp>: <tstr>'CANCEL'</tstr> }
+  | { <tp>type</tp>: <tstr>'RETRY'</tstr> }
+  | { <tp>type</tp>: <tstr>'RESET'</tstr> };</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-c">Data Flow</span>
+          Props · Events · API Communication
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="dataflow">
+            <div class="df-col">
+              <div class="df-col-title">Component Inputs (Props)</div>
+              <div class="df-item">onComplete(transcriptId, analysisId)</div>
+              <div class="df-item">maxFileSizeMB: number (default 50)</div>
+              <div class="df-item">allowedFormats: string[]</div>
+              <div class="df-item">workspaceId: string</div>
+              <div class="df-item">autoProcess: boolean</div>
+              <div class="df-item">onProcessingUpdate?: callback</div>
+            </div>
+            <div class="df-center">
+              <div class="df-arrow-block">
+                <div class="df-arrow-label">XHR multipart</div>
+                <div class="df-arrow-sym">→</div>
+              </div>
+              <div class="df-arrow-block">
+                <div class="df-arrow-label">WS events</div>
+                <div class="df-arrow-sym">⇄</div>
+              </div>
+            </div>
+            <div class="df-col">
+              <div class="df-col-title">API Communication</div>
+              <div class="df-item">POST /api/v1/upload/presign → {uploadUrl, uploadId}</div>
+              <div class="df-item">PUT {uploadUrl} chunks [XHR + onProgress]</div>
+              <div class="df-item">POST /api/v1/upload/confirm → {transcriptId}</div>
+              <div class="df-item">WS /ws/processing/{transcriptId}</div>
+              <div class="df-item">WS msg: {stage, pct, message, eta}</div>
+              <div class="df-item">GET /api/v1/transcripts/{id}/status</div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Format Detection — magic byte sniffing + extension fallback</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// Read first 8 bytes for format detection before server validation</tc>
+<tk>async function</tk> <tfn>detectFormat</tfn>(<tp>file</tp>: <ttype>File</ttype>): <ttype>Promise</ttype>&lt;<ttype>DetectedFormat</ttype>&gt; {
+  <tk>const</tk> <tp>buffer</tp> = <tk>await</tk> file.<tfn>slice</tfn>(0, 8).<tfn>arrayBuffer</tfn>();
+  <tk>const</tk> <tp>bytes</tp> = <tk>new</tk> <ttype>Uint8Array</ttype>(buffer);
+
+  <tc>// DOCX: PK zip magic bytes [0x50, 0x4B]</tc>
+  <tk>if</tk> (bytes[0] === 0x50 && bytes[1] === 0x4B) <tk>return</tk> <tstr>'docx'</tstr>;
+
+  <tc>// Read as text for VTT/SRT detection</tc>
+  <tk>const</tk> <tp>header</tp> = <tk>await</tk> file.<tfn>slice</tfn>(0, 64).<tfn>text</tfn>();
+  <tk>if</tk> (<tconst>/^WEBVTT/i</tconst>.<tfn>test</tfn>(header)) <tk>return</tk> <tstr>'vtt'</tstr>;
+  <tk>if</tk> (<tconst>/^\d{2}:\d{2}:\d{2}/</tconst>.<tfn>test</tfn>(header)) <tk>return</tk> <tstr>'srt'</tstr>;
+
+  <tc>// JSON transcript schema detection</tc>
+  <tk>if</tk> (header.<tfn>trimStart</tfn>().<tfn>startsWith</tfn>(<tstr>'{'</tstr>)) {
+    <tk>const</tk> <tp>sample</tp> = <ttype>JSON</ttype>.<tfn>parse</tfn>(<tk>await</tk> file.<tfn>text</tfn>());
+    <tk>if</tk> (sample?.transcripts || sample?.segments) <tk>return</tk> <tstr>'json'</tstr>;
+  }
+
+  <tc>// Extension-based fallback</tc>
+  <tk>const</tk> <tp>ext</tp> = file.name.<tfn>split</tfn>(<tstr>'.'</tstr>).<tfn>pop</tfn>()?.toLowerCase();
+  <tk>const</tk> <tp>extMap</tp>: <ttype>Record</ttype>&lt;<ttype>string</ttype>, <ttype>DetectedFormat</ttype>&gt; = {
+    txt: <tstr>'txt'</tstr>, vtt: <tstr>'vtt'</tstr>, srt: <tstr>'srt'</tstr>, docx: <tstr>'docx'</tstr>, json: <tstr>'json'</tstr>
+  };
+  <tk>return</tk> extMap[ext ?? <tstr>''</tstr>] ?? <tstr>'unknown'</tstr>;
+}</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-r">Errors</span>
+          Error Management Strategy
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <table class="err-table">
+            <thead><tr><th>Error Type</th><th>Trigger</th><th>Recovery Strategy</th></tr></thead>
+            <tbody>
+              <tr><td>FILE_TOO_LARGE</td><td>file.size > maxFileSizeMB * 1024²</td><td>Immediate UI rejection, suggest compression, no upload attempted</td></tr>
+              <tr><td>UNSUPPORTED_FORMAT</td><td>detectFormat returns 'unknown'</td><td>Show accepted formats, offer paste fallback, no network call</td></tr>
+              <tr><td>PRESIGN_FAILED</td><td>HTTP 4xx/5xx on /upload/presign</td><td>Auto-retry x2 with exponential backoff (1s, 3s), then show error</td></tr>
+              <tr><td>UPLOAD_INTERRUPTED</td><td>XHR abort / network drop mid-chunk</td><td>Resume from last confirmed chunk using uploadId, re-presign if expired</td></tr>
+              <tr><td>PROCESSING_TIMEOUT</td><td>WS silent > 30s during processing</td><td>Poll GET /status as fallback, show "taking longer than usual" at 15s</td></tr>
+              <tr><td>QUOTA_EXCEEDED</td><td>HTTP 402 from confirm endpoint</td><td>Hard stop, show upgrade modal with usage meter, no retry</td></tr>
+              <tr><td>WS_DISCONNECT</td><td>WebSocket closes unexpectedly</td><td>Exponential reconnect (1s→2s→4s→8s), resume stage from last known</td></tr>
+              <tr><td>ANALYSIS_FAILED</td><td>Processing stage emits 'failed'</td><td>Store transcriptId, show manual re-trigger option, log error code</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-a">Loading</span>
+          Loading Behavior · Empty State · Edge Cases
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-header">Loading States</div>
+          <div class="loading-pattern">
+            <div class="lp-item"><div class="lp-dot" style="background:var(--text3)"></div>IDLE — Drop zone with animated dashed border, format chips</div>
+            <div class="lp-item"><div class="lp-dot" style="background:var(--indigo)"></div>VALIDATING — Instant (client-side), spinner overlay on drop zone</div>
+            <div class="lp-item"><div class="lp-dot" style="background:var(--cyan);animation-delay:0.3s"></div>UPLOADING — XHR progress ring + byte counter + time estimate</div>
+            <div class="lp-item"><div class="lp-dot" style="background:var(--amber);animation-delay:0.6s"></div>PROCESSING — Stage timeline with animated active step, streaming ETA</div>
+          </div>
+
+          <div class="sub-header">Empty State UX</div>
+          <p style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:12px">
+            When upload library is empty: display illustrated drop zone with dashed animated border (CSS keyframe dash-offset animation). Show accepted format pills. Provide "Try a sample transcript" CTA that fetches a fixture file and runs through the full flow — giving new users immediate first-value experience without needing their own file.
+          </p>
+
+          <div class="sub-header">Edge Cases</div>
+          <div class="edge-grid">
+            <div class="edge-item">
+              <div class="edge-icon">📁</div>
+              <div><div class="edge-label">Multi-file drop</div><div class="edge-desc">Capture entire FileList, queue sequentially. Show numbered file chips. Process one at a time to avoid quota abuse.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🔁</div>
+              <div><div class="edge-label">Duplicate detection</div><div class="edge-desc">Hash first 64KB of file (SHA-256 via SubtleCrypto). POST hash to /upload/dedup before presign. If match: prompt "Upload again or view existing?"</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">📶</div>
+              <div><div class="edge-desc">Track upload progress in localStorage by uploadId. On remount with same uploadId, offer "Resume interrupted upload" from last confirmed chunk offset.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🗂️</div>
+              <div><div class="edge-label">Browser tab close during upload</div><div class="edge-desc">Attach beforeunload warning only during UPLOADING/PROCESSING states. Clear on completion or cancel. Persist uploadId to session storage.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🌐</div>
+              <div><div class="edge-label">Offline during upload</div><div class="edge-desc">navigator.onLine + 'offline' event listener. Pause XHR, show offline banner. Auto-resume on 'online' event from last successful chunk.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🌍</div>
+              <div><div class="edge-label">Mixed-language transcripts</div><div class="edge-desc">Detect dominant language in first 1000 chars via langdetect hint header. Send detected language to backend for appropriate tokenizer selection.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">React</span>
+          Component Architecture · Hooks · Handlers
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="hook-grid">
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useUploadMachine</div>
+              <div class="hook-desc">Core FSM via useReducer. Owns uploadState, dispatch, abort controller ref. Exposes derived booleans: isUploading, isProcessing, canRetry.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useFileValidation</div>
+              <div class="hook-desc">Pure validation pipeline. Returns validate(file) → Promise&lt;ValidationResult&gt;. Runs format detect, size check, MIME sniff in sequence.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useChunkedUpload</div>
+              <div class="hook-desc">Manages XHR lifecycle. Exposes upload(file, presignUrl, onProgress). Handles abort(), resume(offset). Returns cancelToken ref.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useProcessingSocket</div>
+              <div class="hook-desc">WS connection to /ws/processing/{id}. Parses stage events, emits to FSM via dispatch. Manages reconnect with exponential backoff.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useDragDrop</div>
+              <div class="hook-desc">Drop zone logic. Handles dragenter, dragover, dragleave, drop. Normalizes DataTransfer to FileList. Sets dragActive state for visual feedback.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useUploadResume</div>
+              <div class="hook-desc">Reads/writes uploadId + chunkOffset from sessionStorage. Provides getResumableUpload(), clearResumable() for cleanup after success.</div>
+            </div>
+          </div>
+
+          <div class="comp-tree">
+<span class="ct-comp">TranscriptUploader</span>                     <span class="ct-comment">// Root orchestrator, owns FSM</span>
+├── <span class="ct-hook">useUploadMachine()</span>                      <span class="ct-comment">// → [state, dispatch, actions]</span>
+├── <span class="ct-hook">useDragDrop(dropZoneRef)</span>                 <span class="ct-comment">// → { dragActive, handleDrop }</span>
+├── handlers:
+│   ├── <span class="ct-handler">handleFileSelect(e: ChangeEvent)</span>
+│   ├── <span class="ct-handler">handleDrop(files: FileList)</span>
+│   ├── <span class="ct-handler">handleRetry()</span>                        <span class="ct-comment">// dispatch RETRY + reset chunk offset</span>
+│   └── <span class="ct-handler">handleCancel()</span>                       <span class="ct-comment">// abort XHR + close WS</span>
+│
+├── <span class="ct-comp">DropZone</span>                                <span class="ct-comment">// Visual target, handles drag states</span>
+│   ├── <span class="ct-prop">dragActive: boolean</span>
+│   ├── <span class="ct-prop">onFileSelect: handler</span>
+│   └── <span class="ct-comp">FormatChips</span>                         <span class="ct-comment">// Animated format label pills</span>
+│
+├── <span class="ct-comp">FilePreviewCard</span>                         <span class="ct-comment">// Shows once file selected</span>
+│   ├── <span class="ct-prop">file: File</span>
+│   ├── <span class="ct-prop">detectedFormat: DetectedFormat</span>
+│   ├── <span class="ct-prop">validationStatus: ValidationPhase | 'failed'</span>
+│   └── <span class="ct-comp">ValidationBadge</span>                     <span class="ct-comment">// Phase progress micro-indicator</span>
+│
+├── <span class="ct-comp">UploadProgressRing</span>                      <span class="ct-comment">// SVG ring + byte counter</span>
+│   ├── <span class="ct-prop">progress: 0–100</span>
+│   ├── <span class="ct-prop">bytesUploaded: number</span>
+│   ├── <span class="ct-prop">totalBytes: number</span>
+│   └── <span class="ct-prop">estimatedSeconds: number</span>
+│
+├── <span class="ct-comp">ProcessingStageTracker</span>                  <span class="ct-comment">// WS-driven stage visualizer</span>
+│   ├── <span class="ct-hook">useProcessingSocket(transcriptId)</span>
+│   ├── <span class="ct-prop">stages: ProcessingStage[]</span>
+│   ├── <span class="ct-prop">currentStage: ProcessingStage</span>
+│   └── <span class="ct-comp">StageStep</span>                          <span class="ct-comment">// done/active/pending variants</span>
+│
+└── <span class="ct-comp">UploadErrorBanner</span>                       <span class="ct-comment">// Shown on failed state</span>
+    ├── <span class="ct-prop">error: UploadError</span>
+    ├── <span class="ct-prop">onRetry: handler (if canRetry)</span>
+    └── <span class="ct-prop">onReset: handler</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     M2 — REAL-TIME LLM CHAT INTERFACE
+════════════════════════════════════════════════════ -->
+<section class="section" id="m2">
+  <div class="section-header">
+    <div class="section-meta">
+      <div class="section-num">Module 02 / 05</div>
+      <h2 class="section-title">Real-Time LLM<br><em>Chat Interface</em></h2>
+    </div>
+    <div class="section-side">WebSocket token streaming with LangGraph orchestration, processing stage indicators, RAGAS confidence scoring</div>
+  </div>
+
+  <p class="section-intro">The chat interface manages a persistent WebSocket connection multiplexed across sessions. LangGraph orchestrates multi-step reasoning (extract → analyze → generate), emitting stage events before token streaming begins. Each response carries RAGAS-derived confidence metadata. The UI implements optimistic updates, graceful degradation to SSE fallback, and rate-limit awareness.</p>
+
+  <div class="module-card">
+    <div class="module-card-header">
+      <div class="module-icon" style="background:var(--cyan-dim)">💬</div>
+      <div>
+        <div class="module-card-title">Chat State Machine + WebSocket Protocol</div>
+        <div class="module-card-sub">FSM · WS Message Types · Token Buffer Strategy</div>
+      </div>
+    </div>
+    <div class="module-card-body">
+
+      <div class="accordion-item">
+        <button class="accordion-trigger open" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">FSM</span>
+          Chat State Machine
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content open">
+          <div class="state-machine">
+            <div class="sm-title">Chat Message Lifecycle FSM</div>
+            <div class="sm-flow" style="flex-wrap:wrap;row-gap:16px">
+              <div class="sm-state initial">IDLE<br><small style="font-size:9px;opacity:0.6">awaiting input</small></div>
+              <div class="sm-arrow"><span>→</span><small>submit</small></div>
+              <div class="sm-state info">PENDING<br><small style="font-size:9px;opacity:0.7">optimistic insert</small></div>
+              <div class="sm-arrow"><span>→</span><small>ws:ack</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">ORCHESTRATING (LangGraph)</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">Extracting context</div>
+                  <div class="sm-sub-state">Analyzing semantics</div>
+                  <div class="sm-sub-state">Retrieving embeddings</div>
+                  <div class="sm-sub-state">Generating response</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>ws:stream_start</small></div>
+              <div class="sm-state active">STREAMING<br><small style="font-size:9px;opacity:0.7">token accumulation</small></div>
+              <div class="sm-arrow"><span>→</span><small>ws:done</small></div>
+              <div class="sm-state success">COMPLETE<br><small style="font-size:9px;opacity:0.7">+ confidence score</small></div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">WebSocket Message Protocol — full type definition</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// ── OUTBOUND (client → server) ──────────────────────────────</tc>
+<tk>type</tk> <ttype>ClientMessage</ttype> =
+  | { <tp>type</tp>: <tstr>'chat_message'</tstr>; <tp>sessionId</tp>: <ttype>string</ttype>; <tp>content</tp>: <ttype>string</ttype>;
+      <tp>transcriptId</tp>: <ttype>string</ttype>; <tp>contextWindow</tp>?: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'interrupt'</tstr>; <tp>messageId</tp>: <ttype>string</ttype> }       <tc>// abort mid-stream</tc>
+  | { <tp>type</tp>: <tstr>'heartbeat'</tstr>; <tp>timestamp</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'context_pin'</tstr>; <tp>segmentIds</tp>: <ttype>string</ttype>[] };   <tc>// focus on transcript segments</tc>
+
+<tc>// ── INBOUND (server → client) ──────────────────────────────</tc>
+<tk>type</tk> <ttype>ServerMessage</ttype> =
+  | { <tp>type</tp>: <tstr>'ack'</tstr>; <tp>messageId</tp>: <ttype>string</ttype>; <tp>sessionId</tp>: <ttype>string</ttype> }
+  | { <tp>type</tp>: <tstr>'stage'</tstr>; <tp>messageId</tp>: <ttype>string</ttype>;
+      <tp>stage</tp>: <ttype>OrchestratorStage</ttype>; <tp>detail</tp>?: <ttype>string</ttype> }
+  | { <tp>type</tp>: <tstr>'token'</tstr>; <tp>messageId</tp>: <ttype>string</ttype>;
+      <tp>delta</tp>: <ttype>string</ttype>; <tp>tokenIndex</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'done'</tstr>; <tp>messageId</tp>: <ttype>string</ttype>;
+      <tp>confidence</tp>: <ttype>ConfidenceMetrics</ttype>; <tp>citations</tp>: <ttype>Citation</ttype>[];
+      <tp>processingMs</tp>: <ttype>number</ttype>; <tp>modelId</tp>: <ttype>string</ttype> }
+  | { <tp>type</tp>: <tstr>'error'</tstr>; <tp>messageId</tp>: <ttype>string</ttype>; <tp>code</tp>: <ttype>ChatErrorCode</ttype> }
+  | { <tp>type</tp>: <tstr>'interrupted'</tstr>; <tp>messageId</tp>: <ttype>string</ttype> }
+  | { <tp>type</tp>: <tstr>'rate_limited'</tstr>; <tp>retryAfterMs</tp>: <ttype>number</ttype> };
+
+<tk>type</tk> <ttype>OrchestratorStage</ttype> =
+  <tstr>'extracting'</tstr> | <tstr>'analyzing'</tstr> | <tstr>'retrieving'</tstr> | <tstr>'generating'</tstr>;
+
+<tk>interface</tk> <ttype>ConfidenceMetrics</ttype> {
+  <tp>overall</tp>: <ttype>number</ttype>;            <tc>// 0–1, RAGAS composite score</tc>
+  <tp>faithfulness</tp>: <ttype>number</ttype>;       <tc>// answer grounded in transcript</tc>
+  <tp>answerRelevance</tp>: <ttype>number</ttype>;    <tc>// how well it answers the question</tc>
+  <tp>contextPrecision</tp>: <ttype>number</ttype>;   <tc>// relevant context retrieved</tc>
+}</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-c">Data Flow</span>
+          Token Buffer · Message Threading · Session Management
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Token streaming buffer strategy — batched DOM updates</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// Token buffer prevents excessive React re-renders during fast streaming</tc>
+<tc>// Batch tokens every 16ms (one animation frame) for smooth 60fps rendering</tc>
+<tk>function</tk> <tfn>useTokenStreamBuffer</tfn>(<tp>onFlush</tp>: (<tp>text</tp>: <ttype>string</ttype>) => <ttype>void</ttype>) {
+  <tk>const</tk> <tp>bufferRef</tp> = <tfn>useRef</tfn>&lt;<ttype>string</ttype>[]&gt;([]);
+  <tk>const</tk> <tp>rafRef</tp> = <tfn>useRef</tfn>&lt;<ttype>number</ttype>&gt;();
+
+  <tk>const</tk> <tp>push</tp> = <tfn>useCallback</tfn>((<tp>token</tp>: <ttype>string</ttype>) => {
+    bufferRef.current.<tfn>push</tfn>(token);
+    <tk>if</tk> (!rafRef.current) {
+      rafRef.current = <tfn>requestAnimationFrame</tfn>(() => {
+        <tp>onFlush</tp>(bufferRef.current.<tfn>join</tfn>(<tstr>''</tstr>));
+        bufferRef.current = [];
+        rafRef.current = 0;
+      });
+    }
+  }, [onFlush]);
+
+  <tc>// Flush any remaining tokens synchronously on stream end</tc>
+  <tk>const</tk> <tp>flush</tp> = <tfn>useCallback</tfn>(() => {
+    <tfn>cancelAnimationFrame</tfn>(rafRef.current);
+    <tk>if</tk> (bufferRef.current.length) {
+      <tp>onFlush</tp>(bufferRef.current.<tfn>join</tfn>(<tstr>''</tstr>));
+      bufferRef.current = [];
+    }
+    rafRef.current = 0;
+  }, [onFlush]);
+
+  <tk>return</tk> { push, flush };
+}
+
+<tc>// Message store structure — append-only with streaming indicator</tc>
+<tk>interface</tk> <ttype>ChatMessage</ttype> {
+  <tp>id</tp>: <ttype>string</ttype>;
+  <tp>role</tp>: <tstr>'user'</tstr> | <tstr>'assistant'</tstr> | <tstr>'system'</tstr>;
+  <tp>content</tp>: <ttype>string</ttype>;
+  <tp>streamingContent</tp>?: <ttype>string</ttype>;       <tc>// accumulated delta during stream</tc>
+  <tp>isStreaming</tp>: <ttype>boolean</ttype>;
+  <tp>stage</tp>?: <ttype>OrchestratorStage</ttype>;        <tc>// current LangGraph step</tc>
+  <tp>confidence</tp>?: <ttype>ConfidenceMetrics</ttype>;   <tc>// available after done event</tc>
+  <tp>citations</tp>?: <ttype>Citation</ttype>[];
+  <tp>status</tp>: <tstr>'pending'</tstr> | <tstr>'streaming'</tstr> | <tstr>'done'</tstr> | <tstr>'error'</tstr> | <tstr>'interrupted'</tstr>;
+  <tp>timestamp</tp>: <ttype>number</ttype>;
+}</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-r">Errors</span>
+          Error + Reconnect + Rate Limit Strategy
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <table class="err-table">
+            <thead><tr><th>Scenario</th><th>Detection</th><th>Recovery</th></tr></thead>
+            <tbody>
+              <tr><td>WS_DISCONNECT mid-stream</td><td>onclose event while isStreaming=true</td><td>Mark message 'interrupted'. Show resume button. Reconnect backoff. On reconnect, send resume request with lastTokenIndex.</td></tr>
+              <tr><td>CONTEXT_WINDOW_OVERFLOW</td><td>error code from server: CTX_OVERFLOW</td><td>Auto-summarize oldest messages via /api/v1/chat/compact. Retry original message. Inform user: "Summarized older context to fit window."</td></tr>
+              <tr><td>MODEL_OFFLINE</td><td>Ollama heartbeat timeout / error code</td><td>Fallback to secondary model. Display "Using backup model" indicator. Queue message for retry on primary model recovery.</td></tr>
+              <tr><td>RATE_LIMITED</td><td>rate_limited WS event with retryAfterMs</td><td>Disable input, show countdown timer, auto-retry after retryAfterMs. No error — inform user of wait.</td></tr>
+              <tr><td>INCOMPLETE_STREAM</td><td>Connection dropped after partial tokens</td><td>Show partial response with warning badge. Offer "Try again" to regenerate from scratch or "Keep partial" to save as-is.</td></tr>
+              <tr><td>LangGraph NODE_FAILURE</td><td>error event with stage: 'analyzing'</td><td>Surface which graph node failed. Retry individual node via /api/v1/chat/retry-stage. Never re-run expensive extraction if it completed.</td></tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">WebSocket reconnect manager — exponential backoff</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tk>function</tk> <tfn>useChatWebSocket</tfn>(<tp>sessionId</tp>: <ttype>string</ttype>, <tp>onMessage</tp>: (<tp>msg</tp>: <ttype>ServerMessage</ttype>) => <ttype>void</ttype>) {
+  <tk>const</tk> <tp>wsRef</tp> = <tfn>useRef</tfn>&lt;<ttype>WebSocket</ttype>&gt;();
+  <tk>const</tk> <tp>attemptRef</tp> = <tfn>useRef</tfn>(0);
+  <tk>const</tk> <tp>MAX_ATTEMPTS</tp> = 5;
+
+  <tk>const</tk> <tp>connect</tp> = <tfn>useCallback</tfn>(() => {
+    <tk>const</tk> <tp>ws</tp> = <tk>new</tk> <ttype>WebSocket</ttype>(`${<tconst>WS_BASE</tconst>}/ws/chat/${sessionId}`);
+
+    ws.onmessage = (<tp>e</tp>) => <tp>onMessage</tp>(<ttype>JSON</ttype>.<tfn>parse</tfn>(e.data));
+
+    ws.onclose = (<tp>e</tp>) => {
+      <tk>if</tk> (e.code === 1000) <tk>return</tk>; <tc>// normal close</tc>
+      <tk>if</tk> (attemptRef.current &lt; <tp>MAX_ATTEMPTS</tp>) {
+        <tk>const</tk> <tp>delay</tp> = <ttype>Math</ttype>.<tfn>min</tfn>(1000 * 2 ** attemptRef.current, 30000);
+        <tfn>setTimeout</tfn>(<tp>connect</tp>, delay);
+        attemptRef.current++;
+      }
+    };
+
+    ws.onopen = () => { attemptRef.current = 0; }; <tc>// reset on success</tc>
+    wsRef.current = ws;
+  }, [sessionId, onMessage]);
+
+  <tk>return</tk> { wsRef, connect };
+}</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">React</span>
+          Component Architecture · Hooks
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="hook-grid">
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useChatSession</div>
+              <div class="hook-desc">Manages session lifecycle: create, resume, close. Persists sessionId to localStorage per transcriptId. Returns session metadata.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useChatWebSocket</div>
+              <div class="hook-desc">Owns WS connection, reconnect logic, heartbeat interval (30s ping). Dispatches parsed ServerMessage events to message store.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useMessageStore</div>
+              <div class="hook-desc">useReducer-based append-only message log. Actions: ADD_USER, ADD_ASSISTANT_PENDING, STREAM_TOKEN, COMPLETE_MESSAGE, ERROR_MESSAGE.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useTokenStreamBuffer</div>
+              <div class="hook-desc">rAF-batched token flusher. Prevents per-token re-renders. Exposes push(token) and flush() for stream start/end.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useSuggestedPrompts</div>
+              <div class="hook-desc">Fetches context-aware prompt suggestions from /api/v1/chat/suggestions based on transcript content. Refreshes on first render only.</div>
+            </div>
+            <div class="hook-card">
+              <div class="hook-type">Custom Hook</div>
+              <div class="hook-name">useChatScroll</div>
+              <div class="hook-desc">Auto-scrolls to bottom during streaming. Pauses auto-scroll if user manually scrolls up. Resumes when user scrolls back to bottom.</div>
+            </div>
+          </div>
+
+          <div class="comp-tree">
+<span class="ct-comp">ChatInterface</span>                           <span class="ct-comment">// Top-level chat orchestrator</span>
+├── <span class="ct-hook">useChatSession(transcriptId)</span>             <span class="ct-comment">// → {sessionId, sessionStatus}</span>
+├── <span class="ct-hook">useChatWebSocket(sessionId)</span>              <span class="ct-comment">// → {wsRef, sendMessage, wsStatus}</span>
+├── <span class="ct-hook">useMessageStore()</span>                        <span class="ct-comment">// → {messages, dispatch}</span>
+├── <span class="ct-hook">useSuggestedPrompts(transcriptId)</span>        <span class="ct-comment">// → {prompts, isLoading}</span>
+│
+├── <span class="ct-comp">ChatHeader</span>                               <span class="ct-comment">// Context label + WS status dot</span>
+│   ├── <span class="ct-prop">transcriptTitle: string</span>
+│   └── <span class="ct-prop">connectionStatus: 'connected' | 'reconnecting' | 'offline'</span>
+│
+├── <span class="ct-comp">MessageList</span>                              <span class="ct-comment">// Virtualized scroll container</span>
+│   ├── <span class="ct-hook">useChatScroll(listRef, isStreaming)</span>
+│   ├── <span class="ct-prop">messages: ChatMessage[]</span>
+│   └── <span class="ct-comp">MessageItem</span>                          <span class="ct-comment">// Per-message renderer</span>
+│       ├── <span class="ct-comp">UserBubble</span>
+│       └── <span class="ct-comp">AssistantBubble</span>
+│           ├── <span class="ct-comp">OrchestratorStageBar</span>            <span class="ct-comment">// Extracting → Analyzing → Generating</span>
+│           │   └── <span class="ct-prop">stage?: OrchestratorStage</span>
+│           ├── <span class="ct-comp">StreamingText</span>                   <span class="ct-comment">// Renders streamingContent with cursor</span>
+│           │   └── <span class="ct-hook">useTokenStreamBuffer(updateFn)</span>
+│           ├── <span class="ct-comp">ConfidenceBadge</span>                 <span class="ct-comment">// RAGAS score gauge, shown after done</span>
+│           │   └── <span class="ct-prop">metrics: ConfidenceMetrics</span>
+│           └── <span class="ct-comp">CitationLinks</span>                   <span class="ct-comment">// Linked transcript segments</span>
+│
+├── <span class="ct-comp">SuggestedPrompts</span>                         <span class="ct-comment">// Context-aware chip rail</span>
+│   └── <span class="ct-prop">onSelect(prompt: string) → fill input + send</span>
+│
+└── <span class="ct-comp">ChatInputComposer</span>                        <span class="ct-comment">// Input + send controls</span>
+    ├── handlers:
+    │   ├── <span class="ct-handler">handleSubmit()</span>                    <span class="ct-comment">// optimistic add + ws.send</span>
+    │   ├── <span class="ct-handler">handleInterrupt()</span>                 <span class="ct-comment">// ws.send interrupt event</span>
+    │   └── <span class="ct-handler">handleKeyDown(e)</span>                  <span class="ct-comment">// Enter submit, Shift+Enter newline</span>
+    ├── <span class="ct-prop">isStreaming: boolean</span>                  <span class="ct-comment">// disables input during stream</span>
+    └── <span class="ct-prop">rateLimitCountdown?: number</span>           <span class="ct-comment">// shows countdown timer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     M3 — LIVE DOCUMENT EDITOR
+════════════════════════════════════════════════════ -->
+<section class="section" id="m3">
+  <div class="section-header">
+    <div class="section-meta">
+      <div class="section-num">Module 03 / 05</div>
+      <h2 class="section-title">Live Document<br><em>Editor</em></h2>
+    </div>
+    <div class="section-side">ProseMirror-powered editor with inline LLM refinement, section highlighting, and multi-format export</div>
+  </div>
+
+  <p class="section-intro">Built on ProseMirror with a custom schema for transcript-aware sections. Inline refinement uses a floating command popover that streams tokens directly into the document via a ProseMirror transaction. Y.js CRDTs handle real-time collaboration. Export renders server-side via FastAPI using python-docx and WeasyPrint, preserving document fidelity.</p>
+
+  <div class="module-card">
+    <div class="module-card-header">
+      <div class="module-icon" style="background:var(--emerald-dim)">✏️</div>
+      <div>
+        <div class="module-card-title">Editor State Machine + LLM Refinement Flow</div>
+        <div class="module-card-sub">ProseMirror · Y.js · Inline Streaming · Export Pipeline</div>
+      </div>
+    </div>
+    <div class="module-card-body">
+
+      <div class="accordion-item">
+        <button class="accordion-trigger open" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">FSM</span>
+          Editor + Refinement State Machines
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content open">
+          <div class="state-machine">
+            <div class="sm-title">Inline Refinement FSM</div>
+            <div class="sm-flow">
+              <div class="sm-state initial">EDITING</div>
+              <div class="sm-arrow"><span>→</span><small>textSelect &gt; 10ch</small></div>
+              <div class="sm-state info">SELECTION<br><small style="font-size:9px;opacity:0.7">popover shown</small></div>
+              <div class="sm-arrow"><span>→</span><small>refineAction</small></div>
+              <div class="sm-state warning">REFINING<br><small style="font-size:9px;opacity:0.7">original dimmed</small></div>
+              <div class="sm-arrow"><span>→</span><small>stream_start</small></div>
+              <div class="sm-state active">STREAMING<br><small style="font-size:9px;opacity:0.7">inline token insert</small></div>
+              <div class="sm-arrow"><span>→</span><small>done</small></div>
+              <div class="sm-state success">PREVIEW<br><small style="font-size:9px;opacity:0.7">accept / reject</small></div>
+            </div>
+            <div class="divider" style="margin:16px 0 8px"></div>
+            <div class="sm-flow">
+              <div class="sm-state initial">EDITING</div>
+              <div class="sm-arrow"><span>→</span><small>Ctrl+Z / Ctrl+Y</small></div>
+              <div class="sm-state info">HISTORY<br><small style="font-size:9px;opacity:0.7">PM history plugin</small></div>
+              <div style="width: 40px"></div>
+              <div class="sm-state initial">EDITING</div>
+              <div class="sm-arrow"><span>→</span><small>commitIntent</small></div>
+              <div class="sm-state warning">COMMITTING</div>
+              <div class="sm-arrow"><span>→</span><small>saved</small></div>
+              <div class="sm-state success">COMMITTED</div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">ProseMirror document schema — custom transcript node types</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// Custom PM schema extending the base schema with transcript-aware nodes</tc>
+<tk>const</tk> <tp>transcriptSchema</tp> = <tk>new</tk> <ttype>Schema</ttype>({
+  nodes: {
+    doc: { content: <tstr>"section+"</tstr> },
+    section: {
+      attrs: {
+        sectionType: { <tk>default</tk>: <tstr>'body'</tstr> },  <tc>// summary | action_items | decisions | risks</tc>
+        sourceSegmentIds: { <tk>default</tk>: [] },
+        isHighlighted: { <tk>default</tk>: <tk>false</tk> },
+        refinementState: { <tk>default</tk>: <tk>null</tk> }  <tc>// null | 'streaming' | 'preview'</tc>
+      },
+      content: <tstr>"block+"</tstr>,
+      parseDOM: [{ tag: <tstr>'section'</tstr> }],
+      toDOM: (<tp>node</tp>) => [<tstr>'section'</tstr>,
+        { <tstr>'data-type'</tstr>: node.attrs.sectionType,
+          <tstr>'data-highlighted'</tstr>: node.attrs.isHighlighted }, 0]
+    },
+    streaming_placeholder: {
+      <tc>// Temporary node holding streaming tokens, replaced on completion</tc>
+      attrs: { content: { <tk>default</tk>: <tstr>''</tstr> }, originalText: { <tk>default</tk>: <tstr>''</tstr> } },
+      inline: <tk>true</tk>, atom: <tk>true</tk>,
+      toDOM: (<tp>n</tp>) => [<tstr>'span'</tstr>, { class: <tstr>'streaming-placeholder'</tstr>,
+        <tstr>'data-content'</tstr>: n.attrs.content }, n.attrs.content]
+    }
+  },
+  marks: {
+    <tc>// All base marks (bold, em, code) plus custom:</tc>
+    ai_generated: {
+      <tc>// Visual indicator for LLM-produced content</tc>
+      attrs: { confidence: { <tk>default</tk>: 1 } },
+      toDOM: (<tp>m</tp>) => [<tstr>'span'</tstr>, { class: <tstr>'ai-mark'</tstr>,
+        <tstr>'data-confidence'</tstr>: m.attrs.confidence }]
+    },
+    pending_refinement: { toDOM: () => [<tstr>'span'</tstr>, { class: <tstr>'pending-refinement'</tstr> }] }
+  }
+});</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-c">Data Flow</span>
+          Refinement Pipeline · Collaboration · Export
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Inline refinement handler — streaming tokens into ProseMirror</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tk>async function</tk> <tfn>handleInlineRefinement</tfn>(
+  <tp>action</tp>: <ttype>RefinementAction</ttype>,   <tc>// refine | expand | shorten | formalize | simplify</tc>
+  <tp>selectedText</tp>: <ttype>string</ttype>,
+  <tp>selectionPos</tp>: { from: <ttype>number</ttype>, to: <ttype>number</ttype> },
+  <tp>view</tp>: <ttype>EditorView</ttype>
+) {
+  <tc>// 1. Insert streaming placeholder at selection</tc>
+  <tk>const</tk> <tp>placeholderNode</tp> = schema.nodes.streaming_placeholder.<tfn>create</tfn>({
+    content: <tstr>''</tstr>, originalText: selectedText
+  });
+  view.dispatch(view.state.tr
+    .<tfn>replaceWith</tfn>(selectionPos.from, selectionPos.to, placeholderNode)
+    .<tfn>setMeta</tfn>(<tstr>'refinement'</tstr>, { action, pos: selectionPos }));
+
+  <tc>// 2. Open SSE stream from refinement endpoint</tc>
+  <tk>const</tk> <tp>stream</tp> = <tk>await</tk> <tfn>openRefinementStream</tfn>({
+    action, text: selectedText,
+    documentId: currentDocId, context: <tfn>getSurroundingContext</tfn>(selectionPos, view)
+  });
+
+  <tk>let</tk> <tp>accumulated</tp> = <tstr>''</tstr>;
+  <tk>for await</tk> (<tk>const</tk> <tp>token</tp> <tk>of</tk> stream) {
+    accumulated += token;
+    <tc>// 3. Update placeholder node content per RAF batch</tc>
+    <tfn>scheduleUpdate</tfn>(() =>
+      view.dispatch(view.state.tr
+        .<tfn>setNodeAttribute</tfn>(<tfn>findPlaceholderPos</tfn>(view.state), <tstr>'content'</tstr>, accumulated))
+    );
+  }
+
+  <tc>// 4. Stream complete: enter PREVIEW state</tc>
+  <tc>// Original text stored in placeholder attrs for rejection rollback</tc>
+  setRefinementState({ status: <tstr>'preview'</tstr>, refined: accumulated, original: selectedText });
+}
+
+<tc>// Accept handler: replace placeholder with final styled text node</tc>
+<tk>function</tk> <tfn>acceptRefinement</tfn>(<tp>view</tp>: <ttype>EditorView</ttype>, <tp>refinedText</tp>: <ttype>string</ttype>) {
+  <tk>const</tk> <tp>placeholderPos</tp> = <tfn>findPlaceholderPos</tfn>(view.state);
+  <tk>const</tk> <tp>textNode</tp> = schema.<tfn>text</tfn>(refinedText, [schema.marks.ai_generated.<tfn>create</tfn>()]);
+  view.dispatch(view.state.tr.<tfn>replaceWith</tfn>(placeholderPos, placeholderPos + 1, textNode));
+}
+
+<tc>// Reject: restore original text from placeholder attrs</tc>
+<tk>function</tk> <tfn>rejectRefinement</tfn>(<tp>view</tp>: <ttype>EditorView</ttype>, <tp>originalText</tp>: <ttype>string</ttype>) {
+  <tk>const</tk> <tp>pos</tp> = <tfn>findPlaceholderPos</tfn>(view.state);
+  view.dispatch(view.state.tr.<tfn>replaceWith</tfn>(pos, pos + 1, schema.<tfn>text</tfn>(originalText)));
+}</pre></div>
+          </div>
+
+          <div class="sub-header">Export Pipeline</div>
+          <div class="edge-grid">
+            <div class="edge-item">
+              <div class="edge-icon">📄</div>
+              <div>
+                <div class="edge-label">PDF Export</div>
+                <div class="edge-desc">POST /api/v1/documents/{id}/export/pdf with prosemirror_json payload. FastAPI renders via WeasyPrint with CSS template. Streams blob back. Client downloads via URL.createObjectURL.</div>
+              </div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">📝</div>
+              <div>
+                <div class="edge-label">DOCX Export</div>
+                <div class="edge-desc">POST /api/v1/documents/{id}/export/docx. python-docx builds document from PM JSON. Preserves heading levels, bold/italic, tables. Returns as application/vnd.openxmlformats.</div>
+              </div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🔗</div>
+              <div>
+                <div class="edge-label">Notion Push</div>
+                <div class="edge-desc">Client converts PM JSON to Notion Block API format. POST /api/v1/integrations/notion/push with OAuth token from workspace settings. Confirms page ID on success.</div>
+              </div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">📋</div>
+              <div>
+                <div class="edge-label">Clipboard Export</div>
+                <div class="edge-desc">Client-side only. PM serializer → Markdown. navigator.clipboard.write with both text/plain and text/html. No server call needed. Instant feedback toast.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-r">Errors + Edge Cases</span>
+          Collaboration Conflicts · Stream Interruption · Export Failures
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <table class="err-table">
+            <thead><tr><th>Scenario</th><th>Strategy</th></tr></thead>
+            <tbody>
+              <tr><td>YMAP_CONFLICT — two users edit same section simultaneously</td><td>Y.js CRDT resolves automatically. No manual merge needed. Show "N changes merged" toast post-sync. Conflicting AI placeholders are deduplicated by transaction ID.</td></tr>
+              <tr><td>REFINEMENT_STREAM_INTERRUPTED</td><td>Placeholder node stores partial accumulated text. Show "Refinement interrupted" badge with option to accept partial or reject fully. Partial text never auto-applied.</td></tr>
+              <tr><td>EXPORT_TIMEOUT (server-side render &gt;10s)</td><td>Show animated progress indicator. After 10s, offer "Email when ready" option. Backend queues export job, sends signed download URL via WebSocket notification.</td></tr>
+              <tr><td>UNSAVED_CHANGES on navigate away</td><td>beforeunload + router beforeEach guard. Show "You have unsaved changes" dialog with Save + Leave and Leave Without Saving options. Auto-save every 30s as draft (no commit).</td></tr>
+              <tr><td>COLLABORATION_PROVIDER_DISCONNECT</td><td>Y.js marks provider as offline. Buffer local changes. Show "Collaboration paused — reconnecting" banner. On reconnect, sync queued operations. Merge state from server Y.Doc snapshot.</td></tr>
+              <tr><td>LARGE_DOCUMENT_PERFORMANCE (&gt;50KB PM JSON)</td><td>Virtualize section rendering. Only render visible sections + 2 buffer sections above/below. Use Intersection Observer to trigger lazy rendering of off-screen sections.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">React</span>
+          Component Architecture
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="comp-tree">
+<span class="ct-comp">LiveEditor</span>                               <span class="ct-comment">// ProseMirror host + collaboration</span>
+├── <span class="ct-hook">useEditorState(documentId)</span>               <span class="ct-comment">// → {view, editorState, dispatch}</span>
+├── <span class="ct-hook">useYjsCollaboration(documentId, user)</span>    <span class="ct-comment">// → {provider, awareness, peers}</span>
+├── <span class="ct-hook">useDocumentAutoSave(view, 30_000)</span>        <span class="ct-comment">// → {isDirty, lastSaved, save}</span>
+├── <span class="ct-hook">useInlineRefinement(view)</span>                <span class="ct-comment">// → {refinementState, actions}</span>
+├── <span class="ct-hook">useSectionHighlighting(view)</span>             <span class="ct-comment">// → {highlightSection, clearHighlight}</span>
+│
+├── <span class="ct-comp">EditorToolbar</span>
+│   ├── <span class="ct-comp">FormatGroup</span>                          <span class="ct-comment">// Bold, Italic, Heading marks</span>
+│   ├── <span class="ct-comp">StructureGroup</span>                       <span class="ct-comment">// List, Quote, Code</span>
+│   ├── <span class="ct-comp">AIRefinementButton</span>                   <span class="ct-comment">// Disabled unless text selected</span>
+│   ├── <span class="ct-comp">CommitButton</span>                         <span class="ct-comment">// Triggers version commit modal</span>
+│   └── <span class="ct-comp">ExportMenu</span>
+│       ├── handlers:
+│       │   ├── <span class="ct-handler">handleExportPDF()</span>              <span class="ct-comment">// POST + download blob</span>
+│       │   ├── <span class="ct-handler">handleExportDOCX()</span>
+│       │   ├── <span class="ct-handler">handlePushToNotion()</span>
+│       │   └── <span class="ct-handler">handleCopyMarkdown()</span>
+│       └── <span class="ct-prop">isExporting: boolean</span>
+│
+├── <span class="ct-comp">CollaboratorBar</span>                          <span class="ct-comment">// Live cursor presence from Y.js awareness</span>
+│   └── <span class="ct-prop">peers: AwarenessPeer[]</span>
+│
+├── <span class="ct-comp">EditorContent</span>                            <span class="ct-comment">// ProseMirror mount point</span>
+│   └── div[ref=editorRef] ← EditorView mounts here
+│
+├── <span class="ct-comp">RefinementPopover</span>                        <span class="ct-comment">// Floating action menu on selection</span>
+│   ├── <span class="ct-prop">selectionRect: DOMRect</span>               <span class="ct-comment">// Positioned absolute over selection</span>
+│   ├── <span class="ct-prop">onAction(RefinementAction)</span>
+│   └── actions: refine | expand | shorten | formalize | simplify
+│
+├── <span class="ct-comp">RefinementPreviewBanner</span>                  <span class="ct-comment">// Accept / Reject overlay during PREVIEW</span>
+│   ├── <span class="ct-prop">original: string</span>
+│   ├── <span class="ct-prop">refined: string</span>
+│   ├── <span class="ct-handler">onAccept()</span>
+│   └── <span class="ct-handler">onReject()</span>
+│
+└── <span class="ct-comp">CommitModal</span>                              <span class="ct-comment">// Version commit with message input</span>
+    ├── <span class="ct-hook">useCommitForm(documentId)</span>
+    └── handlers: <span class="ct-handler">handleCommit(message, branch)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     M4 — VERSION CONTROL TIMELINE
+════════════════════════════════════════════════════ -->
+<section class="section" id="m4">
+  <div class="section-header">
+    <div class="section-meta">
+      <div class="section-num">Module 04 / 05</div>
+      <h2 class="section-title">Version Control<br><em>Timeline</em></h2>
+    </div>
+    <div class="section-side">Git-model branching, diff visualization, point-in-time restore with conflict detection</div>
+  </div>
+
+  <p class="section-intro">Implements a client-side Git model over document snapshots stored in PostgreSQL. Branches are represented as named pointers to commit hashes. The diff engine uses a custom Myers diff algorithm adapted for ProseMirror JSON nodes rather than line-by-line text. Restore operations are optimistic with server-side validation before commit.</p>
+
+  <div class="module-card">
+    <div class="module-card-header">
+      <div class="module-icon" style="background:var(--amber-dim)">⎇</div>
+      <div>
+        <div class="module-card-title">Version Control Architecture</div>
+        <div class="module-card-sub">Branching Model · Diff Engine · Restore FSM</div>
+      </div>
+    </div>
+    <div class="module-card-body">
+
+      <div class="accordion-item">
+        <button class="accordion-trigger open" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">FSM</span>
+          Timeline View + Restore State Machine
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content open">
+          <div class="state-machine">
+            <div class="sm-title">Version Control Interaction States</div>
+            <div class="sm-flow">
+              <div class="sm-state initial">BROWSING<br><small style="opacity:0.6;font-size:9px">commit list</small></div>
+              <div class="sm-arrow"><span>→</span><small>selectCommit</small></div>
+              <div class="sm-state info">DIFF_VIEW<br><small style="opacity:0.6;font-size:9px">loading diff</small></div>
+              <div class="sm-arrow"><span>→</span><small>diff loaded</small></div>
+              <div class="sm-state active">COMPARING<br><small style="opacity:0.6;font-size:9px">side-by-side</small></div>
+              <div class="sm-arrow"><span>→</span><small>restoreClick</small></div>
+              <div class="sm-state warning">CONFIRMING<br><small style="opacity:0.6;font-size:9px">confirm dialog</small></div>
+              <div class="sm-arrow"><span>→</span><small>confirm</small></div>
+              <div class="sm-state active">RESTORING<br><small style="opacity:0.6;font-size:9px">POST /restore</small></div>
+              <div class="sm-arrow"><span>→</span><small>success</small></div>
+              <div class="sm-state success">RESTORED<br><small style="opacity:0.6;font-size:9px">head updated</small></div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Client-side Git model — branch and commit data structures</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tk>interface</tk> <ttype>CommitNode</ttype> {
+  <tp>id</tp>: <ttype>string</ttype>;                    <tc>// sha-256 hash of document snapshot</tc>
+  <tp>parentId</tp>: <ttype>string</ttype> | <tk>null</tk>;    <tc>// null for root commit</tc>
+  <tp>message</tp>: <ttype>string</ttype>;
+  <tp>author</tp>: { id: <ttype>string</ttype>; name: <ttype>string</ttype>; avatar?: <ttype>string</ttype> };
+  <tp>timestamp</tp>: <ttype>number</ttype>;
+  <tp>branch</tp>: <ttype>string</ttype>;                 <tc>// 'main' | custom branch name</tc>
+  <tp>documentSnapshot</tp>?: <ttype>PMDocJSON</ttype>;   <tc>// lazy-loaded on demand</tc>
+  <tp>diffStats</tp>: { added: <ttype>number</ttype>; removed: <ttype>number</ttype>; modified: <ttype>number</ttype> };
+  <tp>tags</tp>?: <ttype>string</ttype>[];                 <tc>// 'HEAD', 'main', custom</tc>
+}
+
+<tk>interface</tk> <ttype>BranchRef</ttype> {
+  <tp>name</tp>: <ttype>string</ttype>;
+  <tp>headCommitId</tp>: <ttype>string</ttype>;
+  <tp>isDefault</tp>: <ttype>boolean</ttype>;
+  <tp>lastActivity</tp>: <ttype>number</ttype>;
+  <tp>ahead</tp>: <ttype>number</ttype>;   <tc>// commits ahead of merge base with main</tc>
+  <tp>behind</tp>: <ttype>number</ttype>;  <tc>// commits behind</tc>
+}
+
+<tc>// Computed graph structure for visualization</tc>
+<tk>interface</tk> <ttype>CommitGraph</ttype> {
+  <tp>nodes</tp>: <ttype>CommitNode</ttype>[];
+  <tp>edges</tp>: Array&lt;{ from: <ttype>string</ttype>; to: <ttype>string</ttype>; type: <tstr>'parent'</tstr> | <tstr>'merge'</tstr> }&gt;;
+  <tp>branches</tp>: <ttype>BranchRef</ttype>[];
+  <tp>HEAD</tp>: <ttype>string</ttype>;  <tc>// current commit id</tc>
+  <tp>currentBranch</tp>: <ttype>string</ttype>;
+}
+
+<tc>// Myers diff adapted for PM JSON node comparison</tc>
+<tk>type</tk> <ttype>DiffOp</ttype> =
+  | { <tp>type</tp>: <tstr>'add'</tstr>; <tp>node</tp>: <ttype>PMNode</ttype>; <tp>pos</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'remove'</tstr>; <tp>node</tp>: <ttype>PMNode</ttype>; <tp>pos</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'modify'</tstr>; <tp>from</tp>: <ttype>PMNode</ttype>; <tp>to</tp>: <ttype>PMNode</ttype>; <tp>pos</tp>: <ttype>number</ttype> }
+  | { <tp>type</tp>: <tstr>'unchanged'</tstr>; <tp>node</tp>: <ttype>PMNode</ttype>; <tp>pos</tp>: <ttype>number</ttype> };</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-c">Data Flow</span>
+          Graph Rendering · Diff Loading · Restore Protocol
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="dataflow">
+            <div class="df-col">
+              <div class="df-col-title">API Endpoints</div>
+              <div class="df-item">GET /api/v1/documents/{id}/commits → CommitGraph</div>
+              <div class="df-item">GET /api/v1/commits/{id}/diff?base={baseId} → DiffOp[]</div>
+              <div class="df-item">GET /api/v1/commits/{id}/snapshot → PMDocJSON</div>
+              <div class="df-item">POST /api/v1/documents/{id}/branches → BranchRef</div>
+              <div class="df-item">POST /api/v1/documents/{id}/restore → {newCommitId}</div>
+              <div class="df-item">POST /api/v1/branches/{name}/merge → MergeResult</div>
+            </div>
+            <div class="df-center">
+              <div class="df-arrow-block">
+                <div class="df-arrow-label">lazy load</div>
+                <div class="df-arrow-sym">→</div>
+              </div>
+              <div class="df-arrow-block">
+                <div class="df-arrow-label">optimistic</div>
+                <div class="df-arrow-sym">⇄</div>
+              </div>
+            </div>
+            <div class="df-col">
+              <div class="df-col-title">Caching Strategy</div>
+              <div class="df-item">CommitGraph: React Query cache, 5min stale time</div>
+              <div class="df-item">Diffs: memoized by (fromId, toId) pair, never stale</div>
+              <div class="df-item">Snapshots: lazy, loaded only on restore/preview</div>
+              <div class="df-item">Branch list: refetch on focus, WS invalidation</div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Restore flow with auto-branch-before-restore safety net</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tk>async function</tk> <tfn>handleRestore</tfn>(<tp>targetCommitId</tp>: <ttype>string</ttype>) {
+  <tc>// Safety: auto-create backup branch before overwriting HEAD</tc>
+  <tk>const</tk> <tp>backupBranchName</tp> = `backup/${<ttype>Date</ttype>.<tfn>now</tfn>()}`;
+  <tk>await</tk> <tfn>createBranch</tfn>({ name: backupBranchName, fromCommitId: graph.HEAD });
+
+  <tc>// Optimistic UI update: immediately show target state as current</tc>
+  <tk>const</tk> <tp>snapshot</tp> = <tk>await</tk> <tfn>fetchSnapshot</tfn>(targetCommitId);
+  setOptimisticDocument(snapshot);
+
+  <tk>try</tk> {
+    <tc>// Server creates new commit pointing to target snapshot content</tc>
+    <tk>const</tk> { newCommitId } = <tk>await</tk> api.<tfn>post</tfn>(`/documents/${docId}/restore`, {
+      targetCommitId,
+      message: `Restore to ${targetCommitId.<tfn>slice</tfn>(0,7)}`,
+      backupBranch: backupBranchName
+    });
+
+    <tc>// Invalidate and refetch graph with new HEAD</tc>
+    <tk>await</tk> queryClient.<tfn>invalidateQueries</tfn>([<tstr>'commits'</tstr>, docId]);
+    <tfn>toast</tfn>.success(`Restored. Backup saved to branch "${backupBranchName}".`);
+  } <tk>catch</tk> (err) {
+    <tc>// Rollback optimistic update</tc>
+    <tfn>revertOptimisticDocument</tfn>();
+    <tfn>toast</tfn>.error(<tstr>'Restore failed. Your document is unchanged.'</tstr>);
+  }
+}</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-r">Edge Cases</span>
+          Merge Conflicts · Large Histories · Branch Divergence
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="edge-grid">
+            <div class="edge-item">
+              <div class="edge-icon">⚡</div>
+              <div><div class="edge-label">Merge conflict visualization</div><div class="edge-desc">Server returns conflict regions as DiffOp[] with type:'conflict'. Client renders three-pane merge view: ours, theirs, merged. User resolves manually or accepts either side.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">📊</div>
+              <div><div class="edge-label">Large commit history (&gt;500 commits)</div><div class="edge-desc">Paginate graph API with cursor-based pagination. Virtualize commit list. Load branch tips eagerly; load commit detail lazily on scroll or selection.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🔀</div>
+              <div><div class="edge-label">Branch deleted on server while viewing</div><div class="edge-desc">React Query refetch on focus detects 404 for branch. Invalidate UI, show "Branch was deleted" message, redirect to main branch.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🕐</div>
+              <div><div class="edge-label">Concurrent restore by two users</div><div class="edge-desc">Server uses optimistic locking (version counter). Second restore returns 409 CONFLICT. Client shows "Another user just restored — reload to see current state."</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">💾</div>
+              <div><div class="edge-label">Snapshot unavailable (storage gap)</div><div class="edge-desc">Snapshot endpoint returns 404. Disable restore button for that commit. Show "Snapshot unavailable — this version cannot be restored" tooltip.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">📈</div>
+              <div><div class="edge-label">Diff computation for large documents</div><div class="edge-desc">Server computes Myers diff. Client receives pre-computed DiffOp[]. Never compute diff client-side for documents &gt;50KB. Show "Computing diff…" skeleton during API fetch.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">React</span>
+          Component Architecture
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="comp-tree">
+<span class="ct-comp">VersionTimeline</span>                          <span class="ct-comment">// Root: split timeline/diff view</span>
+├── <span class="ct-hook">useCommitGraph(documentId)</span>               <span class="ct-comment">// React Query → CommitGraph</span>
+├── <span class="ct-hook">useSelectedCommit()</span>                      <span class="ct-comment">// → {selected, setSelected}</span>
+├── <span class="ct-hook">useDiffLoader(fromId, toId)</span>              <span class="ct-comment">// React Query lazy diff, memoized</span>
+├── <span class="ct-hook">useBranchManager(documentId)</span>             <span class="ct-comment">// create, switch, delete branches</span>
+├── <span class="ct-hook">useRestoreFlow(documentId)</span>               <span class="ct-comment">// FSM: browsing→confirming→restoring</span>
+│
+├── <span class="ct-comp">TimelinePanel</span>                            <span class="ct-comment">// Left: commit list + branch graph</span>
+│   ├── <span class="ct-comp">BranchSelector</span>                       <span class="ct-comment">// Dropdown to switch branches</span>
+│   ├── <span class="ct-comp">CommitGraph</span>                          <span class="ct-comment">// SVG graph of branch/merge lines</span>
+│   │   └── <span class="ct-comp">GraphEdge</span>                     <span class="ct-comment">// SVG path per edge</span>
+│   └── <span class="ct-comp">CommitList</span>
+│       └── <span class="ct-comp">CommitItem</span>                       <span class="ct-comment">// sha, message, author, timestamp</span>
+│           ├── <span class="ct-prop">isHead: boolean</span>
+│           ├── <span class="ct-prop">isCurrent: boolean</span>             <span class="ct-comment">// highlighted if viewing diff</span>
+│           ├── <span class="ct-prop">tags: string[]</span>                <span class="ct-comment">// HEAD, branch names</span>
+│           └── <span class="ct-handler">onClick → setSelectedCommit</span>
+│
+└── <span class="ct-comp">DiffPanel</span>                                <span class="ct-comment">// Right: diff view + restore</span>
+    ├── <span class="ct-comp">DiffHeader</span>                           <span class="ct-comment">// commit metadata + stats</span>
+    ├── <span class="ct-comp">DiffViewer</span>                           <span class="ct-comment">// side-by-side or inline toggle</span>
+    │   ├── <span class="ct-prop">ops: DiffOp[]</span>
+    │   ├── <span class="ct-prop">mode: 'split' | 'unified'</span>
+    │   └── <span class="ct-comp">DiffLine</span>                         <span class="ct-comment">// add/remove/modify/unchanged variants</span>
+    ├── <span class="ct-comp">RestoreButton</span>
+    │   └── <span class="ct-handler">onClick → restoreFlow.begin(commitId)</span>
+    └── <span class="ct-comp">RestoreConfirmDialog</span>                  <span class="ct-comment">// Warns + shows backup branch name</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     M5 — AUTH LIFECYCLE
+════════════════════════════════════════════════════ -->
+<section class="section" id="m5">
+  <div class="section-header">
+    <div class="section-meta">
+      <div class="section-num">Module 05 / 05</div>
+      <h2 class="section-title">Authentication<br><em>Lifecycle</em></h2>
+    </div>
+    <div class="section-side">JWT + refresh token rotation, protected routes, OAuth, registration, password recovery with security hardening</div>
+  </div>
+
+  <p class="section-intro">Full auth lifecycle using httpOnly refresh tokens (HttpOnly, Secure, SameSite=Strict) with silent refresh via a hidden iframe or proactive re-issue 60 seconds before expiry. Access tokens are short-lived (15 min) and stored in memory only — never localStorage. OAuth flows use PKCE. All forms are hardened against timing attacks and credential stuffing.</p>
+
+  <div class="module-card">
+    <div class="module-card-header">
+      <div class="module-icon" style="background:var(--rose-dim)">🔐</div>
+      <div>
+        <div class="module-card-title">Authentication State Machine + Security Architecture</div>
+        <div class="module-card-sub">JWT · Refresh Rotation · OAuth PKCE · Rate Limiting</div>
+      </div>
+    </div>
+    <div class="module-card-body">
+
+      <div class="accordion-item">
+        <button class="accordion-trigger open" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">FSM</span>
+          Auth State Machine — Full Lifecycle
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content open">
+          <div class="state-machine">
+            <div class="sm-title">Authentication State Machine</div>
+            <div class="sm-flow">
+              <div class="sm-state initial">UNINITIALISED</div>
+              <div class="sm-arrow"><span>→</span><small>app mount</small></div>
+              <div class="sm-state info">CHECKING<br><small style="font-size:9px;opacity:0.7">silent refresh</small></div>
+              <div class="sm-arrow"><span>→</span><small>token valid</small></div>
+              <div class="sm-state success">AUTHENTICATED</div>
+              <div class="sm-arrow"><span>→</span><small>logout / expired</small></div>
+              <div class="sm-state initial">UNAUTHENTICATED</div>
+            </div>
+            <div class="divider" style="margin:16px 0 8px"></div>
+            <div class="sm-flow">
+              <div class="sm-state initial">UNAUTHENTICATED</div>
+              <div class="sm-arrow"><span>→</span><small>submitLogin</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">LOGIN FLOW</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">submitting</div>
+                  <div class="sm-sub-state">mfa_required (optional)</div>
+                  <div class="sm-sub-state">token_exchange</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>tokens issued</small></div>
+              <div class="sm-state success">AUTHENTICATED</div>
+            </div>
+            <div class="divider" style="margin:16px 0 8px"></div>
+            <div class="sm-flow">
+              <div class="sm-state initial">UNAUTHENTICATED</div>
+              <div class="sm-arrow"><span>→</span><small>registerIntent</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">REGISTRATION</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">form_input</div>
+                  <div class="sm-sub-state">email_verify</div>
+                  <div class="sm-sub-state">workspace_create</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>verified</small></div>
+              <div class="sm-state success">AUTHENTICATED</div>
+            </div>
+            <div class="divider" style="margin:16px 0 8px"></div>
+            <div class="sm-flow">
+              <div class="sm-state initial">UNAUTHENTICATED</div>
+              <div class="sm-arrow"><span>→</span><small>forgotPassword</small></div>
+              <div class="sm-group">
+                <div class="sm-group-title">RECOVERY</div>
+                <div class="sm-sub-states">
+                  <div class="sm-sub-state current">email_sent</div>
+                  <div class="sm-sub-state">token_verify</div>
+                  <div class="sm-sub-state">new_password</div>
+                </div>
+              </div>
+              <div class="sm-arrow"><span>→</span><small>reset done</small></div>
+              <div class="sm-state success">AUTHENTICATED</div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Auth context + silent refresh — token stored in memory only</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// Access token NEVER stored in localStorage — memory only</tc>
+<tc>// Refresh token in httpOnly cookie set by FastAPI /auth/refresh endpoint</tc>
+<tk>interface</tk> <ttype>AuthState</ttype> {
+  <tp>status</tp>: <tstr>'uninitialised'</tstr> | <tstr>'checking'</tstr> | <tstr>'authenticated'</tstr> | <tstr>'unauthenticated'</tstr>;
+  <tp>user</tp>: <ttype>User</ttype> | <tk>null</tk>;
+  <tp>accessToken</tp>: <ttype>string</ttype> | <tk>null</tk>;   <tc>// in-memory only, cleared on unmount</tc>
+  <tp>expiresAt</tp>: <ttype>number</ttype> | <tk>null</tk>;
+}
+
+<tk>function</tk> <tfn>useAuthProvider</tfn>(): <ttype>AuthContextValue</ttype> {
+  <tk>const</tk> [state, setState] = <tfn>useState</tfn>&lt;<ttype>AuthState</ttype>&gt;({ status: <tstr>'uninitialised'</tstr>, user: <tk>null</tk>,
+    accessToken: <tk>null</tk>, expiresAt: <tk>null</tk> });
+  <tk>const</tk> <tp>refreshTimerRef</tp> = <tfn>useRef</tfn>&lt;<ttype>number</ttype>&gt;();
+
+  <tc>// Silent refresh: attempt to get new access token using httpOnly refresh cookie</tc>
+  <tk>const</tk> <tp>silentRefresh</tp> = <tfn>useCallback</tfn>(<tk>async</tk> () => {
+    <tk>try</tk> {
+      <tk>const</tk> { accessToken, expiresIn, user } = <tk>await</tk>
+        api.<tfn>post</tfn>(<tstr>'/auth/refresh'</tstr>, {}, { withCredentials: <tk>true</tk> });
+
+      setState({ status: <tstr>'authenticated'</tstr>, user, accessToken,
+        expiresAt: <ttype>Date</ttype>.<tfn>now</tfn>() + expiresIn * 1000 });
+
+      <tc>// Schedule next refresh 60s before expiry</tc>
+      <tk>const</tk> <tp>delay</tp> = (expiresIn - 60) * 1000;
+      refreshTimerRef.current = <tfn>window</tfn>.<tfn>setTimeout</tfn>(silentRefresh, delay);
+    } <tk>catch</tk> {
+      setState({ status: <tstr>'unauthenticated'</tstr>, user: <tk>null</tk>, accessToken: <tk>null</tk>, expiresAt: <tk>null</tk> });
+    }
+  }, []);
+
+  <tc>// On mount: attempt silent refresh to restore session</tc>
+  <tfn>useEffect</tfn>(() => {
+    setState(<tp>s</tp> => ({ ...<tp>s</tp>, status: <tstr>'checking'</tstr> }));
+    <tp>silentRefresh</tp>();
+    <tk>return</tk> () => <tfn>clearTimeout</tfn>(refreshTimerRef.current);
+  }, [silentRefresh]);
+
+  <tc>// Axios interceptor: attach access token to every request</tc>
+  <tc>// On 401: call silentRefresh once, retry original request, then logout</tc>
+  <tfn>useEffect</tfn>(() => {
+    <tk>const</tk> <tp>id</tp> = api.interceptors.request.<tfn>use</tfn>(cfg => {
+      <tk>if</tk> (state.accessToken) cfg.headers.Authorization = `Bearer ${state.accessToken}`;
+      <tk>return</tk> cfg;
+    });
+    <tk>return</tk> () => api.interceptors.request.<tfn>eject</tfn>(id);
+  }, [state.accessToken]);
+
+  <tk>return</tk> { ...state, login, logout, silentRefresh };
+}</pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-c">Forms</span>
+          Login · Registration · Password Recovery
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-header-label">Login form — security hardening + rate limit UI</span>
+              <span class="code-lang">TypeScript</span>
+            </div>
+            <div class="code-body"><pre>
+<tc>// Login form with: debounced submission, rate limit countdown,</tc>
+<tc>// timing-safe error messages, CSRF token, password visibility toggle</tc>
+<tk>function</tk> <tfn>LoginForm</tfn>() {
+  <tk>const</tk> { login } = <tfn>useAuth</tfn>();
+  <tk>const</tk> <tp>form</tp> = <tfn>useForm</tfn>&lt;<ttype>LoginFields</ttype>&gt;({
+    resolver: <tfn>zodResolver</tfn>(loginSchema),
+    mode: <tstr>'onBlur'</tstr>  <tc>// validate on blur, not on every keystroke</tc>
+  });
+  <tk>const</tk> [rateLimitState, setRateLimit] = <tfn>useState</tfn>&lt;{ locked: <ttype>boolean</ttype>; retryAfter: <ttype>number</ttype> }&gt;();
+
+  <tk>const</tk> <tp>onSubmit</tp> = <tfn>useCallback</tfn>(<tk>async</tk> (<tp>data</tp>: <ttype>LoginFields</ttype>) => {
+    <tk>try</tk> {
+      <tk>await</tk> <tp>login</tp>(data);
+      <tc>// Success: navigate handled by protected route redirect</tc>
+    } <tk>catch</tk> (err: <tk>any</tk>) {
+      <tk>if</tk> (err.status === 429) {
+        <tc>// Rate limited: show countdown, disable submit</tc>
+        <tk>const</tk> <tp>retryAfter</tp> = err.headers[<tstr>'retry-after'</tstr>] ?? 60;
+        <tp>setRateLimit</tp>({ locked: <tk>true</tk>, retryAfter });
+        <tfn>startCountdown</tfn>(retryAfter, (n) =>
+          n === 0 ? <tp>setRateLimit</tp>({ locked: <tk>false</tk>, retryAfter: 0 }) : <tk>null</tk>);
+      } <tk>else</tk> <tk>if</tk> (err.status === 401) {
+        <tc>// Generic message regardless of whether email or password is wrong</tc>
+        <tc>// Prevents user enumeration — never specify which field is incorrect</tc>
+        form.<tfn>setError</tfn>(<tstr>'root'</tstr>, { message: <tstr>'Invalid credentials. Please try again.'</tstr> });
+      }
+    }
+  }, [login]);
+
+  <tc>// PKCE OAuth flow</tc>
+  <tk>const</tk> <tp>handleOAuth</tp> = <tk>async</tk> (<tp>provider</tp>: <tstr>'google'</tstr> | <tstr>'github'</tstr>) => {
+    <tk>const</tk> <tp>verifier</tp> = <tfn>generateCodeVerifier</tfn>();  <tc>// crypto.getRandomValues</tc>
+    <tk>const</tk> <tp>challenge</tp> = <tk>await</tk> <tfn>generateCodeChallenge</tfn>(verifier);
+    sessionStorage.<tfn>setItem</tfn>(<tstr>'oauth_verifier'</tstr>, verifier);
+    <tk>const</tk> <tp>state</tp> = <tfn>generateOAuthState</tfn>();  <tc>// CSRF protection for OAuth</tc>
+    sessionStorage.<tfn>setItem</tfn>(<tstr>'oauth_state'</tstr>, state);
+    <tk>window</tk>.location.href =
+      `/api/v1/auth/oauth/${provider}?code_challenge=${challenge}&state=${state}`;
+  };
+
+  <tc>// Zod validation schema</tc>
+  <tk>const</tk> <tp>loginSchema</tp> = z.<tfn>object</tfn>({
+    email: z.<tfn>string</tfn>().<tfn>email</tfn>(<tstr>'Invalid email format'</tstr>),
+    password: z.<tfn>string</tfn>().<tfn>min</tfn>(8, <tstr>'Password must be at least 8 characters'</tstr>)
+  });
+}</pre></div>
+          </div>
+
+          <div class="edge-grid">
+            <div class="edge-item">
+              <div class="edge-icon">📧</div>
+              <div><div class="edge-label">Email verification flow</div><div class="edge-desc">On registration, send token to email. Link format: /verify-email?token=&lt;JWT&gt;. Token expires in 24h. Clicking link in a different browser: exchange token for auth session (single-use).</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🔑</div>
+              <div><div class="edge-label">Password recovery edge cases</div><div class="edge-desc">Reset tokens expire in 1h and are single-use. On success: invalidate ALL existing refresh tokens for that user (full logout all devices). Never reveal if email exists (generic "If an account exists…" message).</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">📱</div>
+              <div><div class="edge-label">OAuth callback in different tab</div><div class="edge-desc">BroadcastChannel API: on /auth/callback success, post message to opener tab. Opener receives token, closes callback tab, navigates to intended destination.</div></div>
+            </div>
+            <div class="edge-item">
+              <div class="edge-icon">🔄</div>
+              <div><div class="edge-label">Refresh token rotation collision</div><div class="edge-desc">Two concurrent requests both try to refresh. Implement "refresh lock" using a pending promise ref. Second caller awaits first caller's promise instead of making duplicate refresh call.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-r">Errors + Security</span>
+          Token Expiry · CSRF · Session Management
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <table class="err-table">
+            <thead><tr><th>Scenario</th><th>Detection</th><th>Response</th></tr></thead>
+            <tbody>
+              <tr><td>ACCESS_TOKEN_EXPIRED mid-request</td><td>401 from any API call via Axios interceptor</td><td>Queue all pending requests. Execute silentRefresh() once. On success: replay all queued requests with new token. On failure: clear state, redirect to /login with returnUrl param.</td></tr>
+              <tr><td>REFRESH_TOKEN_REVOKED</td><td>silentRefresh returns 401</td><td>Clear in-memory token. Redirect to /login. If user had unsaved work in editor, store draft to localStorage keyed to user ID before redirect.</td></tr>
+              <tr><td>CSRF_ATTACK attempt</td><td>SameSite=Strict cookie prevents cross-origin cookie send. Additional: X-Requested-With header checked server-side for state-mutating endpoints.</td><td>FastAPI rejects request. Client receives 403. No user-facing action needed — attack silently fails.</td></tr>
+              <tr><td>CONCURRENT_SESSIONS — same user multiple tabs</td><td>BroadcastChannel 'auth:logout' message</td><td>When user logs out in one tab, broadcast logout message. All other tabs receive message, clear in-memory token, show "Logged out in another tab" modal with re-login option.</td></tr>
+              <tr><td>OAUTH_STATE_MISMATCH</td><td>state param in callback ≠ sessionStorage value</td><td>Hard fail: clear OAuth state, show "Authentication failed — possible CSRF" error, redirect to /login. Log security event.</td></tr>
+              <tr><td>ACCOUNT_NOT_VERIFIED on login attempt</td><td>HTTP 403 with code UNVERIFIED_EMAIL</td><td>Show "Check your email" screen with resend verification option. Throttle resend to once per 60s. Auto-redirect if verification completes in another tab via BroadcastChannel.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-trigger" onclick="toggleAcc(this)">
+          <span class="acc-tag tag-i">React</span>
+          Component Architecture + Protected Routes
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-content">
+          <div class="comp-tree">
+<span class="ct-comp">AuthProvider</span>                              <span class="ct-comment">// Context root — wraps entire app</span>
+├── <span class="ct-hook">useAuthProvider()</span>                        <span class="ct-comment">// State, silentRefresh, interceptors</span>
+└── &lt;AuthContext.Provider value={authCtx}&gt;
+
+<span class="ct-comp">ProtectedRoute</span>                              <span class="ct-comment">// Wrapper for authenticated pages</span>
+├── checks: status === 'authenticated'
+├── status === 'checking' → &lt;<span class="ct-comp">SplashLoader</span>&gt;  <span class="ct-comment">// skeleton screen, not spinner</span>
+├── status === 'unauthenticated' → &lt;Navigate to="/login" state={{returnUrl}}&gt;
+└── renders children when authenticated
+
+<span class="ct-comp">LoginPage</span>
+├── <span class="ct-hook">useLoginForm()</span>                           <span class="ct-comment">// react-hook-form + zod + rate limit</span>
+├── <span class="ct-comp">LoginForm</span>
+│   ├── <span class="ct-comp">EmailField</span>
+│   ├── <span class="ct-comp">PasswordField</span>                       <span class="ct-comment">// with visibility toggle</span>
+│   ├── <span class="ct-comp">SubmitButton</span>                        <span class="ct-comment">// disabled during submit + rate limit</span>
+│   ├── <span class="ct-comp">RateLimitCountdown</span>                  <span class="ct-comment">// shows only when locked</span>
+│   └── <span class="ct-comp">FormErrorMessage</span>                    <span class="ct-comment">// generic, no field specifics</span>
+├── <span class="ct-comp">OAuthButtons</span>
+│   └── handlers: <span class="ct-handler">handleOAuth('google')</span>, <span class="ct-handler">handleOAuth('github')</span>
+└── links: Register | Forgot Password
+
+<span class="ct-comp">RegisterPage</span>
+├── <span class="ct-hook">useRegistrationSteps()</span>               <span class="ct-comment">// multi-step: email→password→workspace</span>
+├── <span class="ct-comp">RegistrationStepper</span>                      <span class="ct-comment">// Step indicator (3 steps)</span>
+├── <span class="ct-comp">Step1_EmailPassword</span>
+├── <span class="ct-comp">Step2_EmailVerification</span>              <span class="ct-comment">// polling /auth/verify-status</span>
+│   └── <span class="ct-hook">useVerificationPoller(email)</span>        <span class="ct-comment">// polls every 3s, max 5min</span>
+└── <span class="ct-comp">Step3_WorkspaceSetup</span>
+
+<span class="ct-comp">PasswordRecovery</span>
+├── <span class="ct-comp">RequestResetForm</span>                         <span class="ct-comment">// email input → always shows success</span>
+├── <span class="ct-comp">ResetPasswordForm</span>                        <span class="ct-comment">// rendered from /reset?token=...</span>
+│   ├── <span class="ct-hook">useResetToken(token)</span>                 <span class="ct-comment">// validates token on mount</span>
+│   └── handlers: <span class="ct-handler">handlePasswordReset(newPassword)</span>
+└── <span class="ct-comp">ResetSuccess</span>                             <span class="ct-comment">// auto-login + redirect to app</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ GLOBAL NOTES ════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-meta">
+      <div class="section-num">Cross-Cutting</div>
+      <h2 class="section-title">Global Architecture<br><em>Patterns</em></h2>
+    </div>
+    <div class="section-side">Shared infrastructure across all five modules</div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-header-label">API client setup — auth interceptor + retry logic + error normalization</span>
+      <span class="code-lang">TypeScript</span>
+    </div>
+    <div class="code-body"><pre>
+<tc>// src/lib/api.ts — shared Axios instance used by all modules</tc>
+<tk>const</tk> <tp>api</tp> = axios.<tfn>create</tfn>({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: <tk>true</tk>,          <tc>// send refresh cookie</tc>
+  headers: { <tstr>'X-Requested-With'</tstr>: <tstr>'XMLHttpRequest'</tstr> }  <tc>// CSRF header</tc>
+});
+
+<tc>// Refresh lock prevents duplicate refresh calls from concurrent 401s</tc>
+<tk>let</tk> <tp>refreshLock</tp>: <ttype>Promise</ttype>&lt;<ttype>string</ttype>&gt; | <tk>null</tk> = <tk>null</tk>;
+
+api.interceptors.response.<tfn>use</tfn>(
+  <tp>res</tp> => res,
+  <tk>async</tk> (<tp>err</tp>) => {
+    <tk>if</tk> (err.response?.status !== 401 || err.config._retry) <tk>throw</tk> err;
+    err.config._retry = <tk>true</tk>;
+
+    <tk>if</tk> (!refreshLock) {
+      refreshLock = api.<tfn>post</tfn>(<tstr>'/auth/refresh'</tstr>)
+        .<tfn>then</tfn>(r => { refreshLock = <tk>null</tk>; <tk>return</tk> r.data.accessToken; })
+        .<tfn>catch</tfn>(e => { refreshLock = <tk>null</tk>; <tk>throw</tk> e; });
+    }
+    <tk>const</tk> <tp>newToken</tp> = <tk>await</tk> refreshLock;
+    err.config.headers.Authorization = `Bearer ${newToken}`;
+    <tk>return</tk> api.<tfn>request</tfn>(err.config);
+  }
+);
+
+<tc>// Normalized error type used across all modules</tc>
+<tk>interface</tk> <ttype>AppError</ttype> {
+  <tp>code</tp>: <ttype>string</ttype>;            <tc>// QUOTA_EXCEEDED, UPLOAD_FAILED, etc.</tc>
+  <tp>message</tp>: <ttype>string</ttype>;         <tc>// human-readable</tc>
+  <tp>status</tp>: <ttype>number</ttype>;          <tc>// HTTP status</tc>
+  <tp>retryable</tp>: <ttype>boolean</ttype>;      <tc>// should the UI offer retry?</tc>
+  <tp>context</tp>?: <ttype>Record</ttype>&lt;<ttype>string</ttype>, <tk>unknown</tk>&gt;;
+}
+</pre></div>
+  </div>
+
+  <div class="hook-grid" style="margin-top:16px">
+    <div class="hook-card">
+      <div class="hook-type">Shared Hook</div>
+      <div class="hook-name">useWebSocketManager</div>
+      <div class="hook-desc">Singleton WS multiplexer. Routes messages by channel prefix. Shared across Chat and Upload modules to avoid redundant connections.</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-type">Shared Hook</div>
+      <div class="hook-name">useOnlineStatus</div>
+      <div class="hook-desc">navigator.onLine + online/offline events. Emits to all active modules. Used by Upload resume and Chat reconnect logic.</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-type">Shared Hook</div>
+      <div class="hook-name">useErrorBoundary</div>
+      <div class="hook-desc">Per-module error boundaries with structured fallback UI. Logs to Sentry with module context, user ID, and state snapshot.</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-type">Shared Hook</div>
+      <div class="hook-name">useOptimisticUpdate</div>
+      <div class="hook-desc">Generic optimistic update wrapper: apply(fn), confirm(), rollback(). Used by VersionControl restore and Document commit flows.</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-type">Shared Hook</div>
+      <div class="hook-name">useQueryInvalidation</div>
+      <div class="hook-desc">WS-triggered React Query cache invalidation. When server emits invalidation event, corresponding query keys are refetched automatically.</div>
+    </div>
+    <div class="hook-card">
+      <div class="hook-type">Shared Hook</div>
+      <div class="hook-name">useBeforeUnloadGuard</div>
+      <div class="hook-desc">Attaches beforeunload warning when any module has unsaved state. Accepts active: boolean prop. Cleared automatically on cleanup.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleAcc(btn) {
+  btn.classList.toggle('open');
+  const content = btn.nextElementSibling;
+  content.classList.toggle('open');
+}
+
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('rbar').style.width = pct + '%';
+});
+</script>
+</body>
+</html>

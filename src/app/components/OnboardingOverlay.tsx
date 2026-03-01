@@ -224,8 +224,8 @@ export function OnboardingOverlay({ isOpen, onClose }: OnboardingOverlayProps) {
           left: targetRect.left,
           width: targetRect.width,
           height: targetRect.height,
-          border: "2px solid rgba(99,102,241,0.5)",
-          boxShadow: "0 0 30px rgba(99,102,241,0.25), inset 0 0 20px rgba(99,102,241,0.08)",
+          border: "2px solid rgba(92,108,245,0.5)",
+          boxShadow: "0 0 30px rgba(92,108,245,0.25), inset 0 0 20px rgba(92,108,245,0.08)",
           pointerEvents: "none",
         }}
       />
@@ -279,9 +279,9 @@ export function OnboardingOverlay({ isOpen, onClose }: OnboardingOverlayProps) {
                     width: i === currentStep ? 16 : 6,
                     backgroundColor:
                       i === currentStep
-                        ? "#6366F1"
+                        ? colors.crystal
                         : i < currentStep
-                        ? "rgba(99,102,241,0.4)"
+                        ? "rgba(92,108,245,0.4)"
                         : dotInactive,
                   }}
                 />
@@ -304,8 +304,8 @@ export function OnboardingOverlay({ isOpen, onClose }: OnboardingOverlayProps) {
               </button>
               <button
                 onClick={handleNext}
-                className="flex items-center gap-1 px-3 py-1 rounded-md bg-[#6366F1] text-white text-[10px] hover:bg-[#818CF8] transition-colors"
-                style={{ fontWeight: 500 }}
+                className="flex items-center gap-1 px-3 py-1 rounded-md text-white text-[10px] transition-colors"
+                style={{ backgroundColor: colors.crystal, fontWeight: 500 }}
               >
                 {currentStep < steps.length - 1 ? "Next" : "Get Started"}
                 <ArrowRight className="w-3 h-3" />

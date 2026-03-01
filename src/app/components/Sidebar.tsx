@@ -13,9 +13,11 @@ import {
   Plus,
   LayoutDashboard,
   Files,
+  Upload,
 } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import { useUser } from "./UserContext";
+import { ConfidenceBadge } from "./ConfidenceBadge";
 
 const transcripts = [
   { id: 1, name: "Q4 Strategy Review", confidence: 94, date: "2h ago", speakers: 6 },
@@ -35,25 +37,19 @@ const navSections = [
   { icon: Settings, label: "Settings", count: null },
 ];
 
-function ConfidenceBadge({ score }: { score: number }) {
-  const color =
-    score >= 85 ? "text-[#10B981] bg-[#10B981]/10" :
-    score >= 65 ? "text-[#F59E0B] bg-[#F59E0B]/10" :
-    "text-[#F43F5E] bg-[#F43F5E]/10";
-  return (
-    <span className={`${color} px-1.5 py-0.5 rounded text-[10px] font-mono`}>
-      {score}%
-    </span>
-  );
+function ConfidenceBadgeInline({ score }: { score: number }) {
+  // Use the shared component
+  return <ConfidenceBadge score={score} />;
 }
 
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
   onNavigate?: (section: string) => void;
+  onUpload?: () => void;
 }
 
-export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
+export function Sidebar({ collapsed, onToggle, onNavigate, onUpload }: SidebarProps) {
   const { isDark, colors } = useTheme();
   const { isNewUser } = useUser();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -80,31 +76,57 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
         style={{ backgroundColor: sidebarBg, borderRight: `1px solid ${colors.border}` }}>
         <button
           onClick={onToggle}
-          className="p-2 rounded-md hover:bg-[#6366F1]/15 transition-colors duration-160 mb-4"
+          className="p-2 rounded-md transition-colors duration-160"
+          style={{ color: colors.textSecondary }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
           title="Expand sidebar"
         >
-          <PanelLeft className="w-4 h-4" style={{ color: colors.textSecondary }} />
+          <PanelLeft className="w-4 h-4" />
         </button>
+
+        {/* Upload icon */}
+        <button
+          onClick={onUpload}
+          className="p-2 rounded-md transition-colors duration-160 mb-1"
+          style={{
+            color: colors.textSecondary,
+            border: `1px solid ${isDark ? "rgba(232,234,246,0.15)" : "rgba(26,25,22,0.15)"}`,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = colors.hoverNeutral;
+            e.currentTarget.style.borderColor = isDark ? "rgba(232,234,246,0.25)" : "rgba(26,25,22,0.25)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+            e.currentTarget.style.borderColor = isDark ? "rgba(232,234,246,0.15)" : "rgba(26,25,22,0.15)";
+          }}
+          title="Upload Transcript"
+        >
+          <Upload className="w-4 h-4" />
+        </button>
+
         {navSections.map((section) => (
           <button
             key={section.label}
             onClick={() => { setActiveItem(section.label); onNavigate?.(section.label); onToggle(); }}
-            className={`p-2.5 rounded-md transition-all duration-160 relative group ${
-              activeItem === section.label
-                ? "bg-[#6366F1]/15"
-                : "hover:bg-[#6366F1]/10"
-            }`}
-            style={{ color: activeItem === section.label ? colors.textPrimary : colors.textMuted }}
+            className="p-2.5 rounded-md transition-all duration-160 relative group"
+            style={{
+              color: activeItem === section.label ? colors.textPrimary : colors.textMuted,
+              backgroundColor: activeItem === section.label ? colors.hoverNeutral : "transparent",
+            }}
+            onMouseEnter={(e) => { if (activeItem !== section.label) e.currentTarget.style.backgroundColor = colors.hoverNeutral; }}
+            onMouseLeave={(e) => { if (activeItem !== section.label) e.currentTarget.style.backgroundColor = "transparent"; }}
             title={section.label}
           >
             {activeItem === section.label && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#6366F1] rounded-r" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r" style={{ backgroundColor: colors.crystalLight }} />
             )}
             <section.icon className="w-4 h-4" />
           </button>
         ))}
         <div className="flex-1" />
-        <div className="w-8 h-8 rounded-full bg-[#6366F1] flex items-center justify-center text-white text-[11px]">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[11px]" style={{ backgroundColor: colors.crystalMuted }}>
           JD
         </div>
       </div>
@@ -122,8 +144,12 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
             Transcript Library
           </span>
         </div>
-        <button onClick={onToggle} className="p-1.5 rounded hover:bg-[#6366F1]/10 transition-colors duration-160">
-          <PanelLeftClose className="w-3.5 h-3.5" style={{ color: colors.textMuted }} />
+        <button onClick={onToggle} className="p-1.5 rounded transition-colors duration-160"
+          style={{ color: colors.textMuted }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+        >
+          <PanelLeftClose className="w-3.5 h-3.5" />
         </button>
       </div>
 
@@ -143,9 +169,22 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
 
       {/* New Upload */}
       <div className="px-3 py-2 shrink-0">
-        <button className="w-full flex items-center justify-center gap-2 py-1.5 rounded-md bg-[#6366F1] hover:bg-[#818CF8] transition-colors text-white text-[12px]"
-          style={{ boxShadow: "0 0 12px rgba(99,102,241,0.15)" }}
+        <button className="w-full flex items-center justify-center gap-2 py-1.5 rounded-md transition-colors text-[12px]"
+          style={{
+            color: colors.textPrimary,
+            backgroundColor: "transparent",
+            border: `1px solid ${isDark ? "rgba(232,234,246,0.15)" : "rgba(26,25,22,0.15)"}`,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = colors.hoverNeutral;
+            e.currentTarget.style.borderColor = isDark ? "rgba(232,234,246,0.25)" : "rgba(26,25,22,0.25)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+            e.currentTarget.style.borderColor = isDark ? "rgba(232,234,246,0.15)" : "rgba(26,25,22,0.15)";
+          }}
           data-onboarding="upload"
+          onClick={onUpload}
         >
           <Plus className="w-3.5 h-3.5" />
           Upload Transcript
@@ -158,13 +197,16 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
           <div key={section.label} className="mb-1">
             <button
               onClick={() => { setActiveItem(section.label); toggleSection(section.label); onNavigate?.(section.label); }}
-              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[12px] transition-all duration-160 relative group ${
-                activeItem === section.label ? "bg-[#6366F1]/15" : "hover:bg-[#6366F1]/8"
-              }`}
-              style={{ color: activeItem === section.label ? colors.textPrimary : colors.textSecondary }}
+              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[12px] transition-all duration-160 relative group"
+              style={{
+                color: activeItem === section.label ? colors.textPrimary : colors.textSecondary,
+                backgroundColor: activeItem === section.label ? colors.hoverNeutral : "transparent",
+              }}
+              onMouseEnter={(e) => { if (activeItem !== section.label) e.currentTarget.style.backgroundColor = colors.hoverNeutral; }}
+              onMouseLeave={(e) => { if (activeItem !== section.label) e.currentTarget.style.backgroundColor = "transparent"; }}
             >
               {activeItem === section.label && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-[#6366F1] rounded-r" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r" style={{ backgroundColor: colors.crystalLight }} />
               )}
               <section.icon className="w-3.5 h-3.5 shrink-0" />
               <span className="flex-1 text-left">{section.label}</span>
@@ -198,18 +240,17 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
                     <button
                       key={t.id}
                       onClick={() => setActiveTranscript(t.id)}
-                      className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] transition-all duration-160 group ${
-                        activeTranscript === t.id ? "bg-[#6366F1]/10" : ""
-                      }`}
+                      className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] transition-all duration-160 group"
                       style={{
                         color: activeTranscript === t.id ? colors.textPrimary : colors.textSecondary,
+                        backgroundColor: activeTranscript === t.id ? colors.hoverNeutral : "transparent",
                       }}
                       onMouseEnter={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = `${hoverBg}`; }}
-                      onMouseLeave={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = "transparent"; }}
+                      onMouseLeave={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = activeTranscript === t.id ? colors.hoverNeutral : "transparent"; }}
                     >
                       <FileText className="w-3 h-3 shrink-0" style={{ color: colors.textMuted }} />
                       <span className="flex-1 text-left truncate">{t.name}</span>
-                      <ConfidenceBadge score={t.confidence} />
+                      <ConfidenceBadgeInline score={t.confidence} />
                     </button>
                   ))
                 )}
@@ -249,7 +290,7 @@ export function Sidebar({ collapsed, onToggle, onNavigate }: SidebarProps) {
       {/* User */}
       <div className="px-3 py-3 flex items-center gap-2 shrink-0"
         style={{ borderTop: `1px solid ${colors.border}` }}>
-        <div className="w-7 h-7 rounded-full bg-[#6366F1] flex items-center justify-center text-white text-[10px]">
+        <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px]" style={{ backgroundColor: colors.crystalMuted }}>
           JD
         </div>
         <div className="flex-1 min-w-0">

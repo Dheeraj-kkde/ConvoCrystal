@@ -40,7 +40,7 @@ const slides: TourSlide[] = [
     subtitle: "Your AI-powered meeting assistant",
     description: "ConvoCrystal transforms raw meeting transcripts into polished, searchable documents with AI-powered insights. Let's take a quick tour of the interface.",
     icon: Rocket,
-    color: "#6366F1",
+    color: "#5C6CF5",
     illustration: "welcome",
     tips: ["Takes about 1 minute", "You can replay this anytime from the ? button"],
   },
@@ -49,7 +49,7 @@ const slides: TourSlide[] = [
     subtitle: "Everything at a glance",
     description: "Your workspace has three main areas: the Sidebar on the left for navigation and your transcript library, the Chat Panel in the center for AI conversations, and the Editor Panel on the right for document refinement.",
     icon: Layout,
-    color: "#6366F1",
+    color: "#5C6CF5",
     illustration: "workspace",
     tips: [
       "Sidebar: Navigate between Library, Overview, Documents, and Settings",
@@ -62,7 +62,7 @@ const slides: TourSlide[] = [
     subtitle: "Step 1 of your workflow",
     description: "Click the Upload button in the sidebar or top bar to import meeting recordings. We support VTT, SRT, TXT, DOCX, and JSON formats. ConvoCrystal automatically detects speakers, timestamps, and content structure.",
     icon: Upload,
-    color: "#6366F1",
+    color: "#5C6CF5",
     illustration: "chat",
     tips: [
       "Drag & drop files directly into the app",
@@ -75,7 +75,7 @@ const slides: TourSlide[] = [
     subtitle: "AI-powered conversation analysis",
     description: "Once a transcript is loaded, ask the AI anything about it. Get citation-backed answers that reference specific moments in the meeting. Ask follow-up questions to dive deeper into any topic.",
     icon: MessageSquare,
-    color: "#06B6D4",
+    color: "#00C9D6",
     illustration: "chat",
     tips: [
       "\"What were the key decisions made?\"",
@@ -101,7 +101,7 @@ const slides: TourSlide[] = [
     subtitle: "Polish your documents",
     description: "Select any text in the editor and click AI Refine to improve, expand, shorten, or rephrase it. Changes stream in real-time, and you can accept or reject each suggestion. Commit changes when you're ready.",
     icon: Sparkles,
-    color: "#8B5CF6",
+    color: "#00C9D6",
     illustration: "editor",
     tips: [
       "Select text → Click 'AI Refine' in the toolbar",
@@ -127,7 +127,7 @@ const slides: TourSlide[] = [
     subtitle: "Start with your first upload",
     description: "You now know everything you need to get started. Upload a transcript, chat with AI, refine your documents, and export. Check your progress in the Getting Started tracker at the bottom-right.",
     icon: Rocket,
-    color: "#6366F1",
+    color: "#5C6CF5",
     illustration: "done",
     tips: [
       "Track your progress with the Getting Started widget",
@@ -150,8 +150,8 @@ function SlideIllustration({ type, color, isDark }: { type: string; color: strin
           <motion.div
             className="w-24 h-24 rounded-3xl flex items-center justify-center"
             style={{
-              background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-              boxShadow: "0 12px 40px rgba(99,102,241,0.35)",
+              background: "linear-gradient(135deg, #5C6CF5, #3A4AE8)",
+              boxShadow: "0 12px 40px rgba(92,108,245,0.35)",
             }}
             animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -166,7 +166,7 @@ function SlideIllustration({ type, color, isDark }: { type: string; color: strin
         <div className="rounded-lg overflow-hidden" style={{ backgroundColor: bg, border: `1px solid ${border}` }}>
           {/* Mini topbar */}
           <div className="h-6 px-3 flex items-center gap-2" style={{ borderBottom: `1px solid ${border}` }}>
-            <div className="w-2 h-2 rounded-full bg-[#6366F1]" />
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#5C6CF5" }} />
             <div className="w-16 h-1.5 rounded-full" style={{ backgroundColor: border }} />
             <div className="flex-1" />
             <div className="w-8 h-1.5 rounded-full" style={{ backgroundColor: border }} />
@@ -174,21 +174,21 @@ function SlideIllustration({ type, color, isDark }: { type: string; color: strin
           <div className="flex h-28">
             {/* Mini sidebar */}
             <div className="w-14 p-1.5 space-y-1.5 shrink-0" style={{ borderRight: `1px solid ${border}` }}>
-              <div className="text-[6px] text-center" style={{ color: "#6366F1", fontWeight: 600 }}>Sidebar</div>
+              <div className="text-[6px] text-center" style={{ color: "#5C6CF5", fontWeight: 600 }}>Sidebar</div>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="h-2 rounded" style={{ backgroundColor: `${color}12` }} />
               ))}
             </div>
             {/* Mini chat */}
             <div className="flex-1 p-2 space-y-1.5" style={{ borderRight: `1px solid ${border}` }}>
-              <div className="text-[6px] text-center" style={{ color: "#06B6D4", fontWeight: 600 }}>Chat Panel</div>
-              <div className="h-3 rounded w-3/4" style={{ backgroundColor: `#06B6D4${isDark ? "15" : "10"}` }} />
+              <div className="text-[6px] text-center" style={{ color: "#00C9D6", fontWeight: 600 }}>Chat Panel</div>
+              <div className="h-3 rounded w-3/4" style={{ backgroundColor: `#00C9D6${isDark ? "15" : "10"}` }} />
               <div className="h-3 rounded w-full" style={{ backgroundColor: `${border}60` }} />
-              <div className="h-3 rounded w-2/3" style={{ backgroundColor: `#06B6D4${isDark ? "15" : "10"}` }} />
+              <div className="h-3 rounded w-2/3" style={{ backgroundColor: `#00C9D6${isDark ? "15" : "10"}` }} />
             </div>
             {/* Mini editor */}
             <div className="flex-1 p-2 space-y-1.5">
-              <div className="text-[6px] text-center" style={{ color: "#8B5CF6", fontWeight: 600 }}>Editor Panel</div>
+              <div className="text-[6px] text-center" style={{ color: "#00C9D6", fontWeight: 600 }}>Editor Panel</div>
               <div className="h-2 rounded w-full" style={{ backgroundColor: `${border}60` }} />
               <div className="h-2 rounded w-5/6" style={{ backgroundColor: `${border}60` }} />
               <div className="h-2 rounded w-3/4" style={{ backgroundColor: `${border}60` }} />
@@ -203,8 +203,8 @@ function SlideIllustration({ type, color, isDark }: { type: string; color: strin
         <div className="space-y-3 px-2 py-3">
           {[
             { label: "Faithfulness", score: 96, color: "#10B981" },
-            { label: "Relevance", score: 91, color: "#06B6D4" },
-            { label: "Precision", score: 88, color: "#8B5CF6" },
+            { label: "Relevance", score: 91, color: "#00C9D6" },
+            { label: "Precision", score: 88, color: "#5C6CF5" },
           ].map((m) => (
             <div key={m.label}>
               <div className="flex items-center justify-between mb-1">
@@ -267,15 +267,15 @@ function SlideIllustration({ type, color, isDark }: { type: string; color: strin
         <div className="px-2 py-3 space-y-2">
           {/* Toolbar */}
           <div className="flex items-center gap-2 px-2 py-1 rounded" style={{ backgroundColor: panelBg, border: `1px solid ${border}` }}>
-            <div className="w-10 h-2 rounded" style={{ backgroundColor: `#8B5CF6${isDark ? "30" : "20"}` }} />
+            <div className="w-10 h-2 rounded" style={{ backgroundColor: `#00C9D6${isDark ? "30" : "20"}` }} />
             <div className="w-8 h-2 rounded" style={{ backgroundColor: `${border}60` }} />
             <div className="flex-1" />
-            <div className="px-1.5 py-0.5 rounded text-[7px]" style={{ backgroundColor: "#8B5CF6", color: "white" }}>AI Refine</div>
+            <div className="px-1.5 py-0.5 rounded text-[7px]" style={{ backgroundColor: "#5C6CF5", color: "white" }}>AI Refine</div>
           </div>
           {/* Text with highlight */}
           <div className="space-y-1 px-1">
             <div className="h-2 rounded w-full" style={{ backgroundColor: `${border}50` }} />
-            <div className="h-2 rounded w-full" style={{ backgroundColor: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.3)" }} />
+            <div className="h-2 rounded w-full" style={{ backgroundColor: "rgba(92,108,245,0.15)", border: "1px solid rgba(92,108,245,0.3)" }} />
             <div className="h-2 rounded w-4/5" style={{ backgroundColor: `${border}50` }} />
             <div className="h-2 rounded w-full" style={{ backgroundColor: `${border}50` }} />
           </div>
@@ -324,13 +324,13 @@ function SlideIllustration({ type, color, isDark }: { type: string; color: strin
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Rocket className="w-12 h-12" style={{ color: "#6366F1" }} />
+            <Rocket className="w-12 h-12" style={{ color: "#5C6CF5" }} />
           </motion.div>
           <div className="flex items-center gap-2">
             {[
-              { label: "Upload", color: "#6366F1" },
-              { label: "Chat", color: "#06B6D4" },
-              { label: "Refine", color: "#8B5CF6" },
+              { label: "Upload", color: "#5C6CF5" },
+              { label: "Chat", color: "#00C9D6" },
+              { label: "Refine", color: "#00C9D6" },
               { label: "Export", color: "#10B981" },
             ].map((s, i) => (
               <motion.div

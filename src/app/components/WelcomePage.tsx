@@ -27,21 +27,21 @@ const features = [
     icon: Upload,
     title: "Upload Transcripts",
     description: "Drag & drop meeting recordings in VTT, SRT, TXT, DOCX, or JSON. We'll parse speakers, timestamps, and content automatically.",
-    color: "#6366F1",
+    color: "#5C6CF5",
     step: "1",
   },
   {
     icon: MessageSquare,
     title: "Chat with Your Meetings",
     description: "Ask questions about any transcript. Get citation-backed answers with confidence scores so you know how reliable each insight is.",
-    color: "#06B6D4",
+    color: "#00C9D6",
     step: "2",
   },
   {
     icon: Sparkles,
     title: "AI-Powered Refinement",
     description: "Select text in the editor and let AI refine, expand, shorten, or rephrase. Watch changes stream in real-time with accept/reject.",
-    color: "#8B5CF6",
+    color: "#00C9D6",
     step: "3",
   },
   {
@@ -68,8 +68,8 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
   const cardBg = isDark ? "#111320" : "#FFFFFF";
   const cardBorder = colors.border;
   const heroBg = isDark
-    ? "radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.12) 0%, transparent 60%)"
-    : "radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 60%)";
+    ? "radial-gradient(ellipse at 50% 0%, rgba(92,108,245,0.12) 0%, transparent 60%)"
+    : "radial-gradient(ellipse at 50% 0%, rgba(92,108,245,0.08) 0%, transparent 60%)";
 
   const handleGetStarted = () => {
     setHasCompletedWelcome(true);
@@ -98,8 +98,8 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
             <div
               className="w-20 h-20 rounded-2xl flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-                boxShadow: "0 8px 32px rgba(99,102,241,0.3)",
+                background: "linear-gradient(135deg, #5C6CF5, #3A4AE8)",
+                boxShadow: "0 8px 32px rgba(92,108,245,0.3)",
               }}
             >
               <CrystalLogo size={44} />
@@ -110,7 +110,7 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
             className="text-[28px] sm:text-[36px] mb-3"
             style={{ fontWeight: 700, color: colors.textPrimary }}
           >
-            Welcome to Convo<span style={{ color: "#6366F1" }}>Crystal</span>
+            Welcome to Convo<span style={{ color: colors.crystal }}>Crystal</span>
           </h1>
           <p
             className="text-[15px] max-w-lg mx-auto mb-8"
@@ -126,8 +126,8 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
               onClick={handleGetStarted}
               className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white text-[13px] transition-all hover:scale-[1.02]"
               style={{
-                background: "linear-gradient(135deg, #6366F1, #818CF8)",
-                boxShadow: "0 4px 16px rgba(99,102,241,0.3)",
+                background: `linear-gradient(135deg, ${colors.crystal}, ${colors.crystalLight})`,
+                boxShadow: "var(--shadow-crystal)",
                 fontWeight: 600,
               }}
             >
@@ -143,7 +143,7 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
                 fontWeight: 500,
               }}
             >
-              <Play className="w-4 h-4" style={{ color: colors.indigo }} />
+              <Play className="w-4 h-4" style={{ color: colors.crystal }} />
               Take the Product Tour
             </button>
           </div>
@@ -212,18 +212,18 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
         <div
           className="rounded-xl p-6 mb-10"
           style={{
-            backgroundColor: isDark ? "rgba(99,102,241,0.06)" : "rgba(99,102,241,0.04)",
-            border: `1px solid ${isDark ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.12)"}`,
+            backgroundColor: isDark ? "rgba(92,108,245,0.06)" : "rgba(92,108,245,0.04)",
+            border: `1px solid ${isDark ? "rgba(92,108,245,0.15)" : "rgba(92,108,245,0.12)"}`,
           }}
         >
           <div className="flex flex-col sm:flex-row items-start gap-5">
             <div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
               style={{
-                background: "linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))",
+                background: "linear-gradient(135deg, rgba(92,108,245,0.2), rgba(0,201,214,0.2))",
               }}
             >
-              <BarChart3 className="w-7 h-7" style={{ color: colors.indigo }} />
+              <BarChart3 className="w-7 h-7" style={{ color: colors.crystal }} />
             </div>
             <div className="flex-1">
               <h3 className="text-[15px] mb-2" style={{ fontWeight: 600, color: colors.textPrimary }}>
@@ -232,8 +232,8 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
               <p className="text-[12px] mb-4" style={{ color: colors.textSecondary, lineHeight: 1.6 }}>
                 Every AI-generated response comes with a transparency score breaking down{" "}
                 <span style={{ color: "#10B981", fontWeight: 500 }}>Faithfulness</span>,{" "}
-                <span style={{ color: "#06B6D4", fontWeight: 500 }}>Relevance</span>, and{" "}
-                <span style={{ color: "#8B5CF6", fontWeight: 500 }}>Precision</span>{" "}
+                <span style={{ color: "#00C9D6", fontWeight: 500 }}>Relevance</span>, and{" "}
+                <span style={{ color: "#00C9D6", fontWeight: 500 }}>Precision</span>{" "}
                 — so you always know exactly how reliable each answer is.
               </p>
 
@@ -241,8 +241,8 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
               <div className="flex flex-wrap gap-6">
                 {[
                   { label: "Faithfulness", score: 96, color: "#10B981" },
-                  { label: "Relevance", score: 91, color: "#06B6D4" },
-                  { label: "Precision", score: 88, color: "#8B5CF6" },
+                  { label: "Relevance", score: 91, color: "#00C9D6" },
+                  { label: "Precision", score: 88, color: "#00C9D6" },
                 ].map((metric) => (
                   <div key={metric.label} className="flex items-center gap-2">
                     <div className="w-24 h-2 rounded-full" style={{ backgroundColor: `${metric.color}20` }}>
@@ -269,7 +269,7 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
               className="rounded-lg p-3 text-center"
               style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
             >
-              <stat.icon className="w-5 h-5 mx-auto mb-2" style={{ color: colors.indigo }} />
+              <stat.icon className="w-5 h-5 mx-auto mb-2" style={{ color: colors.crystal }} />
               <div className="text-[11px] mb-0.5" style={{ fontWeight: 600, color: colors.textPrimary }}>
                 {stat.label}
               </div>
@@ -323,13 +323,12 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
             onClick={handleGetStarted}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-white text-[13px] transition-all hover:scale-[1.02]"
             style={{
-              background: "linear-gradient(135deg, #6366F1, #818CF8)",
-              boxShadow: "0 4px 16px rgba(99,102,241,0.3)",
+              background: `linear-gradient(135deg, ${colors.crystal}, ${colors.crystalLight})`,
+              boxShadow: "var(--shadow-crystal)",
               fontWeight: 600,
             }}
           >
             Get Started Now
-            <ArrowRight className="w-4 h-4" />
           </button>
           <p className="text-[10px] mt-2" style={{ color: colors.textMuted }}>
             You can always replay the product tour from the <span style={{ fontWeight: 500 }}>?</span> button in the top bar

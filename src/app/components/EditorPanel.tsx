@@ -17,6 +17,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useTheme } from "./ThemeContext";
+import { useToast } from "./ToastSystem";
 
 const toolbarButtons = [
   { icon: Bold, label: "Bold" },
@@ -85,14 +86,79 @@ export function EditorPanel() {
   const [showPopover, setShowPopover] = useState(true);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [activeToolbar, setActiveToolbar] = useState<string | null>("Bold");
+  const [commitVersion, setCommitVersion] = useState({ major: 3, minor: 2 });
+  const [commitStatus, setCommitStatus] = useState<"saved" | "committing">("saved");
   const { isDark, colors } = useTheme();
+  const { addToast } = useToast();
+
+  // Handler: Commit version
+  const handleCommit = () => {
+    setCommitStatus("committing");
+    setTimeout(() => {
+      setCommitVersion((prev) => ({ major: prev.major, minor: prev.minor + 1 }));
+      setCommitStatus("saved");
+      addToast({
+        variant: "success",
+        title: "Version committed",
+        message: `Snapshot v${commitVersion.major}.${commitVersion.minor + 1} saved to version history.`,
+      });
+    }, 800);
+  };
+
+  // Handler: Export to format
+  const handleExport = (format: string) => {
+    setShowExportMenu(false);
+
+    // Build document content from sections
+    let content = "";
+    const docTitle = "Q4 Strategy Review — Analysis";
+
+    if (format === "Markdown") {
+      content += `# ${docTitle}\n\n`;
+      sections.forEach((section) => {
+        content += `## ${section.label}\n\n`;
+        const text = section.state === "streaming"
+          ? (section.streamingContent || section.originalContent || "")
+          : section.content;
+        content += `${text}\n\n`;
+      });
+    } else {
+      // Plain text for PDF/DOCX/Notion
+      content += `${docTitle}\n${"=".repeat(docTitle.length)}\n\n`;
+      sections.forEach((section) => {
+        content += `${section.label}\n${"-".repeat(section.label.length)}\n`;
+        const text = section.state === "streaming"
+          ? (section.streamingContent || section.originalContent || "")
+          : section.content;
+        content += `${text}\n\n`;
+      });
+    }
+
+    const mimeType = format === "Markdown" ? "text/markdown" : "text/plain";
+    const extension = format === "Markdown" ? "md" : format === "PDF" ? "txt" : format === "DOCX" ? "txt" : "txt";
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `q4-strategy-review.${extension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    addToast({
+      variant: "success",
+      title: `Exported as ${format}`,
+      message: `Document downloaded as ${format} format (${sections.length} sections).`,
+    });
+  };
 
   const separatorColor = colors.border;
   const sectionBg = isDark ? "rgba(26,29,46,0.4)" : "rgba(238,236,234,0.5)";
-  const selectedBg = isDark ? "rgba(99,102,241,0.08)" : "rgba(99,102,241,0.06)";
-  const selectedBorder = isDark ? "rgba(99,102,241,0.2)" : "rgba(99,102,241,0.15)";
-  const selectedHighlight = isDark ? "rgba(99,102,241,0.18)" : "rgba(99,102,241,0.12)";
-  const streamingBg = isDark ? "rgba(99,102,241,0.05)" : "rgba(99,102,241,0.04)";
+  const selectedBg = isDark ? "rgba(245,158,11,0.06)" : "rgba(217,119,6,0.04)";
+  const selectedBorder = isDark ? "rgba(245,158,11,0.15)" : "rgba(217,119,6,0.12)";
+  const selectedHighlight = isDark ? "rgba(245,158,11,0.12)" : "rgba(217,119,6,0.08)";
+  const streamingBg = isDark ? "rgba(92,108,245,0.05)" : "rgba(92,108,245,0.04)";
   const dimmedText = isDark ? "rgba(232,234,246,0.35)" : "rgba(26,25,22,0.35)";
   const dropdownBg = isDark ? colors.bgPanel : "#FFFFFF";
   const scrollbarColor = isDark ? `${colors.border} transparent` : `${colors.border} transparent`;
@@ -120,15 +186,19 @@ export function EditorPanel() {
         {/* Document title */}
         <input
           defaultValue="Q4 Strategy Review — Analysis"
-          className="bg-transparent text-[12px] sm:text-[13px] outline-none min-w-0 flex-1 border-b border-transparent focus:border-[#6366F1]/50 transition-colors"
-          style={{ fontWeight: 600, color: colors.textPrimary }}
+          className="bg-transparent text-[12px] sm:text-[13px] outline-none min-w-0 flex-1 border-b border-transparent transition-colors"
+          style={{ fontWeight: 600, color: colors.textPrimary, borderBottomColor: "transparent" }}
         />
 
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           {/* AI Refine button */}
           <button
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-[#6366F1]/40 text-[#6366F1] hover:bg-[#6366F1]/10 transition-all duration-160"
-            style={{ boxShadow: "0 0 8px rgba(99,102,241,0.1)" }}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all duration-160"
+            style={{
+              border: `1px solid ${isDark ? "rgba(92,108,245,0.4)" : "rgba(92,108,245,0.3)"}`,
+              color: colors.crystal,
+              boxShadow: "var(--shadow-crystal)",
+            }}
             data-onboarding="refine"
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -144,6 +214,7 @@ export function EditorPanel() {
             onMouseEnter={(e) => e.currentTarget.style.color = hoverToolbar}
             onMouseLeave={(e) => e.currentTarget.style.color = inactiveToolbar}
             title="Commit"
+            onClick={handleCommit}
           >
             <GitCommit className="w-3.5 h-3.5" />
           </button>
@@ -155,8 +226,8 @@ export function EditorPanel() {
               className="flex items-center gap-1 px-2 py-1 rounded-md transition-colors"
               style={{
                 color: colors.textPrimary,
-                backgroundColor: isDark ? "rgba(99,102,241,0.12)" : "rgba(99,102,241,0.08)",
-                border: `1px solid ${isDark ? "rgba(99,102,241,0.25)" : "rgba(99,102,241,0.2)"}`,
+                backgroundColor: isDark ? "rgba(92,108,245,0.12)" : "rgba(92,108,245,0.08)",
+                border: `1px solid ${isDark ? "rgba(92,108,245,0.25)" : "rgba(92,108,245,0.2)"}`,
               }}
             >
               <FileText className="w-3.5 h-3.5" />
@@ -171,9 +242,9 @@ export function EditorPanel() {
                 {["PDF", "DOCX", "Notion", "Markdown"].map((format) => (
                   <button
                     key={format}
-                    className="w-full text-left px-3 py-1.5 text-[11px] hover:bg-[#6366F1]/10 transition-colors"
+                    className="w-full text-left px-3 py-1.5 text-[11px] transition-colors"
                     style={{ color: colors.textSecondary }}
-                    onClick={() => setShowExportMenu(false)}
+                    onClick={() => handleExport(format)}
                   >
                     {format}
                   </button>
@@ -196,13 +267,13 @@ export function EditorPanel() {
               onClick={() => setActiveToolbar(activeToolbar === btn.label ? null : btn.label)}
               className={`p-1 rounded shrink-0 transition-all duration-160 ${
                 activeToolbar === btn.label
-                  ? "bg-[#6366F1] text-white"
+                  ? ""
                   : ""
               }`}
               style={
-                activeToolbar !== btn.label
-                  ? { color: inactiveToolbar }
-                  : undefined
+                activeToolbar === btn.label
+                  ? { backgroundColor: colors.bgRaised, color: colors.textPrimary }
+                  : { color: inactiveToolbar }
               }
               onMouseEnter={(e) => {
                 if (activeToolbar !== btn.label) e.currentTarget.style.color = hoverToolbar;
@@ -256,7 +327,7 @@ export function EditorPanel() {
                     {refinementActions.map((action) => (
                       <button
                         key={action}
-                        className="px-2.5 py-1 rounded-md text-[10px] hover:bg-[#6366F1]/15 transition-colors whitespace-nowrap"
+                        className="px-2.5 py-1 rounded-md text-[10px] transition-colors whitespace-nowrap"
                         style={{ color: colors.textSecondary }}
                       >
                         {action}
@@ -278,7 +349,7 @@ export function EditorPanel() {
                     backgroundColor: selectedBg,
                     border: `1px solid ${selectedBorder}`,
                     color: colors.textPrimary,
-                    boxShadow: `inset 0 0 0 1px ${isDark ? "rgba(99,102,241,0.08)" : "rgba(99,102,241,0.05)"}`,
+                    boxShadow: `inset 0 0 0 1px ${isDark ? "rgba(245,158,11,0.05)" : "rgba(217,119,6,0.03)"}`,
                   }}
                 >
                   <span className="rounded-sm px-0.5" style={{ backgroundColor: selectedHighlight }}>
@@ -291,7 +362,7 @@ export function EditorPanel() {
             {/* Streaming state */}
             {section.state === "streaming" && (
               <div>
-                <div className="rounded-lg p-3 border-l-2 border-l-[#6366F1]" style={{ backgroundColor: streamingBg }}>
+                <div className="rounded-lg p-3 border-l-2" style={{ backgroundColor: streamingBg, borderLeftColor: colors.crystal }}>
                   {/* Original text (dimmed) */}
                   <div
                     className="text-[13px] leading-relaxed whitespace-pre-wrap mb-3"
@@ -306,9 +377,9 @@ export function EditorPanel() {
 
                   {/* Divider */}
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="flex-1 h-px" style={{ backgroundColor: "rgba(99,102,241,0.2)" }} />
-                    <span className="text-[9px] font-mono text-[#6366F1]">AI Replacement</span>
-                    <div className="flex-1 h-px" style={{ backgroundColor: "rgba(99,102,241,0.2)" }} />
+                    <div className="flex-1 h-px" style={{ backgroundColor: "rgba(92,108,245,0.2)" }} />
+                    <span className="text-[9px] font-mono" style={{ color: colors.crystal }}>AI Replacement</span>
+                    <div className="flex-1 h-px" style={{ backgroundColor: "rgba(92,108,245,0.2)" }} />
                   </div>
 
                   {/* Streaming replacement */}
@@ -317,12 +388,12 @@ export function EditorPanel() {
                     style={{
                       color: colors.textPrimary,
                       textDecoration: "underline",
-                      textDecorationColor: "rgba(99,102,241,0.3)",
+                      textDecorationColor: "rgba(92,108,245,0.3)",
                       textUnderlineOffset: "3px",
                     }}
                   >
                     {renderText(section.streamingContent || "")}
-                    <span className="inline-block w-0.5 h-3.5 bg-[#6366F1] ml-0.5 animate-pulse" />
+                    <span className="inline-block w-0.5 h-3.5 ml-0.5 animate-pulse" style={{ backgroundColor: colors.crystal }} />
                   </div>
                 </div>
 
@@ -351,8 +422,8 @@ export function EditorPanel() {
           <span className="text-[9px] font-mono" style={{ color: colors.textMuted }}>~5 min read</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] font-mono text-[#10B981]">Saved</span>
-          <span className="text-[9px] font-mono" style={{ color: colors.textMuted }}>v3.2</span>
+          <span className="text-[9px] font-mono" style={{ color: commitStatus === "committing" ? "orange" : commitStatus === "saved" ? "#10B981" : "red" }}>{commitStatus === "committing" ? "Committing..." : commitStatus === "saved" ? "Saved" : "Error"}</span>
+          <span className="text-[9px] font-mono" style={{ color: colors.textMuted }}>v{commitVersion.major}.{commitVersion.minor}</span>
         </div>
       </div>
     </div>

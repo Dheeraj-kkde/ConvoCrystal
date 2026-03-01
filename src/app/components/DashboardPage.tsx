@@ -147,8 +147,8 @@ export function DashboardPage() {
           onClick={() => setShowEditorDrawer(true)}
           className="absolute bottom-4 right-4 w-11 h-11 rounded-full shadow-lg z-20 flex items-center justify-center transition-all active:scale-95"
           style={{
-            backgroundColor: colors.indigo,
-            boxShadow: `0 4px 16px rgba(99,102,241,0.35)`,
+            backgroundColor: colors.crystal,
+            boxShadow: `0 4px 16px rgba(92,108,245,0.35)`,
           }}
         >
           <PanelRight className="w-5 h-5 text-white" />
@@ -278,7 +278,7 @@ export function DashboardPage() {
         className="w-1 h-full cursor-col-resize shrink-0 relative group z-10"
         style={{ transition: "background 0.15s" }}
         onMouseDown={handleMouseDown}
-        onMouseEnter={(e) => (e.currentTarget.style.background = `${colors.indigo}30`)}
+        onMouseEnter={(e) => (e.currentTarget.style.background = `${colors.crystal}30`)}
         onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
       >
         <div className="absolute inset-y-0 -left-1 -right-1" />

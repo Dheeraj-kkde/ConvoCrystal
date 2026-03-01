@@ -11,13 +11,13 @@ export function CrystalLogo({ size = 24, className = "" }: { size?: number; clas
       {/* Crystal/prism shape */}
       <defs>
         <linearGradient id="crystalGrad" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#818CF8" />
-          <stop offset="50%" stopColor="#6366F1" />
-          <stop offset="100%" stopColor="#4F46E5" />
+          <stop offset="0%" stopColor="#8F9BFF" />
+          <stop offset="50%" stopColor="#5C6CF5" />
+          <stop offset="100%" stopColor="#3A4AE8" />
         </linearGradient>
         <linearGradient id="crystalShine" x1="8" y1="4" x2="24" y2="28" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#C7D2FE" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
+          <stop offset="100%" stopColor="#5C6CF5" stopOpacity="0" />
         </linearGradient>
       </defs>
       {/* Background rounded square */}

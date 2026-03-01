@@ -54,7 +54,7 @@ function Toggle({
       onClick={() => onChange(!enabled)}
       className="w-9 h-5 rounded-full relative transition-colors"
       style={{
-        backgroundColor: enabled ? "#6366F1" : colors.border,
+        backgroundColor: enabled ? colors.crystal || "#5C6CF5" : colors.border,
       }}
     >
       <div
@@ -151,15 +151,15 @@ export function SettingsPage() {
 
             {/* Avatar */}
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] flex items-center justify-center text-white text-[20px]">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#5C6CF5] to-[#3A4AE8] flex items-center justify-center text-white text-[20px]">
                 JD
               </div>
               <div>
                 <button
                   className="px-3 py-1.5 rounded-md text-[11px] transition-colors"
                   style={{
-                    backgroundColor: `${colors.indigo}15`,
-                    color: colors.indigo,
+                    backgroundColor: `${colors.crystal}15`,
+                    color: colors.crystal,
                     fontWeight: 500,
                   }}
                 >
@@ -177,7 +177,7 @@ export function SettingsPage() {
                 <input
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
-                  className="w-full text-[12px] px-3 py-2 rounded-md outline-none transition-colors focus:border-[#6366F1]/50"
+                  className="w-full text-[12px] px-3 py-2 rounded-md outline-none transition-colors focus:border-[#5C6CF5]/50"
                   style={{
                     backgroundColor: inputBg,
                     border: `1px solid ${cardBorder}`,
@@ -189,7 +189,7 @@ export function SettingsPage() {
                 <input
                   value={profileEmail}
                   onChange={(e) => setProfileEmail(e.target.value)}
-                  className="w-full text-[12px] px-3 py-2 rounded-md outline-none transition-colors focus:border-[#6366F1]/50"
+                  className="w-full text-[12px] px-3 py-2 rounded-md outline-none transition-colors focus:border-[#5C6CF5]/50"
                   style={{
                     backgroundColor: inputBg,
                     border: `1px solid ${cardBorder}`,
@@ -208,7 +208,7 @@ export function SettingsPage() {
                 >
                   Acme Corp
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ backgroundColor: `${colors.indigo}15`, color: colors.indigo }}>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ backgroundColor: `${colors.crystal}15`, color: colors.crystal }}>
                   Pro Plan
                 </span>
               </div>
@@ -240,17 +240,17 @@ export function SettingsPage() {
                     style={{
                       border: `2px solid ${
                         (t.id === "dark" && isDark) || (t.id === "light" && !isDark)
-                          ? colors.indigo
+                          ? colors.crystal
                           : cardBorder
                       }`,
                       backgroundColor: (t.id === "dark" && isDark) || (t.id === "light" && !isDark)
-                        ? `${colors.indigo}10`
+                        ? `${colors.crystal}10`
                         : "transparent",
                     }}
                   >
                     <t.icon className="w-5 h-5" style={{
                       color: (t.id === "dark" && isDark) || (t.id === "light" && !isDark)
-                        ? colors.indigo
+                        ? colors.crystal
                         : colors.textMuted,
                     }} />
                     <span className="text-[11px]" style={{
@@ -262,7 +262,7 @@ export function SettingsPage() {
                       {t.label}
                     </span>
                     {((t.id === "dark" && isDark) || (t.id === "light" && !isDark)) && (
-                      <Check className="w-3.5 h-3.5" style={{ color: colors.indigo }} />
+                      <Check className="w-3.5 h-3.5" style={{ color: colors.crystal }} />
                     )}
                   </button>
                 ))}
@@ -383,7 +383,7 @@ export function SettingsPage() {
                 style={{ backgroundColor: isDark ? "#0F1018" : "#F7F6F3", border: `1px solid ${cardBorder}` }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <BarChart3 className="w-4 h-4" style={{ color: colors.indigo }} />
+                  <BarChart3 className="w-4 h-4" style={{ color: colors.crystal }} />
                   <span className="text-[12px]" style={{ fontWeight: 600, color: colors.textPrimary }}>
                     Your Confidence Scores
                   </span>
@@ -391,8 +391,8 @@ export function SettingsPage() {
                 <div className="grid grid-cols-3 gap-4 mb-3">
                   {[
                     { label: "Faithfulness", avg: 91, color: "#10B981" },
-                    { label: "Relevance", avg: 88, color: "#06B6D4" },
-                    { label: "Precision", avg: 86, color: "#8B5CF6" },
+                    { label: "Relevance", avg: 88, color: "#00C9D6" },
+                    { label: "Precision", avg: 86, color: "#5C6CF5" },
                   ].map((m) => (
                     <div key={m.label}>
                       <div className="flex items-center gap-1 mb-1">
@@ -430,9 +430,9 @@ export function SettingsPage() {
             {/* AI Info */}
             <div
               className="flex items-start gap-3 p-3 rounded-lg"
-              style={{ backgroundColor: `${colors.indigo}08`, border: `1px solid ${colors.indigo}20` }}
+              style={{ backgroundColor: `${colors.crystal}08`, border: `1px solid ${colors.crystal}20` }}
             >
-              <Info className="w-4 h-4 shrink-0 mt-0.5" style={{ color: colors.indigo }} />
+              <Info className="w-4 h-4 shrink-0 mt-0.5" style={{ color: colors.crystal }} />
               <div>
                 <div className="text-[12px]" style={{ fontWeight: 500, color: colors.textPrimary }}>
                   About ConvoCrystal AI
@@ -654,7 +654,7 @@ export function SettingsPage() {
                   className="text-left px-3 py-2 md:py-2.5 flex items-center gap-2 md:gap-3 transition-all duration-200 relative shrink-0 md:shrink md:w-full"
                   style={{
                     borderBottom: `1px solid ${isDark ? "rgba(42,45,66,0.4)" : "rgba(226,224,219,0.4)"}`,
-                    backgroundColor: activeSection === section.key ? `${colors.indigo}10` : "transparent",
+                    backgroundColor: activeSection === section.key ? `${colors.crystal}10` : "transparent",
                   }}
                   onMouseEnter={(e) => {
                     if (activeSection !== section.key)
@@ -666,14 +666,14 @@ export function SettingsPage() {
                   }}
                 >
                   {activeSection === section.key && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#6366F1] rounded-r hidden md:block" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#5C6CF5] rounded-r hidden md:block" />
                   )}
                   {activeSection === section.key && (
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-8 bg-[#6366F1] rounded-t md:hidden" />
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-8 bg-[#5C6CF5] rounded-t md:hidden" />
                   )}
                   <section.icon
                     className="w-4 h-4 shrink-0"
-                    style={{ color: activeSection === section.key ? colors.indigo : colors.textMuted }}
+                    style={{ color: activeSection === section.key ? colors.crystal : colors.textMuted }}
                   />
                   <div className="flex-1 min-w-0">
                     <div
@@ -691,7 +691,7 @@ export function SettingsPage() {
                   </div>
                   <ChevronRight
                     className="w-3 h-3 shrink-0 hidden md:block"
-                    style={{ color: activeSection === section.key ? colors.indigo : colors.textMuted }}
+                    style={{ color: activeSection === section.key ? colors.crystal : colors.textMuted }}
                   />
                 </button>
               ))}
@@ -776,7 +776,7 @@ function SaveButton({ colors }: { colors: any }) {
       }}
       className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-[11px] text-white transition-colors"
       style={{
-        backgroundColor: saved ? "#10B981" : "#6366F1",
+        backgroundColor: saved ? "#10B981" : "#5C6CF5",
         fontWeight: 500,
       }}
     >

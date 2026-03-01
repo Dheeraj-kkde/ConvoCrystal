@@ -13,11 +13,18 @@ import {
   UserCheck,
   X,
   ArrowLeft,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  Info,
+  FileText,
+  Sparkles,
 } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import { useNavigate } from "react-router";
 import { CrystalLogo } from "./Logo";
 import { useUser } from "./UserContext";
+import { useToast } from "./ToastSystem";
 
 interface TopBarProps {
   onUpload?: () => void;
@@ -28,43 +35,64 @@ interface TopBarProps {
 export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
   const { isDark, toggle, colors } = useTheme();
   const { isNewUser, toggleUserMode } = useUser();
-  const [showWorkspace, setShowWorkspace] = useState(false);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const mobileSearchRef = useRef<HTMLInputElement>(null);
+  const { addToast } = useToast();
   const navigate = useNavigate();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [showWorkspace, setShowWorkspace] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (showMobileSearch && mobileSearchRef.current) {
-      mobileSearchRef.current.focus();
+    if (searchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
     }
-  }, [showMobileSearch]);
+  }, [searchOpen]);
 
-  // Close mobile search on Escape
+  // Close search on Escape
   useEffect(() => {
-    if (!showMobileSearch) return;
+    if (!searchOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowMobileSearch(false);
+      if (e.key === "Escape") setSearchOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [showMobileSearch]);
+  }, [searchOpen]);
+
+  // Close notifications on outside click
+  useEffect(() => {
+    if (!notificationsOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotificationsOpen(false);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setNotificationsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [notificationsOpen]);
 
   // Mock search results
   const recentSearches = ["Q3 Earnings Call", "Product roadmap meeting", "Client onboarding"];
-  const filteredResults = searchQuery.trim()
+  const filteredResults = searchOpen && searchInputRef.current?.value.trim()
     ? [
         { type: "document", title: "Q3 Earnings Call Transcript", date: "Oct 15, 2025" },
         { type: "document", title: "Product Sync Notes", date: "Oct 12, 2025" },
         { type: "chat", title: "Summarize action items from Q3 call", date: "Oct 15, 2025" },
-      ].filter((r) => r.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      ].filter((r) => r.title.toLowerCase().includes(searchInputRef.current?.value.toLowerCase()))
     : [];
 
   return (
     <>
       {/* Mobile Search Overlay */}
       <AnimatePresence>
-        {showMobileSearch && (
+        {searchOpen && (
           <motion.div
             className="fixed inset-0 z-[200] flex flex-col"
             style={{ backgroundColor: colors.bgBase }}
@@ -79,7 +107,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
               style={{ borderBottom: `1px solid ${colors.border}` }}
             >
               <button
-                onClick={() => { setShowMobileSearch(false); setSearchQuery(""); }}
+                onClick={() => { setSearchOpen(false); if (searchInputRef.current) searchInputRef.current.value = ""; }}
                 className="p-1.5 rounded-md transition-colors"
                 style={{ color: colors.textMuted }}
               >
@@ -91,15 +119,13 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
               >
                 <Search className="w-4 h-4 shrink-0" style={{ color: colors.textMuted }} />
                 <input
-                  ref={mobileSearchRef}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  ref={searchInputRef}
                   className="bg-transparent text-[14px] outline-none flex-1 w-full"
                   placeholder="Search documents, chats..."
                   style={{ color: colors.textPrimary }}
                 />
-                {searchQuery && (
-                  <button onClick={() => setSearchQuery("")} className="p-0.5" style={{ color: colors.textMuted }}>
+                {searchInputRef.current?.value && (
+                  <button onClick={() => { if (searchInputRef.current) searchInputRef.current.value = ""; }} className="p-0.5" style={{ color: colors.textMuted }}>
                     <X className="w-4 h-4" />
                   </button>
                 )}
@@ -108,7 +134,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
 
             {/* Search content */}
             <div className="flex-1 overflow-y-auto px-4 py-3">
-              {!searchQuery.trim() ? (
+              {!searchInputRef.current?.value.trim() ? (
                 <>
                   <p className="text-[11px] uppercase tracking-wider mb-3" style={{ color: colors.textMuted, fontWeight: 600 }}>
                     Recent Searches
@@ -116,7 +142,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
                   {recentSearches.map((term) => (
                     <button
                       key={term}
-                      onClick={() => setSearchQuery(term)}
+                      onClick={() => { if (searchInputRef.current) searchInputRef.current.value = term; }}
                       className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg mb-1 transition-colors hover:opacity-80"
                       style={{ color: colors.textSecondary }}
                     >
@@ -134,11 +160,11 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
                     ].filter((a) => a.action).map((item) => (
                       <button
                         key={item.label}
-                        onClick={() => { item.action?.(); setShowMobileSearch(false); }}
+                        onClick={() => { item.action?.(); setSearchOpen(false); }}
                         className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg mb-1 transition-colors hover:opacity-80"
                         style={{ color: colors.textSecondary }}
                       >
-                        <item.icon className="w-3.5 h-3.5 shrink-0" style={{ color: colors.indigo }} />
+                        <item.icon className="w-3.5 h-3.5 shrink-0" style={{ color: colors.crystal }} />
                         <span className="text-[13px]">{item.label}</span>
                       </button>
                     ))}
@@ -152,15 +178,15 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
                   {filteredResults.map((result, i) => (
                     <button
                       key={i}
-                      onClick={() => setShowMobileSearch(false)}
+                      onClick={() => setSearchOpen(false)}
                       className="flex items-start gap-3 w-full px-3 py-3 rounded-lg mb-1 transition-colors hover:opacity-80 text-left"
                       style={{ backgroundColor: `${colors.bgPanel}80` }}
                     >
                       <div
                         className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 mt-0.5"
-                        style={{ backgroundColor: `${colors.indigo}15` }}
+                        style={{ backgroundColor: `${colors.crystal}15` }}
                       >
-                        <Search className="w-3.5 h-3.5" style={{ color: colors.indigo }} />
+                        <Search className="w-3.5 h-3.5" style={{ color: colors.crystal }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] truncate" style={{ color: colors.textPrimary, fontWeight: 500 }}>
@@ -177,7 +203,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
                 <div className="flex flex-col items-center justify-center py-12">
                   <Search className="w-8 h-8 mb-3" style={{ color: colors.textMuted, opacity: 0.4 }} />
                   <p className="text-[13px]" style={{ color: colors.textMuted }}>
-                    No results for "{searchQuery}"
+                    No results for "{searchInputRef.current?.value}"
                   </p>
                 </div>
               )}
@@ -195,7 +221,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
             <CrystalLogo size={24} />
             <span className="text-[14px] hidden sm:inline" style={{ fontWeight: 600, color: colors.textPrimary }}>
-              Convo<span className="text-[#6366F1]">Crystal</span>
+              Convo<span style={{ color: colors.crystal }}>Crystal</span>
             </span>
           </div>
 
@@ -205,11 +231,13 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
           <div className="relative hidden sm:block">
             <button
               onClick={() => setShowWorkspace(!showWorkspace)}
-              className="flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] hover:bg-[#6366F1]/10 transition-colors"
+              className="flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] transition-colors"
               style={{ color: colors.textSecondary }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
             >
-              <div className="w-4 h-4 rounded bg-[#8B5CF6]/20 flex items-center justify-center">
-                <span className="text-[8px] text-[#8B5CF6]">A</span>
+              <div className="w-4 h-4 rounded flex items-center justify-center" style={{ backgroundColor: isDark ? "rgba(143,155,255,0.15)" : "rgba(92,108,245,0.12)" }}>
+                <span className="text-[8px]" style={{ color: colors.crystalLight }}>A</span>
               </div>
               Acme Corp
               <ChevronDown className="w-3 h-3" style={{ color: colors.textMuted }} />
@@ -220,8 +248,10 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
                 {["Acme Corp", "Personal", "Design Team"].map((ws) => (
                   <button
                     key={ws}
-                    className="w-full text-left px-3 py-1.5 text-[11px] hover:bg-[#6366F1]/10 transition-colors"
+                    className="w-full text-left px-3 py-1.5 text-[11px] transition-colors"
                     style={{ color: colors.textSecondary }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                     onClick={() => setShowWorkspace(false)}
                   >
                     {ws}
@@ -233,70 +263,43 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
         </div>
 
         {/* Center - Search (desktop) */}
-        <div
-          className="hidden md:flex items-center gap-2 px-3 py-1 rounded-lg max-w-xs flex-1 mx-8 transition-colors duration-300"
-          style={{ backgroundColor: colors.bgPanel, border: `1px solid ${colors.border}` }}
-        >
-          <Search className="w-3.5 h-3.5" style={{ color: colors.textMuted }} />
-          <input
-            className="bg-transparent text-[12px] placeholder-opacity-50 outline-none flex-1"
-            placeholder="Search everything..."
-            style={{ color: colors.textSecondary }}
-          />
-          <span className="text-[9px] font-mono px-1 rounded" style={{ color: colors.textMuted, border: `1px solid ${colors.border}` }}>
-            ⌘K
-          </span>
-        </div>
+        {/* Removed: redundant with sidebar search — ⌘K shortcut triggers the overlay */}
 
         {/* Right */}
         <div className="flex items-center gap-0.5 sm:gap-1">
-          {/* Mobile search trigger */}
+          {/* Search trigger (all screen sizes) */}
           <button
-            onClick={() => setShowMobileSearch(true)}
-            className="md:hidden p-1.5 rounded-md hover:bg-[#6366F1]/10 transition-colors"
-            title="Search"
+            onClick={() => setSearchOpen(true)}
+            className="p-1.5 rounded-md transition-colors"
+            style={{ color: colors.textMuted }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+            title="Search (⌘K)"
           >
-            <Search className="w-4 h-4" style={{ color: colors.textMuted }} />
+            <Search className="w-4 h-4" />
           </button>
-
-          {/* Upload */}
-          {onUpload && (
-            <button
-              onClick={onUpload}
-              className="p-1.5 rounded-md hover:bg-[#6366F1]/10 transition-colors"
-              title="Upload transcript"
-            >
-              <Upload className="w-4 h-4" style={{ color: colors.textMuted }} />
-            </button>
-          )}
-
-          {/* Version history - hide on very small screens */}
-          {onVersions && (
-            <button
-              onClick={onVersions}
-              className="hidden sm:block p-1.5 rounded-md hover:bg-[#6366F1]/10 transition-colors"
-              title="Version history"
-              data-onboarding="versions"
-            >
-              <History className="w-4 h-4" style={{ color: colors.textMuted }} />
-            </button>
-          )}
 
           {/* Onboarding */}
           {onOnboarding && (
             <button
               onClick={onOnboarding}
-              className="p-1.5 rounded-md hover:bg-[#6366F1]/10 transition-colors"
+              className="p-1.5 rounded-md transition-colors"
+              style={{ color: colors.textMuted }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
               title="Product tour"
             >
-              <HelpCircle className="w-4 h-4" style={{ color: colors.textMuted }} />
+              <HelpCircle className="w-4 h-4" />
             </button>
           )}
 
           {/* Theme toggle */}
           <button
             onClick={toggle}
-            className="p-1.5 rounded-md hover:bg-[#6366F1]/10 transition-colors"
+            className="p-1.5 rounded-md transition-colors"
+            style={{ color: colors.textMuted }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
             title={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
             {isDark ? (
@@ -309,16 +312,161 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
           <div className="w-px h-4 mx-0.5 sm:mx-1 hidden sm:block" style={{ backgroundColor: colors.border }} />
 
           {/* Notifications */}
-          <button className="relative p-1.5 rounded-md hover:bg-[#6366F1]/10 transition-colors hidden sm:block">
-            <Bell className="w-4 h-4" style={{ color: colors.textMuted }} />
-            <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
-          </button>
+          <div ref={notifRef} className="relative hidden sm:block">
+            <button
+              className="relative p-1.5 rounded-md transition-colors"
+              style={{ color: notificationsOpen ? colors.crystal : colors.textMuted }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+              onClick={() => setNotificationsOpen(!notificationsOpen)}
+            >
+              <Bell className="w-4 h-4" />
+              <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.crystal }} />
+            </button>
+
+            {/* Notification dropdown */}
+            <AnimatePresence>
+              {notificationsOpen && (
+                <motion.div
+                  className="absolute right-0 top-full mt-2 w-80 rounded-lg shadow-2xl overflow-hidden z-[200]"
+                  style={{ backgroundColor: isDark ? colors.bgPanel : "#FFFFFF", border: `1px solid ${colors.border}` }}
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${colors.border}` }}>
+                    <div className="text-[12px]" style={{ fontWeight: 600, color: colors.textPrimary }}>Notifications</div>
+                    <button
+                      className="text-[10px] px-2 py-0.5 rounded-md transition-colors"
+                      style={{ color: colors.crystalLight }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+                      onClick={() => {
+                        addToast({ variant: "info", title: "All caught up!", message: "All notifications marked as read." });
+                        setNotificationsOpen(false);
+                      }}
+                    >
+                      Mark all read
+                    </button>
+                  </div>
+
+                  {/* Notification items */}
+                  <div className="max-h-72 overflow-y-auto" style={{ scrollbarWidth: "thin", scrollbarColor: `${colors.border} transparent` }}>
+                    {[
+                      {
+                        icon: CheckCircle2,
+                        color: "#10B981",
+                        title: "Processing complete",
+                        body: "Q3 Earnings Call transcript has been analyzed with 94% confidence.",
+                        time: "2 min ago",
+                        unread: true,
+                        toastVariant: "success" as const,
+                      },
+                      {
+                        icon: Sparkles,
+                        color: "#5C6CF5",
+                        title: "AI summary ready",
+                        body: "Your requested summary for Product Sync Notes is ready to review.",
+                        time: "15 min ago",
+                        unread: true,
+                        toastVariant: "info" as const,
+                      },
+                      {
+                        icon: AlertTriangle,
+                        color: "#F59E0B",
+                        title: "Low confidence detected",
+                        body: "Client Onboarding transcript scored 62%. Consider re-uploading.",
+                        time: "1 hr ago",
+                        unread: false,
+                        toastVariant: "warning" as const,
+                      },
+                      {
+                        icon: FileText,
+                        color: "#00C9D6",
+                        title: "Export completed",
+                        body: "DOCX export of Design Review has been downloaded.",
+                        time: "3 hrs ago",
+                        unread: false,
+                        toastVariant: "success" as const,
+                      },
+                      {
+                        icon: XCircle,
+                        color: "#F43F5E",
+                        title: "Upload failed",
+                        body: "team-standup.mp3 exceeded the 200MB file size limit.",
+                        time: "5 hrs ago",
+                        unread: false,
+                        toastVariant: "error" as const,
+                      },
+                    ].map((notif, i) => (
+                      <button
+                        key={i}
+                        className="w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-[#5C6CF5]/5"
+                        style={{ borderBottom: `1px solid ${colors.border}`, backgroundColor: notif.unread ? `${colors.crystal}05` : "transparent" }}
+                        onClick={() => {
+                          addToast({
+                            variant: notif.toastVariant,
+                            title: notif.title,
+                            message: notif.body,
+                            cta: notif.toastVariant === "warning"
+                              ? { label: "View document →", onClick: () => {} }
+                              : undefined,
+                          });
+                          setNotificationsOpen(false);
+                        }}
+                      >
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                          style={{ backgroundColor: `${notif.color}12` }}
+                        >
+                          <notif.icon className="w-3.5 h-3.5" style={{ color: notif.color }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] truncate" style={{ fontWeight: 600, color: colors.textPrimary }}>{notif.title}</span>
+                            {notif.unread && (
+                              <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: colors.crystal }} />
+                            )}
+                          </div>
+                          <p className="text-[10px] mt-0.5 line-clamp-2" style={{ color: colors.textMuted }}>{notif.body}</p>
+                          <span className="text-[9px] font-mono mt-1 block" style={{ color: colors.textMuted, opacity: 0.7 }}>{notif.time}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="px-4 py-2.5 text-center" style={{ borderTop: `1px solid ${colors.border}` }}>
+                    <button
+                      className="text-[10px] transition-colors hover:underline"
+                      style={{ color: colors.crystalLight }}
+                      onClick={() => {
+                        addToast({
+                          variant: "success",
+                          title: "Toast system demo",
+                          message: "All 4 variants work: success, warning, error, and info. Click any notification to fire one!",
+                          cta: { label: "Learn more →", onClick: () => {} },
+                        });
+                        setNotificationsOpen(false);
+                      }}
+                    >
+                      View all notifications
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Auth links */}
           <button
             onClick={() => navigate("/login")}
-            className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-mono hover:bg-[#6366F1]/10 transition-colors"
+            className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-mono transition-colors"
             style={{ color: colors.textMuted }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
           >
             Auth Demo
           </button>
@@ -328,8 +476,8 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
             onClick={toggleUserMode}
             className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-mono transition-colors"
             style={{
-              color: isNewUser ? "#F59E0B" : colors.indigo,
-              backgroundColor: isNewUser ? "rgba(245,158,11,0.1)" : `${colors.indigo}10`,
+              color: isNewUser ? "#F59E0B" : colors.crystal,
+              backgroundColor: isNewUser ? "rgba(245,158,11,0.1)" : `${colors.crystal}10`,
             }}
             title={isNewUser ? "Viewing as New User — click to switch" : "Viewing as Returning User — click to switch"}
             whileTap={{ scale: 0.92 }}
@@ -352,7 +500,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
 
           {/* User avatar */}
           <button className="flex items-center gap-2 ml-1">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] flex items-center justify-center text-white text-[10px]">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px]" style={{ backgroundColor: colors.crystalMuted }}>
               JD
             </div>
           </button>

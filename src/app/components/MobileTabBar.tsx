@@ -24,11 +24,11 @@ export function MobileTabBar({ activeTab, onTabChange }: MobileTabBarProps) {
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className="flex flex-col items-center gap-0.5 px-3 py-1 transition-all duration-200"
-          style={{ color: activeTab === tab.id ? "#6366F1" : colors.textMuted }}
+          style={{ color: activeTab === tab.id ? colors.crystal : colors.textMuted }}
         >
           <div className={`p-1.5 rounded-full transition-all duration-200 ${
-            activeTab === tab.id ? "bg-[#6366F1]/15 scale-110" : ""
-          }`}>
+            activeTab === tab.id ? "scale-110" : ""
+          }`} style={{ backgroundColor: activeTab === tab.id ? `${colors.crystal}15` : "transparent" }}>
             <tab.icon className="w-5 h-5" />
           </div>
           <span className="text-[9px] font-mono">{tab.label}</span>

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { MainLayout } from "./components/MainLayout";
 import { DashboardPage } from "./components/DashboardPage";
 import { OverviewDashboard } from "./components/OverviewDashboard";
@@ -10,15 +11,22 @@ import { ForgotPasswordPage } from "./components/auth/ForgotPasswordPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    Component: MainLayout,
+    // Protected routes — require authentication
+    Component: ProtectedRoute,
     children: [
-      { index: true, Component: DashboardPage },
-      { path: "overview", Component: OverviewDashboard },
-      { path: "documents", Component: DocumentsPage },
-      { path: "settings", Component: SettingsPage },
+      {
+        path: "/",
+        Component: MainLayout,
+        children: [
+          { index: true, Component: DashboardPage },
+          { path: "overview", Component: OverviewDashboard },
+          { path: "documents", Component: DocumentsPage },
+          { path: "settings", Component: SettingsPage },
+        ],
+      },
     ],
   },
+  // Public routes — no auth required
   { path: "/login", Component: LoginPage },
   { path: "/register", Component: RegisterPage },
   { path: "/forgot-password", Component: ForgotPasswordPage },

@@ -12,6 +12,7 @@ import {
   Upload,
 } from "lucide-react";
 import { useToast } from "./ToastSystem";
+import { useTheme } from "./ThemeContext";
 
 type UploadState = "idle" | "validation" | "uploading" | "processing" | "complete" | "error";
 
@@ -46,6 +47,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [dashOffset, setDashOffset] = useState(0);
   const { addToast } = useToast();
+  const { isDark, colors } = useTheme();
 
   const selectedFile = {
     name: "Q4-strategy-review-recording.vtt",
@@ -53,6 +55,14 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
     format: "VTT",
     sha: "a3f8c1d",
   };
+
+  // Theme-derived colors
+  const modalBg = colors.bgBase;
+  const panelBg = colors.bgPanel;
+  const borderColor = colors.border;
+  const textPrimary = colors.textPrimary;
+  const textSecondary = colors.textSecondary;
+  const textMuted = colors.textMuted;
 
   // Dash animation for idle state
   useEffect(() => {
@@ -134,10 +144,6 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
     setPaused(false);
   }, []);
 
-  const handleShowError = useCallback(() => {
-    setState("error");
-  }, []);
-
   if (!isOpen) return null;
 
   const circumference = 2 * Math.PI * 44;
@@ -149,18 +155,19 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-[640px] max-h-[90vh] bg-[#0B0C10] border border-[#2A2D42] rounded-2xl overflow-hidden shadow-2xl mx-3 sm:mx-4"
-        style={{ animation: "modalSlideUp 0.28s ease-out" }}>
+      <div className="relative w-full max-w-[640px] max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl mx-3 sm:mx-4"
+        style={{ backgroundColor: modalBg, border: `1px solid ${borderColor}`, animation: "modalSlideUp 0.28s ease-out" }}>
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[#2A2D42]">
+        <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: `1px solid ${borderColor}` }}>
           <div className="flex items-center gap-2">
-            <Upload className="w-4 h-4 text-[#6366F1]" />
-            <span className="text-[13px] text-[#E8EAF6]" style={{ fontWeight: 600 }}>Upload Transcript</span>
-            <span className="text-[9px] font-mono text-[#5C6490] px-1.5 py-0.5 rounded bg-[#1A1D2E] border border-[#2A2D42]">
+            <Upload className="w-4 h-4" style={{ color: colors.crystal }} />
+            <span className="text-[13px]" style={{ fontWeight: 600, color: textPrimary }}>Upload Transcript</span>
+            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded"
+              style={{ color: textMuted, backgroundColor: panelBg, border: `1px solid ${borderColor}` }}>
               {state === "idle" ? "Ready" : state === "validation" ? "Validating" : state === "uploading" ? "Uploading" : state === "processing" ? "Processing" : state === "complete" ? "Done" : "Error"}
             </span>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#F43F5E]/15 hover:text-[#F43F5E] text-[#5C6490] transition-colors">
+          <button onClick={onClose} className="p-1 rounded hover:bg-[#F43F5E]/15 transition-colors" style={{ color: textMuted }}>
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -169,15 +176,10 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           {/* State 1: Idle Drop Zone */}
           {state === "idle" && (
             <div
-              className={`w-full rounded-xl p-10 flex flex-col items-center justify-center transition-all duration-200 cursor-pointer ${
-                dragOver ? "bg-[#6366F1]/[0.04] border-[#6366F1]" : "bg-transparent"
-              }`}
+              className={`w-full rounded-xl p-10 flex flex-col items-center justify-center transition-all duration-200 cursor-pointer`}
               style={{
-                border: dragOver ? "1.5px solid #6366F1" : "1.5px dashed #2A2D42",
-                backgroundImage: dragOver ? undefined : `repeating-linear-gradient(90deg, #2A2D42 0, #2A2D42 2px, transparent 2px, transparent 6px)`,
-                backgroundSize: dragOver ? undefined : "auto 1px",
-                backgroundPosition: `${dashOffset}px 0, ${dashOffset}px 100%, 0 ${dashOffset}px, 100% ${dashOffset}px`,
-                backgroundRepeat: "no-repeat",
+                border: dragOver ? `1.5px solid ${colors.crystal}` : `1.5px dashed ${borderColor}`,
+                backgroundColor: dragOver ? `${colors.crystal}04` : "transparent",
               }}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
@@ -185,20 +187,22 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
               onClick={handleFileSelect}
             >
               <div className={`mb-4 transition-transform duration-200 ${dragOver ? "scale-110" : ""}`}>
-                <CloudUpload className="w-12 h-12 text-[#5C6490]" />
+                <CloudUpload className="w-12 h-12" style={{ color: textMuted }} />
               </div>
-              <h3 className="text-[#E8EAF6] text-[16px] mb-2" style={{ fontWeight: 600 }}>Drop your transcript here</h3>
+              <h3 className="text-[16px] mb-2" style={{ fontWeight: 600, color: textPrimary }}>Drop your transcript here</h3>
               <div className="flex flex-wrap items-center justify-center gap-1.5 mb-4">
                 {formatChips.map((f) => (
-                  <span key={f} className="px-2 py-0.5 rounded-full text-[9px] font-mono text-[#06B6D4] bg-[#06B6D4]/10 border border-[#06B6D4]/20 hover:bg-[#06B6D4]/20 transition-colors cursor-default">
+                  <span key={f} className="px-2 py-0.5 rounded-full text-[9px] font-mono transition-colors cursor-default"
+                    style={{ color: colors.ice, backgroundColor: `${colors.ice}10`, border: `1px solid ${colors.ice}20` }}>
                     {f}
                   </span>
                 ))}
               </div>
-              <button className="text-[12px] text-[#6366F1] hover:text-[#818CF8] transition-colors mb-2">
+              <button className="text-[12px] transition-colors mb-2" style={{ color: colors.crystal }}>
                 or browse files
               </button>
-              <button className="text-[11px] text-[#5C6490] hover:text-[#9BA3C8] border border-[#2A2D42] rounded-md px-3 py-1 transition-colors">
+              <button className="text-[11px] rounded-md px-3 py-1 transition-colors"
+                style={{ color: textMuted, border: `1px solid ${borderColor}` }}>
                 Try a sample transcript
               </button>
             </div>
@@ -207,22 +211,20 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           {/* State 2: Validation */}
           {state === "validation" && (
             <div className="w-full max-w-md" style={{ animation: "slideUp 0.2s ease-out" }}>
-              {/* File card */}
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-[#1A1D2E] border border-[#2A2D42] mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#6366F1]/15 flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-[#6366F1]" />
+              <div className="flex items-center gap-3 p-3 rounded-lg mb-6" style={{ backgroundColor: panelBg, border: `1px solid ${borderColor}` }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colors.crystal}15` }}>
+                  <FileText className="w-5 h-5" style={{ color: colors.crystal }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[12px] text-[#E8EAF6] truncate" style={{ fontWeight: 500 }}>{selectedFile.name}</div>
+                  <div className="text-[12px] truncate" style={{ fontWeight: 500, color: textPrimary }}>{selectedFile.name}</div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20">{selectedFile.format}</span>
-                    <span className="text-[10px] font-mono text-[#5C6490]">{selectedFile.size}</span>
-                    <span className="text-[9px] font-mono text-[#5C6490]">SHA: {selectedFile.sha}</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded" style={{ backgroundColor: `${colors.ice}10`, color: colors.ice, border: `1px solid ${colors.ice}20` }}>{selectedFile.format}</span>
+                    <span className="text-[10px] font-mono" style={{ color: textMuted }}>{selectedFile.size}</span>
+                    <span className="text-[9px] font-mono" style={{ color: textMuted }}>SHA: {selectedFile.sha}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Validation steps */}
               <div className="space-y-3">
                 {validationSteps.map((step, i) => (
                   <div key={step.key} className="flex items-center gap-3">
@@ -230,21 +232,21 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
                       {i < validationProgress ? (
                         <Check className="w-4 h-4 text-[#10B981]" />
                       ) : i === validationProgress ? (
-                        <Loader2 className="w-4 h-4 text-[#6366F1] animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin" style={{ color: colors.crystal }} />
                       ) : (
-                        <div className="w-3 h-3 rounded-full border border-[#2A2D42]" />
+                        <div className="w-3 h-3 rounded-full" style={{ border: `1px solid ${borderColor}` }} />
                       )}
                     </div>
-                    <span className={`text-[12px] ${
-                      i < validationProgress ? "text-[#10B981]" : i === validationProgress ? "text-[#E8EAF6]" : "text-[#5C6490]"
-                    }`}>
+                    <span className="text-[12px]" style={{
+                      color: i < validationProgress ? "#10B981" : i === validationProgress ? textPrimary : textMuted,
+                    }}>
                       {step.label} {i < validationProgress ? "✓" : i === validationProgress ? "..." : ""}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <button onClick={handleReset} className="mt-6 text-[11px] text-[#5C6490] hover:text-[#F43F5E] transition-colors">
+              <button onClick={handleReset} className="mt-6 text-[11px] transition-colors" style={{ color: textMuted }}>
                 Cancel
               </button>
             </div>
@@ -253,41 +255,42 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           {/* State 3: Upload Progress */}
           {state === "uploading" && (
             <div className="flex flex-col items-center" style={{ animation: "slideUp 0.2s ease-out" }}>
-              <div className="text-[12px] text-[#9BA3C8] mb-4" style={{ fontWeight: 500 }}>{selectedFile.name}</div>
+              <div className="text-[12px] mb-4" style={{ fontWeight: 500, color: textSecondary }}>{selectedFile.name}</div>
 
-              {/* Progress ring */}
               <div className="relative w-28 h-28 mb-4">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="44" fill="none" stroke="#2A2D42" strokeWidth="3" />
+                  <circle cx="50" cy="50" r="44" fill="none" stroke={borderColor} strokeWidth="3" />
                   <circle
                     cx="50" cy="50" r="44" fill="none"
-                    stroke="#6366F1" strokeWidth="3" strokeLinecap="round"
+                    stroke={colors.crystal} strokeWidth="3" strokeLinecap="round"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeDashoffset}
                     className="transition-all duration-100"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-[20px] font-mono text-[#E8EAF6]" style={{ fontWeight: 500 }}>{Math.round(uploadProgress)}%</span>
-                  <span className="text-[9px] font-mono text-[#5C6490]">{(uploadProgress * 0.042).toFixed(1)} / 4.2 MB</span>
+                  <span className="text-[20px] font-mono" style={{ fontWeight: 500, color: textPrimary }}>{Math.round(uploadProgress)}%</span>
+                  <span className="text-[9px] font-mono" style={{ color: textMuted }}>{(uploadProgress * 0.042).toFixed(1)} / 4.2 MB</span>
                 </div>
               </div>
 
-              <div className="text-[10px] font-mono text-[#5C6490] mb-4">
+              <div className="text-[10px] font-mono mb-4" style={{ color: textMuted }}>
                 Est. {Math.max(1, Math.round((100 - uploadProgress) / 15))}s remaining · {elapsedTime}s elapsed
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setPaused(!paused)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[#2A2D42] text-[11px] text-[#9BA3C8] hover:bg-[#6366F1]/10 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] transition-colors"
+                  style={{ border: `1px solid ${borderColor}`, color: textSecondary }}
                 >
                   {paused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
                   {paused ? "Resume" : "Pause"}
                 </button>
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[#2A2D42] text-[11px] text-[#F43F5E] hover:bg-[#F43F5E]/10 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] transition-colors"
+                  style={{ border: `1px solid ${borderColor}`, color: colors.rose }}
                 >
                   Cancel
                 </button>
@@ -299,44 +302,36 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           {state === "processing" && (
             <div className="w-full max-w-sm" style={{ animation: "slideUp 0.2s ease-out" }}>
               <div className="text-center mb-6">
-                <div className="text-[13px] text-[#E8EAF6] mb-1" style={{ fontWeight: 600 }}>Processing transcript...</div>
-                <div className="text-[10px] font-mono text-[#5C6490]">{elapsedTime}s elapsed</div>
+                <div className="text-[13px] mb-1" style={{ fontWeight: 600, color: textPrimary }}>Processing transcript...</div>
+                <div className="text-[10px] font-mono" style={{ color: textMuted }}>{elapsedTime}s elapsed</div>
               </div>
 
-              {/* Vertical timeline */}
               <div className="space-y-0">
                 {processingSteps.map((step, i) => (
                   <div key={step.key} className="flex items-start gap-3">
                     <div className="flex flex-col items-center">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-                        i < processingStep
-                          ? "bg-[#10B981]/15"
-                          : i === processingStep
-                          ? "bg-[#6366F1]/15"
-                          : "bg-[#2A2D42]/30"
-                      }`}>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-300`}
+                        style={{
+                          backgroundColor: i < processingStep ? "#10B981" + "15" : i === processingStep ? `${colors.crystal}15` : `${borderColor}30`,
+                        }}>
                         {i < processingStep ? (
                           <Check className="w-3 h-3 text-[#10B981]" />
                         ) : i === processingStep ? (
-                          <Loader2 className="w-3 h-3 text-[#6366F1] animate-spin" />
+                          <Loader2 className="w-3 h-3 animate-spin" style={{ color: colors.crystal }} />
                         ) : (
-                          <div className="w-2 h-2 rounded-full bg-[#2A2D42]" />
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: borderColor }} />
                         )}
                       </div>
                       {i < processingSteps.length - 1 && (
-                        <div className={`w-px h-6 transition-colors duration-300 ${
-                          i < processingStep ? "bg-[#10B981]/30" : "bg-[#2A2D42]"
-                        }`} />
+                        <div className="w-px h-6 transition-colors duration-300"
+                          style={{ backgroundColor: i < processingStep ? "#10B981" + "30" : borderColor }} />
                       )}
                     </div>
                     <div className="pb-6">
-                      <span className={`text-[12px] transition-colors duration-300 ${
-                        i < processingStep
-                          ? "text-[#10B981]"
-                          : i === processingStep
-                          ? "text-[#E8EAF6]"
-                          : "text-[#5C6490]"
-                      }`} style={{ fontWeight: i === processingStep ? 500 : 400 }}>
+                      <span className="text-[12px] transition-colors duration-300" style={{
+                        fontWeight: i === processingStep ? 500 : 400,
+                        color: i < processingStep ? "#10B981" : i === processingStep ? textPrimary : textMuted,
+                      }}>
                         {step.label}
                         {i < processingStep && " ✓"}
                       </span>
@@ -353,9 +348,9 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
               <div className="w-16 h-16 rounded-full bg-[#10B981]/15 flex items-center justify-center mb-4">
                 <Check className="w-8 h-8 text-[#10B981]" />
               </div>
-              <h3 className="text-[#E8EAF6] text-[16px] mb-2" style={{ fontWeight: 600 }}>Upload Complete</h3>
+              <h3 className="text-[16px] mb-2" style={{ fontWeight: 600, color: textPrimary }}>Upload Complete</h3>
 
-              <div className="flex items-center gap-4 mb-6 text-[10px] font-mono text-[#5C6490]">
+              <div className="flex items-center gap-4 mb-6 text-[10px] font-mono" style={{ color: textMuted }}>
                 <span>Q4 Strategy Review</span>
                 <span>47:23 duration</span>
                 <span>6 speakers</span>
@@ -363,14 +358,14 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
               <button
                 onClick={onClose}
-                className="px-5 py-2 rounded-lg bg-[#6366F1] text-white text-[12px] hover:bg-[#818CF8] transition-colors mb-3"
-                style={{ fontWeight: 500, boxShadow: "0 0 16px rgba(99,102,241,0.2)" }}
+                className="px-5 py-2 rounded-lg text-white text-[12px] transition-colors mb-3"
+                style={{ fontWeight: 500, backgroundColor: colors.crystal, boxShadow: "var(--shadow-crystal)" }}
               >
                 <span className="flex items-center gap-2">
                   View Analysis <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </button>
-              <button onClick={handleReset} className="text-[11px] text-[#5C6490] hover:text-[#9BA3C8] transition-colors">
+              <button onClick={handleReset} className="text-[11px] transition-colors" style={{ color: textMuted }}>
                 Upload Another
               </button>
             </div>
@@ -379,22 +374,24 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           {/* Error State */}
           {state === "error" && (
             <div className="w-full max-w-md" style={{ animation: "slideUp 0.2s ease-out" }}>
-              <div className="p-4 rounded-lg border border-[#F43F5E]/30 bg-[#F43F5E]/[0.05]">
+              <div className="p-4 rounded-lg" style={{ border: `1px solid ${colors.rose}30`, backgroundColor: `${colors.rose}05` }}>
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-[#F43F5E] shrink-0 mt-0.5" />
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" style={{ color: colors.rose }} />
                   <div>
-                    <div className="text-[13px] text-[#F43F5E] mb-1" style={{ fontWeight: 600 }}>Upload Failed</div>
-                    <div className="text-[12px] text-[#9BA3C8] mb-3 leading-relaxed">
+                    <div className="text-[13px] mb-1" style={{ fontWeight: 600, color: colors.rose }}>Upload Failed</div>
+                    <div className="text-[12px] mb-3 leading-relaxed" style={{ color: textSecondary }}>
                       The file format could not be recognized. Please ensure your transcript is in a supported format (VTT, SRT, TXT, DOCX, or JSON).
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleReset}
-                        className="px-3 py-1.5 rounded-md bg-[#F43F5E]/15 text-[#F43F5E] text-[11px] hover:bg-[#F43F5E]/25 transition-colors"
+                        className="px-3 py-1.5 rounded-md text-[11px] transition-colors"
+                        style={{ backgroundColor: `${colors.rose}15`, color: colors.rose }}
                       >
                         Try Again
                       </button>
-                      <button className="px-3 py-1.5 rounded-md border border-[#2A2D42] text-[11px] text-[#5C6490] hover:text-[#9BA3C8] transition-colors">
+                      <button className="px-3 py-1.5 rounded-md text-[11px] transition-colors"
+                        style={{ border: `1px solid ${borderColor}`, color: textMuted }}>
                         Contact Support
                       </button>
                     </div>
@@ -406,8 +403,9 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
         </div>
 
         {/* Footer with demo controls */}
-        <div className="px-5 py-2.5 border-t border-[#2A2D42] flex items-center gap-1.5 sm:gap-2 bg-[#0B0C10]/80 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          <span className="text-[9px] font-mono text-[#5C6490] mr-1 sm:mr-2 shrink-0">Demo:</span>
+        <div className="px-5 py-2.5 flex items-center gap-1.5 sm:gap-2 overflow-x-auto"
+          style={{ borderTop: `1px solid ${borderColor}`, backgroundColor: `${modalBg}CC`, scrollbarWidth: "none" }}>
+          <span className="text-[9px] font-mono mr-1 sm:mr-2 shrink-0" style={{ color: textMuted }}>Demo:</span>
           {(["idle", "validation", "uploading", "processing", "complete", "error"] as UploadState[]).map((s) => (
             <button
               key={s}
@@ -417,9 +415,11 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
                 if (s === "processing") { setProcessingStep(2); }
                 if (s === "idle") handleReset();
               }}
-              className={`px-1.5 sm:px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-mono transition-colors shrink-0 ${
-                state === s ? "bg-[#6366F1]/20 text-[#6366F1]" : "text-[#5C6490] hover:text-[#9BA3C8]"
-              }`}
+              className="px-1.5 sm:px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-mono transition-colors shrink-0"
+              style={{
+                backgroundColor: state === s ? `${colors.crystal}20` : "transparent",
+                color: state === s ? colors.crystal : textMuted,
+              }}
             >
               {s}
             </button>

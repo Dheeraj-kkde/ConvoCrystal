@@ -136,7 +136,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
   const hashBg = isDark ? "#1A1D2E" : "#EDEBE8";
   const hashBorder = isDark ? "#2A2D42" : "#D9D6D0";
   const hashText = isDark ? "#9BA3C8" : "#57554F";
-  const selectedBg = isDark ? "rgba(99,102,241,0.1)" : "rgba(99,102,241,0.08)";
+  const selectedBg = isDark ? "rgba(92,108,245,0.1)" : "rgba(92,108,245,0.08)";
   const hoverBg = isDark ? "#1A1D2E" : "#F0EFEC";
   const diffBg = isDark ? "#0B0C10" : "#FAFAF8";
   const diffHeaderBg = isDark ? "rgba(26,29,46,0.5)" : "rgba(237,235,232,0.5)";
@@ -171,7 +171,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
           style={{ borderBottom: `1px solid ${borderColor}` }}
         >
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <History className="w-4 h-4 text-[#6366F1] shrink-0" />
+            <History className="w-4 h-4 shrink-0" style={{ color: colors.crystal }} />
             <span className="text-[13px] shrink-0" style={{ fontWeight: 600, color: textPrimary }}>
               Version History
             </span>
@@ -228,10 +228,10 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                 const isSelected = selectedVersion === version.id;
                 const dotColor =
                   version.source === "ai"
-                    ? "#6366F1"
+                    ? colors.crystal
                     : version.isLatest
                     ? "#10B981"
-                    : "#6366F1";
+                    : colors.crystal;
 
                 return (
                   <button
@@ -254,7 +254,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                       {i > 0 && (
                         <div
                           className="w-px flex-1"
-                          style={{ backgroundColor: isDark ? "rgba(99,102,241,0.2)" : "rgba(99,102,241,0.15)" }}
+                          style={{ backgroundColor: isDark ? "rgba(92,108,245,0.2)" : "rgba(92,108,245,0.15)" }}
                         />
                       )}
                       <div
@@ -264,7 +264,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                       {i < versions.length - 1 && (
                         <div
                           className="w-px flex-1"
-                          style={{ backgroundColor: isDark ? "rgba(99,102,241,0.2)" : "rgba(99,102,241,0.15)" }}
+                          style={{ backgroundColor: isDark ? "rgba(92,108,245,0.2)" : "rgba(92,108,245,0.15)" }}
                         />
                       )}
                     </div>
@@ -283,7 +283,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                           {version.hash}
                         </span>
                         {version.isLatest && (
-                          <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-[#6366F1]/15 text-[#6366F1]">
+                          <span className="text-[8px] font-mono px-1 py-0.5 rounded" style={{ backgroundColor: `${colors.crystal}15`, color: colors.crystal }}>
                             HEAD
                           </span>
                         )}
@@ -298,7 +298,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                           <div
                             className="w-4 h-4 rounded-full flex items-center justify-center text-[7px] text-white"
                             style={{
-                              backgroundColor: version.source === "ai" ? "#6366F1" : "#8B5CF6",
+                              backgroundColor: version.source === "ai" ? colors.crystal : colors.ice,
                             }}
                           >
                             {version.initials}
@@ -348,8 +348,8 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                     onClick={() => setDiffMode("split")}
                     className="px-2.5 py-1 text-[9px] font-mono transition-colors"
                     style={{
-                      backgroundColor: diffMode === "split" ? "rgba(99,102,241,0.15)" : "transparent",
-                      color: diffMode === "split" ? "#6366F1" : textMuted,
+                      backgroundColor: diffMode === "split" ? "rgba(92,108,245,0.15)" : "transparent",
+                      color: diffMode === "split" ? colors.crystal : textMuted,
                     }}
                   >
                     Split
@@ -359,8 +359,8 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                     className="px-2.5 py-1 text-[9px] font-mono transition-colors"
                     style={{
                       borderLeft: `1px solid ${borderColor}`,
-                      backgroundColor: diffMode === "unified" ? "rgba(99,102,241,0.15)" : "transparent",
-                      color: diffMode === "unified" ? "#6366F1" : textMuted,
+                      backgroundColor: diffMode === "unified" ? "rgba(92,108,245,0.15)" : "transparent",
+                      color: diffMode === "unified" ? colors.crystal : textMuted,
                     }}
                   >
                     Unified
@@ -368,8 +368,8 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
                 </div>
                 <button
                   onClick={() => setShowRestore(true)}
-                  className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#6366F1] text-white text-[10px] hover:bg-[#818CF8] transition-colors"
-                  style={{ fontWeight: 500 }}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-md text-white text-[10px] transition-colors"
+                  style={{ fontWeight: 500, backgroundColor: colors.crystal }}
                 >
                   <RotateCcw className="w-3 h-3" />
                   Restore
@@ -576,7 +576,7 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
               </label>
               <input
                 defaultValue={`Restore to ${selected?.hash}: ${selected?.description}`}
-                className="w-full rounded-md px-3 py-2 text-[12px] outline-none transition-colors focus:border-[#6366F1]/50"
+                className="w-full rounded-md px-3 py-2 text-[12px] outline-none transition-colors"
                 style={{
                   backgroundColor: inputBg,
                   border: `1px solid ${borderColor}`,
@@ -594,8 +594,8 @@ export function VersionControl({ isOpen, onClose }: VersionControlProps) {
               </button>
               <button
                 onClick={() => setShowRestore(false)}
-                className="px-4 py-1.5 rounded-md bg-[#6366F1] text-white text-[11px] hover:bg-[#818CF8] transition-colors"
-                style={{ fontWeight: 500 }}
+                className="px-4 py-1.5 rounded-md text-white text-[11px] transition-colors"
+                style={{ fontWeight: 500, backgroundColor: colors.crystal }}
               >
                 Confirm Restore
               </button>
