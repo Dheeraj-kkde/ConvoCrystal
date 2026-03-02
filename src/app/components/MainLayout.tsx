@@ -19,6 +19,13 @@ import { useHotkeys } from "../lib/useHotkeys";
 import { useNotificationStream } from "../lib/useNotificationStream";
 import { useNotificationPruner } from "../stores/notificationStore";
 
+// Page transition variants
+const pageTransition = {
+  initial: { opacity: 0, y: 6 },
+  animate: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 280, damping: 26, duration: 0.32 } },
+  exit: { opacity: 0, y: -4, transition: { duration: 0.12 } },
+};
+
 export function MainLayout() {
   const { isDark, toggle, colors } = useTheme();
   const { addToast } = useToast();
@@ -103,7 +110,7 @@ export function MainLayout() {
   // Show new-user welcome page if they haven't completed it
   if (isNewUser && !hasCompletedWelcome) {
     return (
-      <div className="h-screen w-screen overflow-auto" style={{ backgroundColor: colors.bgBase }}>
+      <div className="h-screen w-screen overflow-y-scroll" style={{ backgroundColor: colors.bgBase, scrollbarGutter: "stable" }}>
         <TopBar
           onUpload={() => setShowUpload(true)}
           onVersions={() => setShowVersions(true)}
@@ -152,8 +159,16 @@ export function MainLayout() {
             onUpload={() => setShowUpload(true)}
           />
           <ErrorBoundary>
-            <main className="flex-1 overflow-auto">
-              <Outlet />
+            <main className="flex-1 overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={location.pathname}
+                  {...pageTransition}
+                  className="h-full"
+                >
+                  <Outlet />
+                </motion.div>
+              </AnimatePresence>
             </main>
           </ErrorBoundary>
         </div>
@@ -194,8 +209,16 @@ export function MainLayout() {
       />
 
       <ErrorBoundary>
-        <main className="flex-1 overflow-auto">
-          <Outlet />
+        <main className="flex-1 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              {...pageTransition}
+              className="h-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
       </ErrorBoundary>
 

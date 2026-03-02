@@ -8,6 +8,12 @@
   --font-body: "Lora", serif;
   --font-mono: "DM Mono", monospace;
 
+  /* ── LAYOUT ── */
+  --topbar-h: 56px;
+  --toolbar-h: 48px;
+  --sidebar-w: 240px;
+  --panel-right-w: 360px;
+
   --background: #0B0C10;
   --foreground: #E8EAF6;
   --card: #1A1D2E;
@@ -46,32 +52,118 @@
   --sidebar-border: #2A2D42;
   --sidebar-ring: #5C6CF5;
 
-  /* Void Scale (spec-named neutral tokens) */
-  --void-0: #FFFFFF;
-  --void-50: #F9F8F6;
-  --void-100: #F0EEEB;
-  --void-200: #E2E0DB;
-  --void-300: #D9D6D0;
-  --void-400: #928F87;
-  --void-500: #5C6490;
-  --void-600: #57554F;
-  --void-700: #2A2D42;
-  --void-800: #1A1D2E;
-  --void-900: #0F1018;
-  --void-950: #0D0E16;
-  --void-1000: #0B0C10;
+  /* Void Scale (spec-named neutral tokens) — Design System §1 */
+  --void-0:    #FFFFFF;
+  --void-25:   #FAFAFA;
+  --void-50:   #F6F6F8;
+  --void-100:  #EDEDF1;
+  --void-150:  #E4E4EA;
+  --void-200:  #D5D5DE;
+  --void-300:  #B5B5C2;
+  --void-400:  #8E8E9E;
+  --void-500:  #6B6B7B;
+  --void-600:  #52525F;
+  --void-700:  #3C3C47;
+  --void-750:  #2E2E38;
+  --void-800:  #222229;
+  --void-850:  #1A1A21;
+  --void-900:  #14141A;
+  --void-950:  #0C0C11;
+  --void-1000: #070709;
 
-  /* Crystal Scale (spec-named brand primary tokens) */
-  --crystal-300: #8F9BFF;
+  /* Crystal Scale — full 11-stop palette (Design System §1) */
+  --crystal-50:  #F0F4FF;
+  --crystal-100: #E0EAFF;
+  --crystal-200: #C7D7FE;
+  --crystal-300: #A4BBFD;
+  --crystal-400: #7C94FB;
   --crystal-500: #5C6CF5;
-  --crystal-700: #3A4AE8;
+  --crystal-600: #4A52E8;
+  --crystal-700: #3B3FD0;
+  --crystal-800: #3134A8;
+  --crystal-900: #2C2F84;
+  --crystal-950: #1A1C52;
 
-  /* Ice Scale (spec-named accent tokens) */
+  /* Ice Scale — full 11-stop palette (Design System §1) */
+  --ice-50:  #EFFEFF;
+  --ice-100: #CAFEFF;
+  --ice-200: #94FDFF;
+  --ice-300: #52F4FF;
+  --ice-400: #18E4F0;
   --ice-500: #00C9D6;
+  --ice-600: #00A0AF;
+  --ice-700: #007E8A;
+  --ice-800: #076470;
+  --ice-900: #0B525D;
+  --ice-950: #043840;
 
-  /* Shadow tokens */
-  --shadow-crystal: 0 4px 16px rgba(92,108,245,0.25);
-  --shadow-ice: 0 4px 16px rgba(0,201,214,0.25);
+  /* Violet Accent (Architecture doc + Figma Prompts) */
+  --violet: #8B5CF6;
+
+  /* Semantic Colors (Design System §1) */
+  --semantic-success-subtle: #ECFDF5;
+  --semantic-success-light:  #A7F3D0;
+  --semantic-success-base:   #10B981;
+  --semantic-success-strong: #065F46;
+
+  --semantic-warning-subtle: #FFFBEB;
+  --semantic-warning-light:  #FDE68A;
+  --semantic-warning-base:   #F59E0B;
+  --semantic-warning-strong: #92400E;
+
+  --semantic-danger-subtle: #FEF2F2;
+  --semantic-danger-light:  #FECACA;
+  --semantic-danger-base:   #EF4444;
+  --semantic-danger-strong: #991B1B;
+
+  --semantic-info-subtle: #EFF6FF;
+  --semantic-info-light:  #BFDBFE;
+  --semantic-info-base:   #3B82F6;
+  --semantic-info-strong: #1E3A8A;
+
+  /* Confidence Score Gradient (Design System §1) */
+  --conf-critical: #EF4444;
+  --conf-low:      #F97316;
+  --conf-medium:   #EAB308;
+  --conf-good:     #84CC16;
+  --conf-excellent: #10B981;
+
+  /* Shadow Scale (Design System §tokens) */
+  --shadow-xs:  0 1px 2px rgba(0,0,0,0.06);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.05);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  --shadow-xl:  0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
+  --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.18);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+  --shadow-crystal: 0 0 0 1px rgba(92,108,245,0.15), 0 4px 24px rgba(92,108,245,0.12);
+  --shadow-crystal-lg: 0 0 0 1px rgba(92,108,245,0.2), 0 8px 40px rgba(92,108,245,0.18);
+  --shadow-ice: 0 0 24px rgba(0,201,214,0.15), 0 0 8px rgba(0,201,214,0.08);
+
+  /* Motion Tokens (Design System §tokens) */
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth:     cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --ease-sharp:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --duration-instant: 60ms;
+  --duration-fast:    120ms;
+  --duration-normal:  200ms;
+  --duration-slow:    320ms;
+  --duration-slower:  500ms;
+  --duration-crawl:   800ms;
+
+  /* Z-Index Scale (Design System §tokens) */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:    10;
+  --z-dropdown:  100;
+  --z-sticky:    200;
+  --z-overlay:   300;
+  --z-modal:     400;
+  --z-toast:     500;
+  --z-tooltip:   600;
 
   /* ConvoCrystal semantic tokens */
   --cc-bg-base: #0B0C10;
@@ -87,6 +179,8 @@
   --cc-text-secondary: #9BA3C8;
   --cc-text-muted: #5C6490;
   --cc-border: #2A2D42;
+  --cc-violet: #8B5CF6;
+  --cc-info: #3B82F6;
 }
 
 /* Light mode overrides */
@@ -134,6 +228,12 @@
   --cc-text-secondary: #57554F;
   --cc-text-muted: #928F87;
   --cc-border: #E2E0DB;
+  --cc-violet: #7C3AED;
+  --cc-info: #2563EB;
+
+  --shadow-crystal: 0 0 0 1px rgba(92,108,245,0.1), 0 4px 24px rgba(92,108,245,0.08);
+  --shadow-crystal-lg: 0 0 0 1px rgba(92,108,245,0.15), 0 8px 40px rgba(92,108,245,0.12);
+  --shadow-ice: 0 0 24px rgba(0,201,214,0.1), 0 0 8px rgba(0,201,214,0.06);
 }
 
 @theme inline {
@@ -189,11 +289,39 @@
   --color-cc-text-secondary: var(--cc-text-secondary);
   --color-cc-text-muted: var(--cc-text-muted);
   --color-cc-border: var(--cc-border);
+  --color-cc-violet: var(--cc-violet);
+  --color-cc-info: var(--cc-info);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Global thin scrollbar — applied via CSS so it's instant, no flash of default */
+    scrollbar-width: thin;
+    scrollbar-color: var(--cc-border) rgba(128, 128, 128, 0.05);
+  }
+
+  /* Webkit scrollbar (Chrome, Safari, Edge) — matches the thin Firefox style */
+  *::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  *::-webkit-scrollbar-track {
+    background: rgba(128, 128, 128, 0.05);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--cc-border);
+    border-radius: 9999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--cc-text-muted);
+  }
+  /* Hide scrollbar entirely where scrollbar-width: none is used inline */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
   }
 
   body {
@@ -299,3 +427,115 @@
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ─── Crystal Design System Animations ─────────────────────── */
+
+@keyframes crystalGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(92,108,245,0.15), 0 0 24px rgba(92,108,245,0.05); }
+  50% { box-shadow: 0 0 16px rgba(92,108,245,0.3), 0 0 40px rgba(92,108,245,0.1); }
+}
+
+@keyframes crystalPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes crystalShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes iceGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0,201,214,0.1), 0 0 20px rgba(0,201,214,0.04); }
+  50% { box-shadow: 0 0 14px rgba(0,201,214,0.25), 0 0 36px rgba(0,201,214,0.08); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-3px) rotate(0.5deg); }
+  66% { transform: translateY(-1px) rotate(-0.5deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.92; }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes checkDraw {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ─── Utility animation classes ─────────────────────────────── */
+
+.animate-crystal-glow { animation: crystalGlow 3s ease-in-out infinite; }
+.animate-crystal-pulse { animation: crystalPulse 2s ease-in-out infinite; }
+.animate-crystal-shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(92,108,245,0.08) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: crystalShimmer 2.5s ease-in-out infinite;
+}
+.animate-ice-glow { animation: iceGlow 3s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-float-slow { animation: floatSlow 5s ease-in-out infinite; }
+.animate-breathe { animation: breathe 4s ease-in-out infinite; }
+.animate-spin-slow { animation: spinSlow 8s linear infinite; }
+.animate-dot-bounce { animation: dotBounce 1.4s ease-in-out infinite; }
+.animate-slide-in-left { animation: slideInLeft 0.3s var(--ease-decelerate) both; }
+.animate-slide-in-up { animation: slideInUp 0.3s var(--ease-decelerate) both; }
+.animate-ripple { animation: ripple 0.6s ease-out forwards; }
+.animate-check-draw { animation: checkDraw 0.3s ease-out forwards; }
+.animate-shake { animation: shake 0.4s ease-in-out; }
+.animate-pop-in { animation: popIn 0.35s var(--ease-spring) both; }
+
+/* Stagger delay utilities */
+.delay-75 { animation-delay: 75ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-225 { animation-delay: 225ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-375 { animation-delay: 375ms; }
+.delay-450 { animation-delay: 450ms; }

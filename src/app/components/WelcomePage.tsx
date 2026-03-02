@@ -13,6 +13,7 @@ import {
   Zap,
   Users,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { useTheme } from "./ThemeContext";
 import { useUser } from "./UserContext";
 import { CrystalLogo } from "./Logo";
@@ -21,6 +22,29 @@ interface WelcomePageProps {
   onStartUpload?: () => void;
   onStartTour?: () => void;
 }
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+};
+
+const fadeSlideUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 240, damping: 22 },
+  },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.85 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
+};
 
 const features = [
   {
@@ -83,116 +107,189 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
 
   return (
     <div
-      className="h-full overflow-y-auto"
+      className="h-full overflow-y-scroll"
       style={{
         backgroundColor: colors.bgBase,
-        scrollbarWidth: "thin",
-        scrollbarColor: `${colors.border} transparent`,
+        scrollbarGutter: "stable",
       }}
     >
       {/* Hero Section */}
       <div className="relative" style={{ background: heroBg }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-6 sm:pb-8 text-center">
-          {/* Animated logo */}
-          <div className="flex justify-center mb-6">
-            <div
+          {/* Animated floating logo */}
+          <motion.div
+            className="flex justify-center mb-6"
+            initial={{ opacity: 0, y: -20, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, type: "spring", stiffness: 200, damping: 15 }}
+          >
+            <motion.div
               className="w-20 h-20 rounded-2xl flex items-center justify-center"
               style={{
                 background: "linear-gradient(135deg, #5C6CF5, #3A4AE8)",
                 boxShadow: "0 8px 32px rgba(92,108,245,0.3)",
               }}
+              animate={{
+                y: [0, -8, 0],
+                boxShadow: [
+                  "0 8px 32px rgba(92,108,245,0.3)",
+                  "0 16px 48px rgba(92,108,245,0.45)",
+                  "0 8px 32px rgba(92,108,245,0.3)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              whileHover={{ scale: 1.08, rotate: 5 }}
             >
               <CrystalLogo size={44} />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <h1
+          <motion.h1
             className="text-[28px] sm:text-[36px] mb-3"
             style={{ fontWeight: 700, color: colors.textPrimary }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.5 }}
           >
-            Welcome to Convo<span style={{ color: colors.crystal }}>Crystal</span>
-          </h1>
-          <p
+            Welcome to Convo<motion.span
+              style={{ color: colors.crystal }}
+              animate={{ opacity: [1, 0.7, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >Crystal</motion.span>
+          </motion.h1>
+
+          <motion.p
             className="text-[15px] max-w-lg mx-auto mb-8"
             style={{ color: colors.textSecondary, lineHeight: 1.6 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
           >
             Transform your meeting transcripts into actionable insights.
             Upload a recording, chat with AI, and export polished documents — all in one place.
-          </p>
+          </motion.p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-            <button
+          {/* CTA Buttons — pop in */}
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.5 }}
+          >
+            <motion.button
               onClick={handleGetStarted}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white text-[13px] transition-all hover:scale-[1.02]"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white text-[13px]"
               style={{
                 background: `linear-gradient(135deg, ${colors.crystal}, ${colors.crystalLight})`,
                 boxShadow: "var(--shadow-crystal)",
                 fontWeight: 600,
               }}
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(92,108,245,0.45)",
+              }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               <Upload className="w-4 h-4" />
               Upload Your First Transcript
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={handleTakeTour}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13px] transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13px]"
               style={{
                 border: `1px solid ${cardBorder}`,
                 color: colors.textSecondary,
                 fontWeight: 500,
               }}
+              whileHover={{
+                scale: 1.04,
+                borderColor: colors.crystal,
+                color: colors.textPrimary,
+              }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
               <Play className="w-4 h-4" style={{ color: colors.crystal }} />
               Take the Product Tour
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          <p className="text-[11px]" style={{ color: colors.textMuted }}>
+          <motion.p
+            className="text-[11px]"
+            style={{ color: colors.textMuted }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
             No credit card required · Free to start · 5 transcripts included
-          </p>
+          </motion.p>
         </div>
       </div>
 
       {/* How It Works */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="text-center mb-6">
+        <motion.div
+          className="text-center mb-6"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.4 }}
+        >
           <h2 className="text-[18px] mb-1" style={{ fontWeight: 600, color: colors.textPrimary }}>
             How It Works
           </h2>
           <p className="text-[13px]" style={{ color: colors.textSecondary }}>
             Four steps from raw recording to polished document
           </p>
-        </div>
+        </motion.div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+        {/* Feature Cards — staggered entrance + hover lift */}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           {features.map((feature, i) => (
-            <div
+            <motion.div
               key={i}
-              className="rounded-xl p-5 transition-all duration-200 cursor-default"
+              variants={fadeSlideUp}
+              className="rounded-xl p-5 cursor-default"
               style={{
                 backgroundColor: hoveredFeature === i ? (isDark ? "#181B2E" : "#F7F6F3") : cardBg,
                 border: `1px solid ${hoveredFeature === i ? `${feature.color}40` : cardBorder}`,
               }}
               onMouseEnter={() => setHoveredFeature(i)}
               onMouseLeave={() => setHoveredFeature(null)}
+              whileHover={{
+                y: -6,
+                boxShadow: `0 12px 32px ${feature.color}15`,
+                transition: { type: "spring", stiffness: 400, damping: 22 },
+              }}
             >
               <div className="flex items-start gap-4">
                 {/* Step number + icon */}
                 <div className="relative shrink-0">
-                  <div
+                  <motion.div
                     className="w-12 h-12 rounded-xl flex items-center justify-center"
                     style={{ backgroundColor: `${feature.color}12` }}
+                    animate={hoveredFeature === i ? {
+                      rotate: [0, -5, 5, 0],
+                      scale: [1, 1.05, 1],
+                    } : {}}
+                    transition={{ duration: 0.5 }}
                   >
                     <feature.icon className="w-6 h-6" style={{ color: feature.color }} />
-                  </div>
-                  <div
+                  </motion.div>
+                  <motion.div
                     className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-[9px] text-white"
                     style={{ backgroundColor: feature.color, fontWeight: 700 }}
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 0.4 + i * 0.12, type: "spring", stiffness: 500, damping: 15 }}
                   >
                     {feature.step}
-                  </div>
+                  </motion.div>
                 </div>
 
                 <div className="flex-1 min-w-0">
@@ -204,27 +301,38 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Confidence Scoring Highlight */}
-        <div
+        <motion.div
           className="rounded-xl p-6 mb-10"
           style={{
             backgroundColor: isDark ? "rgba(92,108,245,0.06)" : "rgba(92,108,245,0.04)",
             border: `1px solid ${isDark ? "rgba(92,108,245,0.15)" : "rgba(92,108,245,0.12)"}`,
           }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, type: "spring", stiffness: 200, damping: 22 }}
         >
           <div className="flex flex-col sm:flex-row items-start gap-5">
-            <div
+            <motion.div
               className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
               style={{
                 background: "linear-gradient(135deg, rgba(92,108,245,0.2), rgba(0,201,214,0.2))",
               }}
+              animate={{
+                boxShadow: [
+                  "0 0 0px rgba(92,108,245,0)",
+                  "0 0 20px rgba(92,108,245,0.2)",
+                  "0 0 0px rgba(92,108,245,0)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
               <BarChart3 className="w-7 h-7" style={{ color: colors.crystal }} />
-            </div>
+            </motion.div>
             <div className="flex-1">
               <h3 className="text-[15px] mb-2" style={{ fontWeight: 600, color: colors.textPrimary }}>
                 AI Confidence Scoring
@@ -237,18 +345,21 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
                 — so you always know exactly how reliable each answer is.
               </p>
 
-              {/* Sample score visual */}
+              {/* Animated sample score bars */}
               <div className="flex flex-wrap gap-6">
                 {[
                   { label: "Faithfulness", score: 96, color: "#10B981" },
                   { label: "Relevance", score: 91, color: "#00C9D6" },
-                  { label: "Precision", score: 88, color: "#00C9D6" },
-                ].map((metric) => (
+                  { label: "Precision", score: 88, color: "#5C6CF5" },
+                ].map((metric, mIdx) => (
                   <div key={metric.label} className="flex items-center gap-2">
                     <div className="w-24 h-2 rounded-full" style={{ backgroundColor: `${metric.color}20` }}>
-                      <div
+                      <motion.div
                         className="h-full rounded-full"
-                        style={{ width: `${metric.score}%`, backgroundColor: metric.color }}
+                        style={{ backgroundColor: metric.color }}
+                        initial={{ width: "0%" }}
+                        animate={{ width: `${metric.score}%` }}
+                        transition={{ duration: 1, delay: 0.8 + mIdx * 0.15, ease: [0.22, 1, 0.36, 1] }}
                       />
                     </div>
                     <span className="text-[10px] font-mono" style={{ color: metric.color }}>
@@ -259,31 +370,52 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Quick Capabilities Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+        {/* Quick Capabilities Grid — staggered pop */}
+        <motion.div
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           {quickStats.map((stat, i) => (
-            <div
+            <motion.div
               key={i}
-              className="rounded-lg p-3 text-center"
+              variants={scaleIn}
+              className="rounded-lg p-3 text-center cursor-default"
               style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
+              whileHover={{
+                y: -4,
+                boxShadow: `0 8px 24px ${colors.crystal}12`,
+                borderColor: `${colors.crystal}30`,
+                transition: { type: "spring", stiffness: 400, damping: 20 },
+              }}
             >
-              <stat.icon className="w-5 h-5 mx-auto mb-2" style={{ color: colors.crystal }} />
+              <motion.div
+                className="mx-auto mb-2 inline-flex"
+                whileHover={{ scale: 1.2, rotate: 10 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              >
+                <stat.icon className="w-5 h-5" style={{ color: colors.crystal }} />
+              </motion.div>
               <div className="text-[11px] mb-0.5" style={{ fontWeight: 600, color: colors.textPrimary }}>
                 {stat.label}
               </div>
               <div className="text-[10px]" style={{ color: colors.textMuted }}>
                 {stat.desc}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Where Things Are */}
-        <div
+        {/* Where Things Are — staggered rows */}
+        <motion.div
           className="rounded-xl p-6 mb-8"
           style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 22 }}
         >
           <h3 className="text-[15px] mb-4" style={{ fontWeight: 600, color: colors.textPrimary }}>
             Find Your Way Around
@@ -297,13 +429,24 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
               { area: "Overview Dashboard", desc: "See all your stats at a glance — document counts, conversation highlights, confidence trends, and activity.", icon: "📊" },
               { area: "Documents Page", desc: "A complete library of everything you've uploaded and exported, with status, format, and version tracking.", icon: "📁" },
             ].map((item, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="flex items-start gap-3 p-3 rounded-lg transition-colors"
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = isDark ? "#181B2E" : "#F7F6F3")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                className="flex items-start gap-3 p-3 rounded-lg transition-colors cursor-default"
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 + i * 0.07, type: "spring", stiffness: 260, damping: 22 }}
+                whileHover={{
+                  x: 4,
+                  backgroundColor: isDark ? "#181B2E" : "#F7F6F3",
+                  transition: { type: "spring", stiffness: 400, damping: 22 },
+                }}
               >
-                <span className="text-[16px] shrink-0 mt-0.5">{item.icon}</span>
+                <motion.span
+                  className="text-[16px] shrink-0 mt-0.5"
+                  whileHover={{ scale: 1.2 }}
+                >
+                  {item.icon}
+                </motion.span>
                 <div>
                   <div className="text-[12px]" style={{ fontWeight: 600, color: colors.textPrimary }}>
                     {item.area}
@@ -312,28 +455,45 @@ export function WelcomePage({ onStartUpload, onStartTour }: WelcomePageProps) {
                     {item.desc}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Bottom CTA */}
-        <div className="text-center pb-8">
-          <button
+        <motion.div
+          className="text-center pb-8"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <motion.button
             onClick={handleGetStarted}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-white text-[13px] transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-white text-[13px]"
             style={{
               background: `linear-gradient(135deg, ${colors.crystal}, ${colors.crystalLight})`,
               boxShadow: "var(--shadow-crystal)",
               fontWeight: 600,
             }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 8px 36px rgba(92,108,245,0.5)",
+            }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
           >
             Get Started Now
-          </button>
+            <motion.span
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ArrowRight className="w-4 h-4" />
+            </motion.span>
+          </motion.button>
           <p className="text-[10px] mt-2" style={{ color: colors.textMuted }}>
             You can always replay the product tour from the <span style={{ fontWeight: 500 }}>?</span> button in the top bar
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

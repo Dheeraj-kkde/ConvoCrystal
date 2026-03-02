@@ -15,6 +15,7 @@ import {
   Files,
   Upload,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "./ThemeContext";
 import { useUser } from "./UserContext";
 import { ConfidenceBadge } from "./ConfidenceBadge";
@@ -192,7 +193,7 @@ export function Sidebar({ collapsed, onToggle, onNavigate, onUpload }: SidebarPr
       </div>
 
       {/* Nav Sections */}
-      <div className="flex-1 overflow-y-auto px-2 py-1" style={{ scrollbarWidth: "none" }}>
+      <div className="flex-1 overflow-y-auto px-2 py-1 scrollbar-none">
         {navSections.map((section) => (
           <div key={section.label} className="mb-1">
             <button
@@ -206,9 +207,20 @@ export function Sidebar({ collapsed, onToggle, onNavigate, onUpload }: SidebarPr
               onMouseLeave={(e) => { if (activeItem !== section.label) e.currentTarget.style.backgroundColor = "transparent"; }}
             >
               {activeItem === section.label && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r" style={{ backgroundColor: colors.crystalLight }} />
+                <motion.div
+                  layoutId="sidebar-active-indicator"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-r"
+                  style={{ backgroundColor: colors.crystalLight }}
+                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                />
               )}
-              <section.icon className="w-3.5 h-3.5 shrink-0" />
+              <motion.span
+                className="inline-flex"
+                whileHover={{ scale: 1.12 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              >
+                <section.icon className="w-3.5 h-3.5 shrink-0" />
+              </motion.span>
               <span className="flex-1 text-left">{section.label}</span>
               {section.count !== null && (
                 <span className="text-[10px] font-mono" style={{ color: colors.textMuted }}>
@@ -216,72 +228,98 @@ export function Sidebar({ collapsed, onToggle, onNavigate, onUpload }: SidebarPr
                 </span>
               )}
               {expandedSections[section.label] ? (
-                <ChevronDown className="w-3 h-3" style={{ color: colors.textMuted }} />
+                <motion.span
+                  animate={{ rotate: expandedSections[section.label] ? 0 : -90 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="inline-flex"
+                >
+                  <ChevronDown className="w-3 h-3" style={{ color: colors.textMuted }} />
+                </motion.span>
               ) : (
                 <ChevronRight className="w-3 h-3" style={{ color: colors.textMuted }} />
               )}
             </button>
 
             {/* Transcript List under Library */}
-            {section.label === "Library" && expandedSections.Library && (
-              <div className="ml-2 mt-1 space-y-0.5">
-                {isNewUser ? (
-                  <div className="px-2 py-3 text-center">
-                    <FileText className="w-4 h-4 mx-auto mb-1" style={{ color: colors.textMuted }} />
-                    <div className="text-[10px]" style={{ color: colors.textMuted }}>
-                      No transcripts yet
-                    </div>
-                    <div className="text-[9px] mt-0.5" style={{ color: `${colors.textMuted}80` }}>
-                      Upload one to get started
-                    </div>
-                  </div>
-                ) : (
-                  transcripts.map((t) => (
-                    <button
-                      key={t.id}
-                      onClick={() => setActiveTranscript(t.id)}
-                      className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] transition-all duration-160 group"
-                      style={{
-                        color: activeTranscript === t.id ? colors.textPrimary : colors.textSecondary,
-                        backgroundColor: activeTranscript === t.id ? colors.hoverNeutral : "transparent",
-                      }}
-                      onMouseEnter={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = `${hoverBg}`; }}
-                      onMouseLeave={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = activeTranscript === t.id ? colors.hoverNeutral : "transparent"; }}
-                    >
-                      <FileText className="w-3 h-3 shrink-0" style={{ color: colors.textMuted }} />
-                      <span className="flex-1 text-left truncate">{t.name}</span>
-                      <ConfidenceBadgeInline score={t.confidence} />
-                    </button>
-                  ))
+            {section.label === "Library" && (
+              <AnimatePresence initial={false}>
+                {expandedSections.Library && (
+                  <motion.div
+                    className="ml-2 mt-1 space-y-0.5 overflow-hidden"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                  >
+                    {isNewUser ? (
+                      <div className="px-2 py-3 text-center">
+                        <FileText className="w-4 h-4 mx-auto mb-1" style={{ color: colors.textMuted }} />
+                        <div className="text-[10px]" style={{ color: colors.textMuted }}>
+                          No transcripts yet
+                        </div>
+                        <div className="text-[9px] mt-0.5" style={{ color: `${colors.textMuted}80` }}>
+                          Upload one to get started
+                        </div>
+                      </div>
+                    ) : (
+                      transcripts.map((t) => (
+                        <button
+                          key={t.id}
+                          onClick={() => setActiveTranscript(t.id)}
+                          className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] transition-all duration-160 group"
+                          style={{
+                            color: activeTranscript === t.id ? colors.textPrimary : colors.textSecondary,
+                            backgroundColor: activeTranscript === t.id ? colors.hoverNeutral : "transparent",
+                          }}
+                          onMouseEnter={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = `${hoverBg}`; }}
+                          onMouseLeave={(e) => { if (activeTranscript !== t.id) e.currentTarget.style.backgroundColor = activeTranscript === t.id ? colors.hoverNeutral : "transparent"; }}
+                        >
+                          <FileText className="w-3 h-3 shrink-0" style={{ color: colors.textMuted }} />
+                          <span className="flex-1 text-left truncate">{t.name}</span>
+                          <ConfidenceBadgeInline score={t.confidence} />
+                        </button>
+                      ))
+                    )}
+                  </motion.div>
                 )}
-              </div>
+              </AnimatePresence>
             )}
 
             {/* Recent items */}
-            {section.label === "Recent" && expandedSections.Recent && (
-              <div className="ml-2 mt-1 space-y-0.5">
-                {isNewUser ? (
-                  <div className="px-2 py-2 text-center">
-                    <div className="text-[10px]" style={{ color: colors.textMuted }}>
-                      No recent activity
-                    </div>
-                  </div>
-                ) : (
-                  transcripts.slice(0, 3).map((t) => (
-                    <button
-                      key={`recent-${t.id}`}
-                      className="w-full flex items-center gap-2 px-2 py-1 rounded-md text-[11px] transition-all duration-160"
-                      style={{ color: colors.textMuted }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = hoverBg; e.currentTarget.style.color = colors.textSecondary; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = colors.textMuted; }}
-                    >
-                      <Clock className="w-3 h-3 shrink-0" />
-                      <span className="flex-1 text-left truncate">{t.name}</span>
-                      <span className="text-[9px] font-mono">{t.date}</span>
-                    </button>
-                  ))
+            {section.label === "Recent" && (
+              <AnimatePresence initial={false}>
+                {expandedSections.Recent && (
+                  <motion.div
+                    className="ml-2 mt-1 space-y-0.5 overflow-hidden"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                  >
+                    {isNewUser ? (
+                      <div className="px-2 py-2 text-center">
+                        <div className="text-[10px]" style={{ color: colors.textMuted }}>
+                          No recent activity
+                        </div>
+                      </div>
+                    ) : (
+                      transcripts.slice(0, 3).map((t) => (
+                        <button
+                          key={`recent-${t.id}`}
+                          className="w-full flex items-center gap-2 px-2 py-1 rounded-md text-[11px] transition-all duration-160"
+                          style={{ color: colors.textMuted }}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = hoverBg; e.currentTarget.style.color = colors.textSecondary; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = colors.textMuted; }}
+                        >
+                          <Clock className="w-3 h-3 shrink-0" />
+                          <span className="flex-1 text-left truncate">{t.name}</span>
+                          <span className="text-[9px] font-mono">{t.date}</span>
+                        </button>
+                      ))
+                    )}
+                  </motion.div>
                 )}
-              </div>
+              </AnimatePresence>
             )}
           </div>
         ))}
@@ -290,14 +328,24 @@ export function Sidebar({ collapsed, onToggle, onNavigate, onUpload }: SidebarPr
       {/* User */}
       <div className="px-3 py-3 flex items-center gap-2 shrink-0"
         style={{ borderTop: `1px solid ${colors.border}` }}>
-        <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px]" style={{ backgroundColor: colors.crystalMuted }}>
+        <motion.div
+          className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px]"
+          style={{ backgroundColor: colors.crystalMuted }}
+          whileHover={{ scale: 1.08 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+        >
           JD
-        </div>
+        </motion.div>
         <div className="flex-1 min-w-0">
           <div className="text-[11px] truncate" style={{ color: colors.textPrimary }}>Jane Doe</div>
           <div className="text-[9px] font-mono" style={{ color: colors.textMuted }}>Pro Plan</div>
         </div>
-        <div className="w-2 h-2 rounded-full bg-[#10B981]" title="Online" />
+        <motion.div
+          className="w-2 h-2 rounded-full bg-[#10B981]"
+          title="Online"
+          animate={{ scale: [1, 1.3, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
       </div>
     </div>
   );

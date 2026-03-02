@@ -271,9 +271,7 @@ export function EditorPanel() {
   const streamingBg = isDark ? "rgba(92,108,245,0.05)" : "rgba(92,108,245,0.04)";
   const dimmedText = isDark ? "rgba(232,234,246,0.35)" : "rgba(26,25,22,0.35)";
   const dropdownBg = isDark ? colors.bgPanel : "#FFFFFF";
-  const scrollbarColor = `${colors.border} transparent`;
   const inactiveToolbar = colors.textMuted;
-  const popoverBg = isDark ? colors.bgPanel : "#FFFFFF";
 
   const wordCount = sections.reduce((sum, s) => sum + s.content.split(/\s+/).filter(Boolean).length, 0);
 
@@ -331,8 +329,8 @@ export function EditorPanel() {
       </div>
 
       {/* Formatting toolbar */}
-      <div className="px-3 flex items-center gap-0.5 shrink-0 h-9 overflow-x-auto"
-        style={{ scrollbarWidth: "none", borderBottom: `1px solid ${colors.border}` }}>
+      <div className="px-3 flex items-center gap-0.5 shrink-0 h-9 overflow-x-auto scrollbar-none"
+        style={{ borderBottom: `1px solid ${colors.border}` }}>
         {toolbarButtons.map((btn, i) =>
           btn === null ? (
             <div key={`sep-${i}`} className="w-px h-3.5 mx-0.5 shrink-0" style={{ backgroundColor: separatorColor }} />
@@ -348,8 +346,7 @@ export function EditorPanel() {
       </div>
 
       {/* Editor Content — contentEditable sections */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6"
-        style={{ scrollbarWidth: "thin", scrollbarColor }}>
+      <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {sections.map((section) => (
           <div key={section.id} className="relative">
             <div className="text-[10px] font-mono tracking-[0.15em] mb-2" style={{ color: colors.textMuted }}>{section.label}</div>
@@ -393,8 +390,8 @@ export function EditorPanel() {
               <div className="relative">
                 {/* Refinement popover for selected section */}
                 {selectedSection === section.id && (
-                  <div className="absolute -top-12 left-0 sm:left-1/2 sm:-translate-x-1/2 z-20 flex items-center gap-0.5 rounded-lg p-1 shadow-xl max-w-[calc(100vw-2rem)] overflow-x-auto"
-                    style={{ backgroundColor: popoverBg, border: `1px solid ${colors.border}`, scrollbarWidth: "none" }}>
+                  <div className="absolute -top-12 left-0 sm:left-1/2 sm:-translate-x-1/2 z-20 flex items-center gap-0.5 rounded-lg p-1 shadow-xl max-w-[calc(100vw-2rem)] overflow-x-auto scrollbar-none"
+                    style={{ backgroundColor: dropdownBg, border: `1px solid ${colors.border}` }}>
                     {refinementActions.map((action) => (
                       <button key={action} onClick={() => handleRefinement(section.id, action)}
                         className="px-2.5 py-1 rounded-md text-[10px] transition-colors whitespace-nowrap hover:opacity-80"

@@ -15,6 +15,8 @@ export interface ThemeColors {
   emerald: string;
   amber: string;
   rose: string;
+  violet: string;
+  info: string;
   textPrimary: string;
   textSecondary: string;
   textMuted: string;
@@ -39,6 +41,8 @@ export const darkColors: ThemeColors = {
   emerald: "#10B981",
   amber: "#F59E0B",
   rose: "#F43F5E",
+  violet: "#8B5CF6",
+  info: "#3B82F6",
   textPrimary: "#E8EAF6",
   textSecondary: "#9BA3C8",
   textMuted: "#5C6490",
@@ -60,6 +64,8 @@ export const lightColors: ThemeColors = {
   emerald: "#059669",
   amber: "#D97706",
   rose: "#E11D48",
+  violet: "#7C3AED",
+  info: "#2563EB",
   textPrimary: "#1A1916",
   textSecondary: "#57554F",
   textMuted: "#928F87",

@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvoCrystal — Complete Landing Page Copy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Epilogue:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0A0A0F;
+    --ink-2: #1C1C28;
+    --ink-3: #2E2E40;
+    --silver: #F4F4F8;
+    --silver-2: #E8E8F0;
+    --silver-3: #D0D0E0;
+    --muted: #7A7A92;
+    --muted-2: #9898B0;
+    --accent: #4F46E5;
+    --accent-2: #7C3AED;
+    --accent-glow: rgba(79, 70, 229, 0.15);
+    --teal: #0891B2;
+    --teal-light: #CFFAFE;
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --emerald: #059669;
+    --emerald-light: #D1FAE5;
+    --rose: #E11D48;
+    --cream: #FDFCFB;
+    --page-max: 1100px;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Epilogue', system-ui, sans-serif;
+    --mono: 'Fira Code', 'Courier New', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── COVER ── */
+  .doc-cover {
+    background: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doc-cover::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(79,70,229,0.2) 0%, transparent 70%);
+    top: -200px; right: -100px;
+    pointer-events: none;
+  }
+
+  .doc-cover::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(8,145,178,0.12) 0%, transparent 70%);
+    bottom: -150px; left: 50px;
+    pointer-events: none;
+  }
+
+  .cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative; z-index: 1;
+  }
+
+  .cover-brand {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+
+  .cover-brand span { color: #818CF8; }
+
+  .cover-doctype {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  .cover-body {
+    position: relative; z-index: 1;
+    max-width: 800px;
+  }
+
+  .cover-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #818CF8;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cover-label::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: #818CF8;
+  }
+
+  .cover-title {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: white;
+    margin-bottom: 24px;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: #818CF8;
+  }
+
+  .cover-subtitle {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 48px;
+  }
+
+  .cover-meta-row {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .cover-meta-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.8;
+  }
+
+  .cover-meta-item strong {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 2px;
+  }
+
+  .cover-footer {
+    position: relative; z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .cover-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cover-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 4px 12px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  .doc-nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: rgba(253,252,251,0.94);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--silver-2);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    height: 52px;
+    gap: 0;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .doc-nav::-webkit-scrollbar { display: none; }
+
+  .nav-brand {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-right: 24px;
+    flex-shrink: 0;
+  }
+
+  .nav-brand span { color: var(--accent); }
+
+  .nav-sep {
+    width: 1px; height: 20px;
+    background: var(--silver-3);
+    margin-right: 24px;
+    flex-shrink: 0;
+  }
+
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0 14px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.15s;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-link:hover { color: var(--accent); }
+
+  /* ── PAGE STRUCTURE ── */
+  .doc-page {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--silver-2);
+  }
+
+  .doc-page:last-of-type { border-bottom: none; }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--silver-2);
+  }
+
+  .page-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .page-title {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  .page-desc {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 260px;
+    text-align: right;
+  }
+
+  /* ── COPY BLOCKS ── */
+  .copy-block {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    transition: box-shadow 0.2s;
+  }
+
+  .copy-block:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  }
+
+  .copy-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--silver);
+    border-bottom: 1px solid var(--silver-2);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .block-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .block-label .hier-tag {
+    background: var(--accent);
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .hier-h1 { background: var(--accent) !important; }
+  .hier-h2 { background: var(--accent-2) !important; }
+  .hier-h3 { background: var(--teal) !important; }
+  .hier-body { background: var(--ink-3) !important; }
+  .hier-cta { background: var(--emerald) !important; }
+  .hier-sub { background: var(--amber) !important; }
+  .hier-label { background: var(--muted) !important; }
+  .hier-note { background: var(--rose) !important; }
+
+  .block-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .char-count {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--muted-2);
+    background: var(--silver-2);
+    border-radius: 100px;
+    padding: 2px 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .persuasion-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    border-radius: 100px;
+    padding: 2px 8px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  .pt-authority { background: rgba(79,70,229,0.1); color: var(--accent); }
+  .pt-urgency { background: rgba(217,119,6,0.1); color: var(--amber); }
+  .pt-exclusivity { background: rgba(124,58,237,0.12); color: var(--accent-2); }
+  .pt-social { background: rgba(5,150,105,0.1); color: var(--emerald); }
+  .pt-pain { background: rgba(225,29,72,0.1); color: var(--rose); }
+  .pt-clarity { background: rgba(8,145,178,0.1); color: var(--teal); }
+  .pt-curiosity { background: rgba(124,58,237,0.12); color: var(--accent-2); }
+
+  .copy-block-body {
+    padding: 24px 28px;
+  }
+
+  .copy-text {
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+
+  .copy-text.headline {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .copy-text.subhead {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+  }
+
+  .copy-text.body-lg {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .copy-text.body-sm {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .copy-text.cta-text {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: white;
+    background: var(--accent);
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 8px;
+  }
+
+  .copy-text.label-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  mark {
+    background: rgba(79,70,229,0.12);
+    color: var(--accent);
+    border-radius: 3px;
+    padding: 1px 3px;
+  }
+
+  .copy-note {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--silver);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .copy-note strong { color: var(--ink-2); }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0 32px;
+  }
+
+  .section-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--silver-2);
+  }
+
+  .section-divider-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    white-space: nowrap;
+    background: var(--silver);
+    border: 1px solid var(--silver-2);
+    border-radius: 100px;
+    padding: 4px 16px;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .copy-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .copy-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── FEATURE BLOCK ── */
+  .feature-block {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .feature-block-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--ink), var(--ink-2));
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .feature-block-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+
+  .feature-block-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+
+  .feature-block-body {
+    padding: 0;
+  }
+
+  /* ── TESTIMONIAL ── */
+  .testimonial-card {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .testimonial-card::before {
+    content: '"';
+    font-family: var(--serif);
+    font-size: 80px;
+    font-weight: 900;
+    color: var(--silver-2);
+    position: absolute;
+    top: 12px; left: 20px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .testimonial-quote {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin-bottom: 16px;
+    padding-top: 24px;
+  }
+
+  .testimonial-attribution {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .testimonial-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .testimonial-name {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .testimonial-role {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .testimonial-metric {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--emerald);
+    background: var(--emerald-light);
+    border-radius: 100px;
+    padding: 4px 12px;
+    white-space: nowrap;
+  }
+
+  /* ── FAQ ── */
+  .faq-block {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .faq-q {
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    cursor: pointer;
+  }
+
+  .faq-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 28px;
+    padding-top: 2px;
+    letter-spacing: 0.1em;
+  }
+
+  .faq-q-text {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .faq-intent {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--muted);
+    background: var(--silver);
+    border-radius: 4px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+    align-self: flex-start;
+    margin-top: 3px;
+  }
+
+  .faq-a {
+    padding: 0 24px 20px 68px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.7;
+    border-top: 1px solid var(--silver-2);
+    padding-top: 16px;
+    margin-top: -4px;
+  }
+
+  .faq-a .faq-cta-hook {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  /* ── STAT PILL ── */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 12px;
+    padding: 16px 24px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .stat-pill-val {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .stat-pill-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── AUTHORITY ROW ── */
+  .authority-row {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 12px;
+    padding: 20px 28px;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .auth-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .auth-item::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--silver-3);
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER COPY ── */
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .footer-col-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .footer-link {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+    text-decoration: none;
+  }
+
+  .footer-disclaimer {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted-2);
+    line-height: 1.8;
+    padding-top: 24px;
+    border-top: 1px solid var(--silver-2);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── ANNOTATION / SIDEBAR ── */
+  .annotated {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .annotation-panel {
+    background: var(--ink);
+    border-radius: 12px;
+    padding: 20px;
+    position: sticky;
+    top: 72px;
+  }
+
+  .annotation-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 16px;
+  }
+
+  .annotation-item {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .annotation-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .annotation-item-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #818CF8;
+    margin-bottom: 4px;
+  }
+
+  .annotation-item-text {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+  }
+
+  /* ── MICROCOPY ── */
+  .microcopy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .microcopy-item {
+    background: white;
+    border: 1px solid var(--silver-2);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .microcopy-context {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 6px;
+  }
+
+  .microcopy-text {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  /* ── POWER WORDS LEGEND ── */
+  .power-legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--silver);
+    border-bottom: 1px solid var(--silver-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    align-items: center;
+  }
+
+  .power-legend-title { color: var(--ink-2); font-weight: 600; }
+
+  /* ── PROGRESS INDICATOR ── */
+  .doc-progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--silver-2);
+    z-index: 1000;
+  }
+
+  .doc-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--teal));
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ── DIVIDERS ── */
+  .ruled { border-bottom: 1px solid var(--silver-2); margin: 32px 0; }
+
+  .subsection-intro {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 700px;
+  }
+
+  /* ── INLINE BADGES ── */
+  .badge-inline {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 100px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  .badge-new { background: rgba(5,150,105,0.1); color: var(--emerald); }
+  .badge-critical { background: rgba(225,29,72,0.1); color: var(--rose); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .copy-grid-3 { grid-template-columns: 1fr; }
+    .copy-grid-2 { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .annotated { grid-template-columns: 1fr; }
+    .annotation-panel { position: static; }
+    .doc-cover { padding: 40px 28px; }
+    .doc-page { padding: 60px 24px; }
+    .microcopy-grid { grid-template-columns: 1fr; }
+    .stats-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-progress"><div class="doc-progress-bar" id="progress"></div></div>
+
+<!-- ══════════ COVER ══════════ -->
+<div class="doc-cover">
+  <div class="cover-top">
+    <div class="cover-brand">Convo<span>Crystal</span></div>
+    <div class="cover-doctype">
+      Website Copy Specification<br>
+      Conversion Architect: Senior Strategist<br>
+      Version 1.0 · Final Draft
+    </div>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-label">Complete Landing Page Copy</div>
+    <h1 class="cover-title">Words That<br><em>Convert.</em></h1>
+    <p class="cover-subtitle">Production-ready website copy for ConvoCrystal — engineered for free-trial conversion with every headline, subhead, body block, and CTA annotated for hierarchy, character count, and persuasion mechanics.</p>
+    <div class="cover-meta-row">
+      <div class="cover-meta-item"><strong>Audience</strong>Devs · PMs · Team Leads</div>
+      <div class="cover-meta-item"><strong>Objective</strong>Free Trial Signups</div>
+      <div class="cover-meta-item"><strong>Tone</strong>Technical · Warm · Confident</div>
+      <div class="cover-meta-item"><strong>Sections</strong>5 + Microcopy</div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-tags">
+      <span class="cover-tag">Hero Section</span>
+      <span class="cover-tag">3 Feature Blocks</span>
+      <span class="cover-tag">Social Proof</span>
+      <span class="cover-tag">8 FAQs</span>
+      <span class="cover-tag">Footer</span>
+      <span class="cover-tag">Microcopy</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="doc-nav">
+  <div class="nav-brand">Convo<span>Crystal</span></div>
+  <div class="nav-sep"></div>
+  <a href="#hero" class="nav-link">Hero</a>
+  <a href="#features" class="nav-link">Features</a>
+  <a href="#social-proof" class="nav-link">Social Proof</a>
+  <a href="#faq" class="nav-link">FAQ</a>
+  <a href="#footer" class="nav-link">Footer</a>
+  <a href="#microcopy" class="nav-link">Microcopy</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════
+     §1 — HERO SECTION
+══════════════════════════════════════════════════ -->
+<div class="doc-page" id="hero">
+  <div class="page-header">
+    <div>
+      <div class="page-num">Section 01 / 05</div>
+      <h2 class="page-title">Hero Section</h2>
+    </div>
+    <div class="page-desc">The highest-stakes real estate on the page. Every word must earn its place. Conversion depends on the first 3 seconds.</div>
+  </div>
+
+  <div class="subsection-intro">The hero section must do four things simultaneously: identify the visitor's pain instantly, promise the transformation, establish credibility, and remove friction from the first click. Our opening is designed to land like a precision instrument — not a sledgehammer.</div>
+
+  <!-- EYEBROW -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label">
+        <span class="hier-tag hier-label">Label</span>
+        Eyebrow / Pre-Headline
+      </div>
+      <div class="block-meta">
+        <span class="char-count">34 chars</span>
+        <span class="persuasion-tag pt-authority">Authority</span>
+        <span class="persuasion-tag pt-exclusivity">Exclusivity</span>
+      </div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text label-text">AI Meeting Intelligence · Trusted by 4,200+ Teams</p>
+      <div class="copy-note"><strong>Usage:</strong> Sits above H1 in smaller caps. Establishes immediate social proof before the visitor reads a single word of pitch copy. The "4,200+ Teams" anchors authority through specificity — precise numbers outperform round numbers.</div>
+    </div>
+  </div>
+
+  <!-- H1 HEADLINE -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label">
+        <span class="hier-tag hier-h1">H1</span>
+        Primary Headline — Hero
+      </div>
+      <div class="block-meta">
+        <span class="char-count">33 chars · 5 words</span>
+        <span class="persuasion-tag pt-pain">Pain Relief</span>
+        <span class="persuasion-tag pt-clarity">Clarity</span>
+      </div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text headline">Your Meetings, <mark>Finally</mark> Understood.</p>
+      <div class="copy-note"><strong>Power words:</strong> "Finally" — the single most powerful conversion word in SaaS. It acknowledges accumulated frustration without dwelling on it. Implies the prospect has been waiting. The period creates finality and confidence. <strong>Avoid:</strong> Never lead with the product name or feature list.</div>
+    </div>
+  </div>
+
+  <!-- SUBHEADLINE -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label">
+        <span class="hier-tag hier-sub">Sub</span>
+        Subheadline
+      </div>
+      <div class="block-meta">
+        <span class="char-count">117 chars · ~18 words</span>
+        <span class="persuasion-tag pt-clarity">Specificity</span>
+        <span class="persuasion-tag pt-authority">Authority</span>
+      </div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text subhead">ConvoCrystal turns raw transcripts into structured insights, action items, and living documents — in under 60 seconds.</p>
+      <div class="copy-note"><strong>Structure:</strong> [Product name] + [mechanism] → [outcome]. The "under 60 seconds" is a quantified promise — specific enough to be credible, fast enough to feel magical. "Living documents" signals ongoing value, not a one-time output. <strong>Character target:</strong> 100–130 chars. Long enough to inform, short enough to scan.</div>
+    </div>
+  </div>
+
+  <!-- PRIMARY CTA -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label">
+        <span class="hier-tag hier-cta">CTA</span>
+        Primary Call-to-Action Button
+      </div>
+      <div class="block-meta">
+        <span class="char-count">28 chars</span>
+        <span class="persuasion-tag pt-urgency">Low Friction</span>
+        <span class="persuasion-tag pt-clarity">Specificity</span>
+      </div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text cta-text">Start Analyzing Free →</p>
+      <div class="copy-note"><strong>CTA science:</strong> Verb-first. "Start" beats "Get" (active vs. passive). "Analyzing" states the exact action, reducing cognitive load. "Free" eliminates the #1 objection before the click. The → arrow signals forward momentum. <strong>A/B test against:</strong> "Analyze Your First Meeting" and "Try ConvoCrystal Free."</div>
+    </div>
+  </div>
+
+  <!-- SECONDARY CTA -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label">
+        <span class="hier-tag hier-label">Ghost CTA</span>
+        Secondary Call-to-Action
+      </div>
+      <div class="block-meta">
+        <span class="char-count">20 chars</span>
+        <span class="persuasion-tag pt-clarity">Low Commitment</span>
+      </div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text" style="font-weight:600;color:var(--muted);font-size:15px">Watch 2-min demo ↗</p>
+      <div class="copy-note"><strong>Role:</strong> Captures intent-to-buy visitors who want social proof before committing. "2-min" preempts the objection "I don't have time." Sits visually subordinate to the primary CTA — same line, lower visual weight.</div>
+    </div>
+  </div>
+
+  <!-- HERO TRUST STRIP -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Trust Strip — Below CTA</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="copy-grid-3">
+    <div class="copy-block" style="margin-bottom:0">
+      <div class="copy-block-header">
+        <div class="block-label"><span class="hier-tag hier-label">Micro</span>Trust Signal 1</div>
+        <span class="char-count">18 chars</span>
+      </div>
+      <div class="copy-block-body">
+        <p class="copy-text" style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">✓ <span>No credit card required</span></p>
+      </div>
+    </div>
+    <div class="copy-block" style="margin-bottom:0">
+      <div class="copy-block-header">
+        <div class="block-label"><span class="hier-tag hier-label">Micro</span>Trust Signal 2</div>
+        <span class="char-count">22 chars</span>
+      </div>
+      <div class="copy-block-body">
+        <p class="copy-text" style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">✓ <span>5 free transcripts/month</span></p>
+      </div>
+    </div>
+    <div class="copy-block" style="margin-bottom:0">
+      <div class="copy-block-header">
+        <div class="block-label"><span class="hier-tag hier-label">Micro</span>Trust Signal 3</div>
+        <span class="char-count">21 chars</span>
+      </div>
+      <div class="copy-block-body">
+        <p class="copy-text" style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px">✓ <span>Setup in under 2 minutes</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO ANIMATED SUBTITLE ALT -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Animated Rotating Subtext — Below H1</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label"><span class="hier-tag hier-sub">Rotating</span>Pain-Point Carousel (5 lines, cycles every 2.5s)</div>
+      <span class="char-count">38–52 chars each</span>
+    </div>
+    <div class="copy-block-body">
+      <div class="copy-grid-2" style="gap:12px">
+        <div style="background:var(--silver);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center">
+          <span style="color:var(--accent);font-size:9px;letter-spacing:0.1em">LINE 1</span>
+          <span style="color:var(--ink-2)">Stop losing decisions in 47-page transcripts.</span>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center">
+          <span style="color:var(--accent);font-size:9px;letter-spacing:0.1em">LINE 2</span>
+          <span style="color:var(--ink-2)">Your 2-hour standup deserves a 30-second read.</span>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center">
+          <span style="color:var(--accent);font-size:9px;letter-spacing:0.1em">LINE 3</span>
+          <span style="color:var(--ink-2)">Action items that don't vanish after the call.</span>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center">
+          <span style="color:var(--accent);font-size:9px;letter-spacing:0.1em">LINE 4</span>
+          <span style="color:var(--ink-2)">Let your AI take notes. You run the meeting.</span>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center">
+          <span style="color:var(--accent);font-size:9px;letter-spacing:0.1em">LINE 5</span>
+          <span style="color:var(--ink-2)">Decisions made. Documented. Searchable. Done.</span>
+        </div>
+      </div>
+      <div class="copy-note"><strong>Mechanic:</strong> The H1 stays static. Only this one line below rotates. Each line speaks to a distinct pain point segment: PMs, devs, team leads, founders. Personalization without custom landing pages.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     §2 — FEATURE SECTIONS
+══════════════════════════════════════════════════ -->
+<div class="doc-page" id="features">
+  <div class="page-header">
+    <div>
+      <div class="page-num">Section 02 / 05</div>
+      <h2 class="page-title">Feature Sections</h2>
+    </div>
+    <div class="page-desc">Three benefit blocks. Each sells the transformation, not the feature. Lead with outcome, reveal the mechanism second.</div>
+  </div>
+
+  <div class="subsection-intro">Features sections fail when they describe what the product does. They convert when they describe what the user <em>becomes</em>. Each block follows the same formula: Outcome headline → Pain acknowledgment → Mechanism → Proof point → Secondary CTA.</div>
+
+  <!-- SECTION INTRO BLOCK -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label"><span class="hier-tag hier-h2">H2</span>Section Overline — Above Feature Blocks</div>
+      <div class="block-meta">
+        <span class="char-count">52 chars</span>
+        <span class="persuasion-tag pt-curiosity">Curiosity</span>
+      </div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text subhead">Three things your meeting notes never had before.</p>
+      <div class="copy-note"><strong>Framing:</strong> "Never had before" implies breakthrough without making an explicit claim. Counts as both a curiosity hook and an authority signal. Drives scroll into the feature blocks.</div>
+    </div>
+  </div>
+
+  <!-- ── FEATURE 1: AI TRANSCRIPT ANALYSIS ── -->
+  <div class="feature-block">
+    <div class="feature-block-header">
+      <div class="feature-icon" style="background:rgba(79,70,229,0.2)">🔍</div>
+      <div>
+        <div class="feature-block-title">Feature Block 1 — AI Transcript Analysis</div>
+      </div>
+      <div class="feature-block-num">F-01 / 03</div>
+    </div>
+    <div class="feature-block-body">
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-label">Feature Label</span>Eyebrow</div>
+          <div class="block-meta"><span class="char-count">20 chars</span><span class="persuasion-tag pt-clarity">Positioning</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text label-text">AI-Powered Analysis</p>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-h2">H2</span>Feature Headline</div>
+          <div class="block-meta"><span class="char-count">55 chars</span><span class="persuasion-tag pt-pain">Outcome-Led</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text headline" style="font-size:24px">The smartest person in your meeting never speaks.</p>
+          <div class="copy-note"><strong>Device:</strong> Personification. Positions ConvoCrystal as a silent expert-in-the-room — no friction, no interruption. Intellectually provocative enough to pause the scan. Speaks to technical personas who admire efficiency over noise.</div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-body">Body</span>Feature Description — Paragraph 1</div>
+          <div class="block-meta"><span class="char-count">198 chars</span><span class="persuasion-tag pt-clarity">Mechanism</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text body-lg">Upload any transcript — Zoom, Teams, or Google Meet — and ConvoCrystal's AI engine distills it into a structured intelligence report within seconds. No prompting required. No template wrangling.</p>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-body">Body</span>Feature Description — Paragraph 2</div>
+          <div class="block-meta"><span class="char-count">221 chars</span><span class="persuasion-tag pt-authority">Specificity</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text body-lg">Every report surfaces the decisions made, open questions raised, risks flagged, and action items assigned — each with speaker attribution and a confidence score so you know exactly what to trust.</p>
+          <div class="copy-note"><strong>Power words:</strong> "surfaces," "flags," "exactly," "trust." The confidence score mention is a product differentiator — it's unique enough to deserve a sentence. Always match feature copy to genuine capability.</div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-label">Bullets</span>Benefit Bullets — 4 Points</div>
+          <div class="block-meta"><span class="char-count">28–40 chars each</span></div>
+        </div>
+        <div class="copy-block-body">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Identifies decisions, risks &amp; open questions automatically — zero manual tagging</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Assigns action items to the right owner using speaker-level attribution</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Confidence scoring on every insight — know what's solid, what needs review</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Semantic search across all your meeting history — find anything in seconds</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0;border-bottom:none">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-cta">CTA</span>Feature-Level Inline CTA</div>
+          <div class="block-meta"><span class="char-count">30 chars</span><span class="persuasion-tag pt-urgency">Low Friction</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text" style="font-size:14px;font-weight:700;color:var(--accent)">See a live analysis in 60 seconds →</p>
+          <div class="copy-note"><strong>Role:</strong> Feature-level CTAs should feel like an invitation to experience, not a commitment. "See" is low-stakes. "60 seconds" eliminates time anxiety. Triggers the embedded demo player or scrolls to the product preview.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FEATURE 2: LIVE EDITOR ── -->
+  <div class="feature-block">
+    <div class="feature-block-header">
+      <div class="feature-icon" style="background:rgba(124,58,237,0.2)">✏️</div>
+      <div>
+        <div class="feature-block-title">Feature Block 2 — Live Document Editor + LLM Refinement</div>
+      </div>
+      <div class="feature-block-num">F-02 / 03</div>
+    </div>
+    <div class="feature-block-body">
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-label">Feature Label</span>Eyebrow</div>
+          <div class="block-meta"><span class="char-count">26 chars</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text label-text">Live Editor + AI Refinement</p>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-h2">H2</span>Feature Headline</div>
+          <div class="block-meta"><span class="char-count">63 chars</span><span class="persuasion-tag pt-pain">Frustration Release</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text headline" style="font-size:24px">From raw notes to polished document — without the rewrite.</p>
+          <div class="copy-note"><strong>Mechanism:</strong> "Without the rewrite" acknowledges the specific, tedious pain every PM knows. The em dash creates a dramatic pause that mirrors the ease of the product itself. This headline would be A/B-tested against "Edit smarter. Ship cleaner documents."</div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-body">Body</span>Feature Description — Paragraph 1</div>
+          <div class="block-meta"><span class="char-count">212 chars</span><span class="persuasion-tag pt-clarity">Mechanism</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text body-lg">The ConvoCrystal editor isn't a text box — it's an intelligent workspace. Push any AI-generated insight directly into a live document, then refine it inline with a single slash command. No copy-pasting. No context switching.</p>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-body">Body</span>Feature Description — Paragraph 2</div>
+          <div class="block-meta"><span class="char-count">208 chars</span><span class="persuasion-tag pt-social">Collaboration</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text body-lg">Highlight any paragraph and ask the AI to shorten it, formalize the tone, or expand the context — right in the document. Your team collaborates in real time while the AI writes alongside you, not instead of you.</p>
+          <div class="copy-note"><strong>"Not instead of you":</strong> Addresses the latent AI anxiety in technical teams. Positions ConvoCrystal as an amplifier, not a replacement. Essential for adoption in orgs with AI skeptics.</div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-label">Bullets</span>Benefit Bullets — 4 Points</div>
+          <div class="block-meta"><span class="char-count">32–48 chars each</span></div>
+        </div>
+        <div class="copy-block-body">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent-2);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Push AI insights to docs instantly — no copy-paste, no reformatting</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent-2);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Slash commands to refine, expand, shorten, or reframe any paragraph</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent-2);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Real-time collaboration with live cursors and presence indicators</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--accent-2);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Export to Notion, Slack, PDF, or Markdown — one click, clean output</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0;border-bottom:none">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-cta">CTA</span>Feature-Level Inline CTA</div>
+          <div class="block-meta"><span class="char-count">28 chars</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text" style="font-size:14px;font-weight:700;color:var(--accent-2)">Try the editor free, no install →</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FEATURE 3: VERSION CONTROL ── -->
+  <div class="feature-block">
+    <div class="feature-block-header">
+      <div class="feature-icon" style="background:rgba(8,145,178,0.2)">⎇</div>
+      <div>
+        <div class="feature-block-title">Feature Block 3 — Version Control + Branching History</div>
+      </div>
+      <div class="feature-block-num">F-03 / 03</div>
+    </div>
+    <div class="feature-block-body">
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-label">Feature Label</span>Eyebrow</div>
+          <div class="block-meta"><span class="char-count">31 chars</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text label-text">Version Control · Branching History</p>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-h2">H2</span>Feature Headline</div>
+          <div class="block-meta"><span class="char-count">44 chars</span><span class="persuasion-tag pt-authority">Technical Authority</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text headline" style="font-size:24px">Git-style control for your meeting documents.</p>
+          <div class="copy-note"><strong>Targeting:</strong> "Git-style" is a deliberate technical shibboleth. It signals immediately to developers that this is built the way they think. For non-technical PMs, it reads as "professional-grade." Never accidentally talks down to either audience.</div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-body">Body</span>Feature Description — Paragraph 1</div>
+          <div class="block-meta"><span class="char-count">209 chars</span><span class="persuasion-tag pt-pain">Fear Removal</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text body-lg">Every document you create in ConvoCrystal is automatically versioned. Branch for a client deliverable, merge the team's changes, or roll back to yesterday's draft — without ever losing a word anyone wrote.</p>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-body">Body</span>Feature Description — Paragraph 2</div>
+          <div class="block-meta"><span class="char-count">201 chars</span><span class="persuasion-tag pt-social">Team Trust</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text body-lg">When six people edit one document, you need a source of truth that can't be broken. ConvoCrystal's commit history gives every change a timestamp, an author, and a message — just like code, but for your knowledge base.</p>
+          <div class="copy-note"><strong>Analogy:</strong> "Just like code, but for your knowledge base" — this is a high-powered analogy that completes the mental model for technical buyers. Makes an abstract capability feel immediately familiar and trustworthy.</div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-label">Bullets</span>Benefit Bullets — 4 Points</div>
+          <div class="block-meta"><span class="char-count">30–46 chars each</span></div>
+        </div>
+        <div class="copy-block-body">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--teal);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Full commit history with author + timestamp on every change</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--teal);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Branch for client versions, internal drafts, or experiments</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--teal);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">One-click restore to any previous version — zero anxiety</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--silver);border-radius:8px">
+              <span style="color:var(--teal);font-weight:800;flex-shrink:0">→</span>
+              <span class="copy-text" style="font-size:14px">Side-by-side diff view to review what changed and who changed it</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy-block" style="border-radius:0;border-left:none;border-right:none;border-top:none;margin-bottom:0;border-bottom:none">
+        <div class="copy-block-header">
+          <div class="block-label"><span class="hier-tag hier-cta">CTA</span>Feature-Level Inline CTA</div>
+          <div class="block-meta"><span class="char-count">36 chars</span></div>
+        </div>
+        <div class="copy-block-body">
+          <p class="copy-text" style="font-size:14px;font-weight:700;color:var(--teal)">Start versioning your team's knowledge →</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     §3 — SOCIAL PROOF
+══════════════════════════════════════════════════ -->
+<div class="doc-page" id="social-proof">
+  <div class="page-header">
+    <div>
+      <div class="page-num">Section 03 / 05</div>
+      <h2 class="page-title">Social Proof</h2>
+    </div>
+    <div class="page-desc">Authority, specificity, and relatability. The visitor must see themselves in the testimonial — not an idealized version.</div>
+  </div>
+
+  <!-- Section Header Copy -->
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label"><span class="hier-tag hier-h2">H2</span>Social Proof Section Headline</div>
+      <div class="block-meta"><span class="char-count">57 chars</span><span class="persuasion-tag pt-social">Social Proof</span></div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text subhead">What teams say after their first week with ConvoCrystal.</p>
+      <div class="copy-note"><strong>Specificity:</strong> "First week" implies rapid time-to-value. It sets an expectation: results are visible quickly. Subtext: the ROI is undeniable within days, not quarters.</div>
+    </div>
+  </div>
+
+  <!-- Quantified Results Strip -->
+  <div class="stats-row">
+    <div class="stat-pill">
+      <span class="stat-pill-val">73%</span>
+      <span class="stat-pill-label">Less time on meeting follow-ups</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val">4.2h</span>
+      <span class="stat-pill-label">Saved per person per week</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val">96%</span>
+      <span class="stat-pill-label">Of teams renew after free trial</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val">60s</span>
+      <span class="stat-pill-label">Average time-to-first-insight</span>
+    </div>
+  </div>
+
+  <div class="copy-note" style="margin-bottom:24px"><strong>Stat sourcing note (internal):</strong> These metrics should be gathered from real customer data within 90 days of launch. Until then, use "teams report" soft attribution or conduct a 50-customer beta survey. Never fabricate statistics — always attribute with "based on our 2025 user survey."</div>
+
+  <!-- Authority Strip -->
+  <div class="authority-row">
+    <div class="auth-item">SOC 2 Type II Certified</div>
+    <div class="auth-item">GDPR Compliant</div>
+    <div class="auth-item">Backed by Y Combinator '25</div>
+    <div class="auth-item">Rated 4.9 on Product Hunt</div>
+    <div class="auth-item">Used at 40+ Fortune 500 teams</div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Testimonial Framework — 3 Personas</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- Testimonial 1 — Developer -->
+  <div class="testimonial-card">
+    <div class="testimonial-quote">
+      "I've tried six different AI note-taking tools. ConvoCrystal is the first one that actually understands the <em>difference</em> between a decision and an action item. That specificity alone saves me an hour of cleanup after every sprint planning call. The confidence scores are genuinely useful — I know immediately which outputs to trust and which to verify."
+    </div>
+    <div class="testimonial-attribution">
+      <div class="testimonial-avatar" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">AK</div>
+      <div>
+        <div class="testimonial-name">Arjun Kapoor</div>
+        <div class="testimonial-role">Senior Software Engineer · Veritas Labs · 12-person eng team</div>
+      </div>
+      <div class="testimonial-metric">↓ 68 min/week saved</div>
+    </div>
+    <div class="copy-note" style="margin-top:16px"><strong>Why this works:</strong> Establishes credibility with "tried six tools" (I'm not naive). Names a specific product differentiator (decision vs. action item distinction). Quantifies outcome. Speaks developer-to-developer.</div>
+  </div>
+
+  <!-- Testimonial 2 — PM -->
+  <div class="testimonial-card">
+    <div class="testimonial-quote">
+      "We run 14 meetings a week across three product squads. Before ConvoCrystal, our eng lead and I would spend Sunday evenings reconciling notes from the week. Now the system produces a structured brief for every meeting automatically — complete with ownership tags. Our retrospectives actually refer back to decisions we can prove we made. It's changed how we operate."
+    </div>
+    <div class="testimonial-attribution">
+      <div class="testimonial-avatar" style="background:linear-gradient(135deg,#0891B2,#059669)">SC</div>
+      <div>
+        <div class="testimonial-name">Sarah Chen</div>
+        <div class="testimonial-role">Head of Product · NovaPay · Series A, 55 employees</div>
+      </div>
+      <div class="testimonial-metric">↓ 4.5h/week saved</div>
+    </div>
+    <div class="copy-note" style="margin-top:16px"><strong>Why this works:</strong> Paints a vivid before-state ("Sunday evenings reconciling notes") — highly relatable to PMs. Social proof through scale ("14 meetings, 3 squads"). Outcome is cultural change, not just time saved — appeals to leaders investing in team health.</div>
+  </div>
+
+  <!-- Testimonial 3 — Team Lead / Founder -->
+  <div class="testimonial-card">
+    <div class="testimonial-quote">
+      "As a team lead, my job is to make sure nothing falls through the cracks. ConvoCrystal makes that trivially easy. The version-controlled documents mean there's no more 'which doc is the latest?' confusion. We branch for client-facing versions, merge internally, and everyone's looking at the same source of truth. It works exactly the way engineers think — which is rare for a productivity tool."
+    </div>
+    <div class="testimonial-attribution">
+      <div class="testimonial-avatar" style="background:linear-gradient(135deg,#D97706,#E11D48)">ML</div>
+      <div>
+        <div class="testimonial-name">Marcus Lee</div>
+        <div class="testimonial-role">Engineering Team Lead · Stratum Cloud · Remote-first, 28 engineers</div>
+      </div>
+      <div class="testimonial-metric">↓ "Can't work without it"</div>
+    </div>
+    <div class="copy-note" style="margin-top:16px"><strong>Why this works:</strong> The quote "works exactly the way engineers think" is a product review masquerading as a compliment — highly credible social proof from a technical authority. "Which doc is the latest?" is an almost universal pain — instantly recognizable and validating.</div>
+  </div>
+
+  <!-- Logo Strip Copy -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Logo Strip Headline</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="copy-block">
+    <div class="copy-block-header">
+      <div class="block-label"><span class="hier-tag hier-body">Body</span>Logo Strip Caption</div>
+      <div class="block-meta"><span class="char-count">68 chars</span><span class="persuasion-tag pt-social">Social Proof</span></div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text" style="font-size:13px;color:var(--muted);text-align:center;letter-spacing:0.05em">Trusted by engineering and product teams at companies like these.</p>
+      <div class="copy-note"><strong>Framing:</strong> "Like these" preserves the logo strip's ambiguity — it invites imagination for companies not listed. Never say "including" unless you have explicit permission from every named company. "Engineering and product teams" speaks directly to the buyer, not the company broadly.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     §4 — FAQ SECTION
+══════════════════════════════════════════════════ -->
+<div class="doc-page" id="faq">
+  <div class="page-header">
+    <div>
+      <div class="page-num">Section 04 / 05</div>
+      <h2 class="page-title">FAQ Section</h2>
+    </div>
+    <div class="page-desc">Eight high-intent questions answered with conversion logic. Every answer ends with either a reassurance or a soft CTA nudge.</div>
+  </div>
+
+  <div class="copy-block" style="margin-bottom:32px">
+    <div class="copy-block-header">
+      <div class="block-label"><span class="hier-tag hier-h2">H2</span>FAQ Section Headline</div>
+      <div class="block-meta"><span class="char-count">37 chars</span><span class="persuasion-tag pt-clarity">Objection Handling</span></div>
+    </div>
+    <div class="copy-block-body">
+      <p class="copy-text subhead">Every question your team will ask. Answered.</p>
+    </div>
+  </div>
+
+  <!-- FAQ 1 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q01</span>
+      <span class="faq-q-text">Which meeting platforms does ConvoCrystal support for transcript upload?</span>
+      <span class="faq-intent">Integration</span>
+    </div>
+    <div class="faq-a">
+      ConvoCrystal accepts transcripts from Zoom, Microsoft Teams, Google Meet, Webex, and any platform that exports a .txt, .vtt, .srt, or .docx file. You can also paste raw text directly or upload a custom JSON transcript format from our API. If you use a platform not listed here, upload the export file and we'll process it — or <strong>contact our team for a native integration request</strong>.
+      <span class="faq-cta-hook">→ View all supported formats in our documentation.</span>
+      <div class="copy-note"><strong>Persuasion logic:</strong> Lists the top 4 platforms (covers ~90% of the market), then catches the remainder with "any platform." The native integration CTA opens a sales conversation with high-intent users. The doc link reduces churn from confused free-trial users.</div>
+    </div>
+  </div>
+
+  <!-- FAQ 2 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q02</span>
+      <span class="faq-q-text">How accurate is the AI analysis? What if it misses something important?</span>
+      <span class="faq-intent">Trust / Accuracy</span>
+    </div>
+    <div class="faq-a">
+      Our AI achieves an average of 91% accuracy on clean transcripts — and every output comes with a confidence score so you always know how much to trust each insight without manual verification. For segments with a score below 70%, ConvoCrystal flags them for human review automatically. You're never flying blind. <strong>Accuracy improves the longer ConvoCrystal learns from your team's meeting style</strong> — most teams see a marked improvement within 30 sessions.
+      <span class="faq-cta-hook">→ See how confidence scoring works in a 2-minute walkthrough.</span>
+      <div class="copy-note"><strong>Persuasion logic:</strong> The 91% stat is a credible proof point — not 99% (which would be unbelievable) and not vague. The confidence score mention reinforces product differentiation. "Never flying blind" is a powerful anxiety reliever for high-stakes meeting contexts.</div>
+    </div>
+  </div>
+
+  <!-- FAQ 3 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q03</span>
+      <span class="faq-q-text">Is my meeting data private? Who can access what I upload?</span>
+      <span class="faq-intent">Privacy / Security</span>
+    </div>
+    <div class="faq-a">
+      Your data is yours. Full stop. ConvoCrystal is SOC 2 Type II certified and fully GDPR-compliant. Transcripts are encrypted in transit (TLS 1.3) and at rest (AES-256). We do not train our models on your data — your meeting content is never used to improve any AI system, including ours. Workspaces are fully isolated: no one outside your team can access your transcripts, analyses, or documents. <strong>Enterprise plans include your choice of data residency</strong> (US, EU, or APAC).
+      <span class="faq-cta-hook">→ Read our full security and privacy policy.</span>
+      <div class="copy-note"><strong>Critical for SaaS:</strong> This answer must be the most precise on the page. Data anxiety kills trial conversion — especially in enterprise and regulated industries. The phrase "Your data is yours. Full stop." is a confidence-closing statement. "We do not train our models on your data" addresses the #1 privacy fear in AI tools.</div>
+    </div>
+  </div>
+
+  <!-- FAQ 4 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q04</span>
+      <span class="faq-q-text">What's included in the free tier? Is there a time limit?</span>
+      <span class="faq-intent">Pricing / Free Tier</span>
+    </div>
+    <div class="faq-a">
+      The free tier is generous by design — and it doesn't expire. You get 5 transcript analyses per month, full access to the live editor and version control, up to 3 document branches, and 30 days of history. No credit card required, no trial countdown, no feature hobbling. We want you to experience the full value of ConvoCrystal before you ever see a pricing page. <strong>When you're ready to upgrade, Pro starts at $29/month</strong> — and you can cancel anytime.
+      <span class="faq-cta-hook">→ Start your free account in 60 seconds.</span>
+      <div class="copy-note"><strong>Persuasion logic:</strong> "Generous by design" signals intent transparency. Listing features inclusively rather than as a stripped-down comparison to paid tiers creates a positive framing. The pricing mention at the end is a soft anchor — it sets expectation without triggering the "too expensive" reflex.</div>
+    </div>
+  </div>
+
+  <!-- FAQ 5 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q05</span>
+      <span class="faq-q-text">How long does it take to analyze a transcript? Is it really instant?</span>
+      <span class="faq-intent">Performance</span>
+    </div>
+    <div class="faq-a">
+      For a typical 60-minute meeting transcript, ConvoCrystal returns a complete structured analysis in under 45 seconds on average — streaming results appear in real time as the analysis runs, so you're never staring at a loading screen. Longer transcripts (2+ hours) process in under 90 seconds. We've optimized the pipeline specifically for the cadence of technical and product workflows — quick enough for post-meeting review before your next call starts.
+      <span class="faq-cta-hook">→ Watch a live analysis being generated.</span>
+    </div>
+  </div>
+
+  <!-- FAQ 6 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q06</span>
+      <span class="faq-q-text">Can I integrate ConvoCrystal with tools my team already uses — Notion, Jira, Slack?</span>
+      <span class="faq-intent">Integrations</span>
+    </div>
+    <div class="faq-a">
+      Yes — and you won't need your IT team involved. ConvoCrystal connects natively to Slack (post summaries directly to channels), Notion (push documents with one click), and exports cleanly to PDF, Markdown, and Jira-compatible JSON. A Jira two-way sync for action items is <strong>in active development and launching Q3 2025</strong>. All integrations are configured in under 3 minutes from your workspace settings — no code, no webhooks unless you want them.
+      <span class="faq-cta-hook">→ See the full integration roadmap.</span>
+      <div class="copy-note"><strong>Urgency + Roadmap transparency:</strong> Mentioning "Q3 2025" for the Jira sync creates a minor urgency signal and demonstrates that the team is actively building. Roadmap transparency is an exceptionally strong trust signal for technical buyers who fear buying into a dead product.</div>
+    </div>
+  </div>
+
+  <!-- FAQ 7 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q07</span>
+      <span class="faq-q-text">What languages does ConvoCrystal support?</span>
+      <span class="faq-intent">Localization</span>
+    </div>
+    <div class="faq-a">
+      ConvoCrystal analyzes transcripts in 28 languages with full AI output in English, Spanish, French, German, Portuguese, Japanese, and Mandarin. Mixed-language meetings (common in global teams) are handled gracefully — the system detects language switches automatically and attributes them to the correct speaker. Full multilingual output in all 28 languages is <strong>launching in H2 2025 as part of our Global Teams release</strong>.
+      <span class="faq-cta-hook">→ See supported languages and roadmap.</span>
+    </div>
+  </div>
+
+  <!-- FAQ 8 -->
+  <div class="faq-block">
+    <div class="faq-q">
+      <span class="faq-num">Q08</span>
+      <span class="faq-q-text">How do I get my whole team onboarded without a 2-week rollout project?</span>
+      <span class="faq-intent">Adoption / Onboarding</span>
+    </div>
+    <div class="faq-a">
+      You don't need two weeks. Most teams are fully operational within a single afternoon. Send invites from your dashboard, each member connects in one click, and the first analysis can run the moment their account is verified. ConvoCrystal was designed to be adopted without a rollout plan — it integrates into your existing workflow rather than replacing it. <strong>Pro and Team plans include a dedicated onboarding call</strong> with a ConvoCrystal specialist — but most teams never need it.
+      <span class="faq-cta-hook">→ Start a team workspace free — invite up to 3 members at no cost.</span>
+      <div class="copy-note"><strong>Objection removal:</strong> Enterprise SaaS adoption anxiety is real. "Designed to be adopted without a rollout plan" is a headline-quality claim that deserves to be tested. The "most teams never need it" line on onboarding support is paradoxically reassuring — it signals the product is intuitive while making the offer sound like a bonus.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     §5 — FOOTER CONTENT
+══════════════════════════════════════════════════ -->
+<div class="doc-page" id="footer">
+  <div class="page-header">
+    <div>
+      <div class="page-num">Section 05 / 05</div>
+      <h2 class="page-title">Footer Content</h2>
+    </div>
+    <div class="page-desc">Navigation architecture, final conversion copy, legal disclaimers, and social prompts.</div>
+  </div>
+
+  <!-- Pre-footer CTA BLOCK -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Pre-Footer CTA Band — Full-Width</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="copy-block" style="background:var(--ink);border-color:var(--ink-3)">
+    <div class="copy-block-header" style="background:var(--ink-2);border-color:var(--ink-3)">
+      <div class="block-label" style="color:rgba(255,255,255,0.4)"><span class="hier-tag hier-h2">H2</span>Pre-Footer Conversion Block</div>
+      <div class="block-meta"><span class="char-count">Full-width band</span><span class="persuasion-tag pt-urgency">Final Conversion</span></div>
+    </div>
+    <div class="copy-block-body" style="background:var(--ink);padding:32px">
+      <p class="copy-text" style="font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(129,140,248,0.8);margin-bottom:16px">Stop losing your team's best thinking.</p>
+      <p style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;letter-spacing:-0.03em;color:white;line-height:1.15;margin-bottom:16px">Your first 5 analyses are free.<br><em style="color:#818CF8">Start now — no card needed.</em></p>
+      <p style="font-family:var(--sans);font-size:16px;color:rgba(255,255,255,0.45);margin-bottom:32px;max-width:520px">Join 4,200+ engineering and product teams who've permanently changed how they turn conversations into clarity.</p>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span style="font-family:var(--sans);font-size:15px;font-weight:700;color:white;background:var(--accent);padding:14px 32px;border-radius:8px;letter-spacing:0.01em">Start Analyzing Free →</span>
+        <span style="font-family:var(--sans);font-size:14px;color:rgba(255,255,255,0.35)">or book a 15-min team demo</span>
+      </div>
+      <div class="copy-note" style="margin-top:20px;background:rgba(255,255,255,0.05);border-color:var(--accent)"><strong style="color:rgba(255,255,255,0.6)">Pre-footer function:</strong> <span style="color:rgba(255,255,255,0.35)">This block converts visitors who scrolled the full page but didn't click earlier CTAs. They are the highest-intent non-converters on the page. Use urgency ("Stop losing"), social proof ("4,200+ teams"), and the lowest-friction possible CTA. Remove all obstacles from this section — no links that navigate away, no secondary messaging that dilutes the ask.</span></div>
+    </div>
+  </div>
+
+  <!-- FOOTER NAV -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Footer Navigation Architecture</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="footer-grid">
+    <div>
+      <div style="font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--ink);margin-bottom:8px">Convo<span style="color:var(--accent)">Crystal</span></div>
+      <div style="font-family:var(--sans);font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;max-width:240px">AI-powered meeting intelligence for teams who move fast and can't afford to miss what matters.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted-2);background:var(--silver);border-radius:6px;padding:4px 10px;letter-spacing:0.05em">Twitter / X</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted-2);background:var(--silver);border-radius:6px;padding:4px 10px;letter-spacing:0.05em">LinkedIn</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted-2);background:var(--silver);border-radius:6px;padding:4px 10px;letter-spacing:0.05em">GitHub</div>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Product</div>
+      <a class="footer-link" href="#">Features</a>
+      <a class="footer-link" href="#">Pricing</a>
+      <a class="footer-link" href="#">Changelog <span class="badge-inline badge-new">New</span></a>
+      <a class="footer-link" href="#">Roadmap</a>
+      <a class="footer-link" href="#">API Reference</a>
+      <a class="footer-link" href="#">Status</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <a class="footer-link" href="#">About</a>
+      <a class="footer-link" href="#">Blog</a>
+      <a class="footer-link" href="#">Careers <span class="badge-inline badge-new">We're hiring</span></a>
+      <a class="footer-link" href="#">Press Kit</a>
+      <a class="footer-link" href="#">Contact Sales</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Resources</div>
+      <a class="footer-link" href="#">Documentation</a>
+      <a class="footer-link" href="#">Integrations</a>
+      <a class="footer-link" href="#">Community</a>
+      <a class="footer-link" href="#">Security</a>
+      <a class="footer-link" href="#">Privacy Center</a>
+    </div>
+  </div>
+
+  <!-- Social Prompts -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Social Proof Prompts — Footer</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="copy-grid-3">
+    <div class="copy-block" style="margin-bottom:0">
+      <div class="copy-block-header">
+        <div class="block-label"><span class="hier-tag hier-label">Social</span>Twitter / X Prompt</div>
+        <span class="char-count">128 chars (tweet limit)</span>
+      </div>
+      <div class="copy-block-body">
+        <p class="copy-text" style="font-size:13px;line-height:1.6">"Just ran my first @ConvoCrystal analysis on our sprint planning call. Got a structured brief in 45 seconds. This is what productivity feels like. 🔮 #ProductManagement #BuildInPublic"</p>
+        <div class="copy-note"><strong>Shareable template</strong> — displayed in-app after first analysis completes. Pre-populated with stats from their actual session.</div>
+      </div>
+    </div>
+    <div class="copy-block" style="margin-bottom:0">
+      <div class="copy-block-header">
+        <div class="block-label"><span class="hier-tag hier-label">Social</span>LinkedIn Prompt</div>
+        <span class="char-count">220 chars</span>
+      </div>
+      <div class="copy-block-body">
+        <p class="copy-text" style="font-size:13px;line-height:1.6">"We reduced our meeting follow-up time by 73% in one week. ConvoCrystal turned our hour-long sprint calls into 30-second briefs. If your team runs on meetings, this changes the game."</p>
+      </div>
+    </div>
+    <div class="copy-block" style="margin-bottom:0">
+      <div class="copy-block-header">
+        <div class="block-label"><span class="hier-tag hier-label">Social</span>Referral CTA — Footer</div>
+        <span class="char-count">62 chars</span>
+      </div>
+      <div class="copy-block-body">
+        <p class="copy-text" style="font-size:13px;font-weight:600;color:var(--accent)">Give a teammate 1 free month. Get 1 free month back.</p>
+        <div class="copy-note"><strong>Referral mechanic:</strong> Mutual benefit framing outperforms one-sided referral copy by 2.3× in SaaS. "Give" comes before "Get" — generosity framing signals trust.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legal Disclaimer -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Legal Disclaimers + Copyright Line</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="footer-disclaimer">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:16px">
+      <div>
+        <a class="footer-link" href="#" style="display:inline;margin-right:16px">Privacy Policy</a>
+        <a class="footer-link" href="#" style="display:inline;margin-right:16px">Terms of Service</a>
+        <a class="footer-link" href="#" style="display:inline;margin-right:16px">Cookie Preferences</a>
+        <a class="footer-link" href="#" style="display:inline;margin-right:16px">Accessibility</a>
+        <a class="footer-link" href="#" style="display:inline;margin-right:16px">Data Processing Agreement</a>
+      </div>
+      <div style="color:var(--muted-2)">© 2025 ConvoCrystal, Inc. All rights reserved.</div>
+    </div>
+    <div>
+      ConvoCrystal is not affiliated with Zoom Video Communications, Microsoft Corporation, or Google LLC. All trademarks are the property of their respective owners. Accuracy metrics referenced on this page are based on our internal benchmark study (n=1,200 transcripts, August 2025). Individual results may vary based on transcript quality and meeting type. ConvoCrystal does not store, sell, or share user transcript data. Processing occurs in SOC 2 Type II certified infrastructure. For security inquiries: security@convocrystal.io. For data deletion requests: privacy@convocrystal.io.
+    </div>
+    <div class="copy-note" style="margin-top:16px;background:var(--silver)"><strong>Legal review required:</strong> All disclaimers, compliance claims, and trademark attribution should be reviewed by legal counsel prior to publishing. Accuracy statistics require documented methodology. Data processing agreement link must go to a DPA that is kept current with applicable privacy regulations (GDPR, CCPA, PDPA).</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MICROCOPY SUPPLEMENT
+══════════════════════════════════════════════════ -->
+<div class="doc-page" id="microcopy">
+  <div class="page-header">
+    <div>
+      <div class="page-num">Supplement</div>
+      <h2 class="page-title">Microcopy Library</h2>
+    </div>
+    <div class="page-desc">In-product copy for buttons, tooltips, empty states, error messages, and onboarding flows. The details that separate polished from professional.</div>
+  </div>
+
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">Navigation Bar Microcopy</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="microcopy-grid" style="grid-template-columns: repeat(4, 1fr)">
+    <div class="microcopy-item"><div class="microcopy-context">Nav — Primary CTA</div><div class="microcopy-text" style="font-weight:700;color:var(--accent)">Start Free →</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Nav — Login</div><div class="microcopy-text">Sign in</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Nav — Pricing</div><div class="microcopy-text">Pricing</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Nav — Docs</div><div class="microcopy-text">Documentation</div></div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Empty States</div><div class="section-divider-line"></div></div>
+
+  <div class="microcopy-grid">
+    <div class="microcopy-item">
+      <div class="microcopy-context">Empty — Transcript Library</div>
+      <div class="microcopy-text"><strong>No transcripts yet.</strong><br>Drop a file here or paste a transcript to run your first analysis in 60 seconds.</div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Empty — Document Library</div>
+      <div class="microcopy-text"><strong>No documents created.</strong><br>Push an AI analysis to this workspace to create your first versioned document.</div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Empty — Search Results</div>
+      <div class="microcopy-text"><strong>No results for "{query}"</strong><br>Try a broader search, or explore by meeting type and date range.</div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Empty — Chat Session</div>
+      <div class="microcopy-text"><strong>Ask anything about this meeting.</strong><br>Try: "What were the three key decisions?" or "Summarize the risks flagged."</div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Empty — Action Items</div>
+      <div class="microcopy-text"><strong>No action items found.</strong><br>This transcript may not contain explicit task assignments. Run in chat to extract them manually.</div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Empty — Team Members</div>
+      <div class="microcopy-text"><strong>Working solo?</strong><br>Invite your team — the first 3 members are always free. They'll be up and running in minutes.</div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Processing State Messages</div><div class="section-divider-line"></div></div>
+
+  <div class="microcopy-grid">
+    <div class="microcopy-item"><div class="microcopy-context">State: Queued</div><div class="microcopy-text">Your transcript is in the queue. Analysis starts in a few seconds…</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">State: Parsing</div><div class="microcopy-text">Reading your transcript. Identifying speakers and timestamps…</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">State: Analyzing</div><div class="microcopy-text">Extracting decisions, action items, and key moments…</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">State: Scoring</div><div class="microcopy-text">Calculating confidence scores for each insight…</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">State: Complete</div><div class="microcopy-text">Analysis complete. Your structured brief is ready.</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">State: Failed</div><div class="microcopy-text">Something went wrong processing this transcript. Check the file format and try again — or contact support and we'll sort it immediately.</div></div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Onboarding Flow Copy</div><div class="section-divider-line"></div></div>
+
+  <div class="microcopy-grid" style="grid-template-columns: 1fr 1fr">
+    <div class="microcopy-item">
+      <div class="microcopy-context">Onboarding Step 1 — Headline</div>
+      <div class="microcopy-text" style="font-size:15px;font-weight:700">Welcome to ConvoCrystal.<br>Let's get your first insight in 3 minutes.</div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Onboarding Step 2 — Connect Platform</div>
+      <div class="microcopy-text" style="font-size:15px;font-weight:700">Where do your meetings happen?<br><span style="font-size:12px;font-weight:400;color:var(--muted)">You can always add more platforms later.</span></div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Onboarding Step 3 — Invite Team</div>
+      <div class="microcopy-text" style="font-size:15px;font-weight:700">Invite your team — or skip for now.<br><span style="font-size:12px;font-weight:400;color:var(--muted)">ConvoCrystal is more powerful together. First 3 seats are always free.</span></div>
+    </div>
+    <div class="microcopy-item">
+      <div class="microcopy-context">Onboarding Step 4 — Upload First Transcript</div>
+      <div class="microcopy-text" style="font-size:15px;font-weight:700">Upload your most recent meeting.<br><span style="font-size:12px;font-weight:400;color:var(--muted)">We'll analyze it and show you exactly what the AI surfaces. Real insights from your real conversations.</span></div>
+    </div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Error & Edge Case Messages</div><div class="section-divider-line"></div></div>
+
+  <div class="microcopy-grid">
+    <div class="microcopy-item"><div class="microcopy-context">Error: File Too Large</div><div class="microcopy-text"><strong>File exceeds 50MB.</strong> Try compressing or splitting the transcript. Need help? We'll handle it manually — just contact support.</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Error: Unsupported Format</div><div class="microcopy-text"><strong>Format not supported.</strong> We accept .txt, .vtt, .srt, and .docx. Convert your file or paste the text directly.</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Error: Monthly Limit Reached</div><div class="microcopy-text"><strong>You've used your 5 free analyses this month.</strong> Upgrade to Pro for unlimited analyses — or wait until the 1st for your quota to reset.</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Upgrade Prompt (Free → Pro)</div><div class="microcopy-text"><strong>You're getting serious about this.</strong> Unlock unlimited analyses, 10-member teams, and priority processing. Pro is $29/month — cancel anytime.</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Confirmation: Commit Saved</div><div class="microcopy-text">✓ Version saved — <em>a3f8c2d</em>. You can restore this snapshot anytime from the version history.</div></div>
+    <div class="microcopy-item"><div class="microcopy-context">Confirmation: Analysis Pushed to Doc</div><div class="microcopy-text">✓ Analysis pushed to <em>Q3 Sprint Brief</em>. Open the document to refine, share, or branch.</div></div>
+  </div>
+
+  <!-- Power Words Glossary -->
+  <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Power Words Used in This Copy</div><div class="section-divider-line"></div></div>
+
+  <div class="copy-block">
+    <div class="power-legend">
+      <span class="power-legend-title">Conversion Power Words Inventory:</span>
+      <span>Finally · Instantly · Automatic · Never lose · Proven · Trusted · Zero friction · Without the rewrite · Exactly · Full stop · Structured · Precision · Immediately · Permanently · Crystal-clear · Always · Source of truth · Trivially easy</span>
+    </div>
+    <div class="copy-block-body">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <div style="background:var(--silver);border-radius:8px;padding:12px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--rose);margin-bottom:6px">Pain Words</div>
+          <div style="font-family:var(--sans);font-size:12px;color:var(--ink-2);line-height:1.8">Drowning<br>Losing<br>Wrangling<br>Reconciling<br>Staring at<br>Miss</div>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--emerald);margin-bottom:6px">Relief Words</div>
+          <div style="font-family:var(--sans);font-size:12px;color:var(--ink-2);line-height:1.8">Finally<br>Automatically<br>Instantly<br>Without<br>No more<br>Zero</div>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Trust Words</div>
+          <div style="font-family:var(--sans);font-size:12px;color:var(--ink-2);line-height:1.8">Certified<br>Compliant<br>Yours<br>Full stop<br>Exactly<br>Proven</div>
+        </div>
+        <div style="background:var(--silver);border-radius:8px;padding:12px">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Action Words</div>
+          <div style="font-family:var(--sans);font-size:12px;color:var(--ink-2);line-height:1.8">Start<br>Analyze<br>Unlock<br>Push<br>Deploy<br>Surface</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SCROLL PROGRESS SCRIPT ── -->
+<script>
+window.addEventListener('scroll', () => {
+  const scroll = window.scrollY;
+  const height = document.body.scrollHeight - window.innerHeight;
+  const pct = (scroll / height) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+</script>
+</body>
+</html>

@@ -8,15 +8,31 @@ import { useTheme } from "./ThemeContext";
 import { validateFile, type DetectedFormat, type ValidationResult } from "../lib/useFileValidation";
 import { useBeforeUnloadGuard } from "../lib/useBeforeUnloadGuard";
 
-type UploadState = "idle" | "validating" | "uploading" | "processing" | "complete" | "error";
+// ─── FSM Types (Architecture Doc M1 — 8-state discriminated union) ─
+
+type ValidationPhase = "format_check" | "size_check" | "mime_sniff";
+type ProcessingStage = "queued" | "parsing" | "extracting" | "analyzing" | "scoring" | "indexing";
+
+type UploadFSM =
+  | { status: "idle" }
+  | { status: "selecting"; dragActive: boolean }
+  | { status: "validating"; file: File; phase: ValidationPhase }
+  | { status: "uploading"; file: File; progress: number; uploadId: string; bytesUploaded: number }
+  | { status: "processing"; transcriptId: string; stage: ProcessingStage; stageIndex: number }
+  | { status: "complete"; transcriptId: string; analysisId: string; confidenceScore: number }
+  | { status: "failed"; error: string; retryCount: number }
+  | { status: "cancelled" };
+
+const INITIAL_STATE: UploadFSM = { status: "idle" };
 
 const formatChips = ["VTT", "SRT", "TXT", "DOCX", "JSON"];
-const processingSteps = [
+const processingSteps: { label: string; key: ProcessingStage }[] = [
   { label: "Queued", key: "queued" },
   { label: "Parsing", key: "parsing" },
   { label: "Extracting", key: "extracting" },
   { label: "Analyzing", key: "analyzing" },
   { label: "Scoring", key: "scoring" },
+  { label: "Indexing", key: "indexing" },
 ];
 
 interface FileInfo {
@@ -32,8 +48,7 @@ interface UploadFlowProps {
 }
 
 export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
-  const [state, setState] = useState<UploadState>("idle");
-  const [dragOver, setDragOver] = useState(false);
+  const [fsm, setFsm] = useState<UploadFSM>(INITIAL_STATE);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [paused, setPaused] = useState(false);
   const [processingStep, setProcessingStep] = useState(0);
@@ -48,9 +63,11 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
   const { addToast } = useToast();
   const { isDark, colors } = useTheme();
 
-  // Guard against accidental tab close during upload/processing
-  useBeforeUnloadGuard(state === "uploading" || state === "processing");
+  // Derived convenience booleans
+  const state = fsm.status;
+  const isDragActive = fsm.status === "selecting" && fsm.dragActive;
 
+  // Shorthand aliases for colors used throughout the template
   const modalBg = colors.bgBase;
   const panelBg = colors.bgPanel;
   const borderColor = colors.border;
@@ -58,9 +75,12 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
   const textSecondary = colors.textSecondary;
   const textMuted = colors.textMuted;
 
+  // Guard against accidental tab close during upload/processing
+  useBeforeUnloadGuard(state === "uploading" || state === "processing");
+
   // Dash animation for idle state
   useEffect(() => {
-    if (state === "idle") {
+    if (state === "idle" || state === "selecting") {
       const interval = setInterval(() => setDashOffset((prev) => (prev + 0.5) % 100), 50);
       return () => clearInterval(interval);
     }
@@ -76,13 +96,13 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
   // Processing stages (simulated WS events — replace with useWebSocket in production)
   useEffect(() => {
-    if (state === "processing" && processingStep < 5) {
+    if (state === "processing" && processingStep < processingSteps.length) {
       const timer = setTimeout(() => setProcessingStep((s) => s + 1), 1200);
       return () => clearTimeout(timer);
     }
-    if (state === "processing" && processingStep >= 5) {
+    if (state === "processing" && processingStep >= processingSteps.length) {
       const timer = setTimeout(() => {
-        setState("complete");
+        setFsm({ status: "complete", transcriptId: `tr_${Date.now()}`, analysisId: `an_${Date.now()}`, confidenceScore: 91 });
         addToast({ variant: "success", title: "Upload complete", message: `${fileInfo?.name || "Transcript"} is ready for analysis.` });
       }, 500);
       return () => clearTimeout(timer);
@@ -92,7 +112,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
   // ─── Real file validation pipeline ─────────────────────────────
 
   const processFile = useCallback(async (file: File) => {
-    setState("validating");
+    setFsm({ status: "validating", file, phase: "format_check" });
     setValidationPhase(0);
     setUploadProgress(0);
     setProcessingStep(0);
@@ -125,7 +145,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
     if (!result.valid) {
       await new Promise((r) => setTimeout(r, 300));
-      setState("error");
+      setFsm({ status: "failed", error: result.error || "Validation failed.", retryCount: 0 });
       setErrorMessage(result.error || "Validation failed.");
       addToast({ variant: "error", title: "Validation failed", message: result.error || "File could not be validated." });
       return;
@@ -133,7 +153,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
     // Auto-advance to upload
     await new Promise((r) => setTimeout(r, 400));
-    setState("uploading");
+    setFsm({ status: "uploading", file, progress: 0, uploadId: `up_${Date.now()}`, bytesUploaded: 0 });
 
     // Simulated chunked upload (replace with real XHR in production)
     const interval = setInterval(() => {
@@ -141,7 +161,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
         const next = Math.min(100, p + Math.random() * 4 + 1);
         if (next >= 100) {
           clearInterval(interval);
-          setTimeout(() => setState("processing"), 300);
+          setTimeout(() => setFsm({ status: "processing", transcriptId: `tr_${Date.now()}`, stage: "queued", stageIndex: 0 }), 300);
         }
         return next;
       });
@@ -151,7 +171,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
   const handleFileDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setDragOver(false);
+    setFsm(INITIAL_STATE);
     const files = e.dataTransfer.files;
     if (files.length > 0) processFile(files[0]);
   }, [processFile]);
@@ -183,7 +203,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           const next = Math.min(100, p + Math.random() * 4 + 1);
           if (next >= 100) {
             clearInterval(interval);
-            setTimeout(() => setState("processing"), 300);
+            setTimeout(() => setFsm({ status: "processing", transcriptId: `tr_${Date.now()}`, stage: "queued", stageIndex: 0 }), 300);
           }
           return next;
         });
@@ -197,7 +217,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
   const handleReset = useCallback(() => {
     if (uploadIntervalRef.current) clearInterval(uploadIntervalRef.current);
-    setState("idle");
+    setFsm(INITIAL_STATE);
     setUploadProgress(0);
     setProcessingStep(0);
     setElapsedTime(0);
@@ -207,6 +227,12 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
     setValidationPhase(0);
     setErrorMessage("");
   }, []);
+
+  const handleCancel = useCallback(() => {
+    if (uploadIntervalRef.current) clearInterval(uploadIntervalRef.current);
+    setFsm({ status: "cancelled" });
+    addToast({ variant: "info", title: "Upload cancelled", message: "The upload has been cancelled." });
+  }, [addToast]);
 
   if (!isOpen) return null;
 
@@ -235,7 +261,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
             <span className="text-[13px]" style={{ fontWeight: 600, color: textPrimary }}>Upload Transcript</span>
             <span className="text-[9px] font-mono px-1.5 py-0.5 rounded"
               style={{ color: textMuted, backgroundColor: panelBg, border: `1px solid ${borderColor}` }}>
-              {state === "idle" ? "Ready" : state === "validating" ? "Validating" : state === "uploading" ? "Uploading" : state === "processing" ? "Processing" : state === "complete" ? "Done" : "Error"}
+              {state === "idle" || state === "selecting" ? "Ready" : state === "validating" ? "Validating" : state === "uploading" ? "Uploading" : state === "processing" ? "Processing" : state === "complete" ? "Done" : state === "cancelled" ? "Cancelled" : "Error"}
             </span>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-[#F43F5E]/15 transition-colors" style={{ color: textMuted }}>
@@ -245,19 +271,20 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
 
         <div className="p-4 sm:p-6 min-h-[280px] sm:min-h-[360px] flex flex-col items-center justify-center">
           {/* IDLE: Drop Zone */}
-          {state === "idle" && (
+          {(state === "idle" || state === "selecting") && (
             <div
               className="w-full rounded-xl p-10 flex flex-col items-center justify-center transition-all duration-200 cursor-pointer"
               style={{
-                border: dragOver ? `1.5px solid ${colors.crystal}` : `1.5px dashed ${borderColor}`,
-                backgroundColor: dragOver ? `${colors.crystal}04` : "transparent",
+                border: isDragActive ? `1.5px solid ${colors.crystal}` : `1.5px dashed ${borderColor}`,
+                backgroundColor: isDragActive ? `${colors.crystal}04` : "transparent",
               }}
-              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-              onDragLeave={() => setDragOver(false)}
+              onDragOver={(e) => { e.preventDefault(); setFsm({ status: "selecting", dragActive: true }); }}
+              onDragLeave={() => setFsm({ status: "selecting", dragActive: false })}
+              onDragEnter={(e) => { e.preventDefault(); setFsm({ status: "selecting", dragActive: true }); }}
               onDrop={handleFileDrop}
               onClick={handleBrowse}
             >
-              <div className={`mb-4 transition-transform duration-200 ${dragOver ? "scale-110" : ""}`}>
+              <div className={`mb-4 transition-transform duration-200 ${isDragActive ? "scale-110" : ""}`}>
                 <CloudUpload className="w-12 h-12" style={{ color: textMuted }} />
               </div>
               <h3 className="text-[16px] mb-2" style={{ fontWeight: 600, color: textPrimary }}>Drop your transcript here</h3>
@@ -344,7 +371,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
                   {paused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
                   {paused ? "Resume" : "Pause"}
                 </button>
-                <button onClick={handleReset}
+                <button onClick={handleCancel}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] transition-colors"
                   style={{ border: `1px solid ${borderColor}`, color: colors.rose }}>
                   Cancel
@@ -411,7 +438,7 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
           )}
 
           {/* ERROR */}
-          {state === "error" && (
+          {(state === "failed") && (
             <div className="w-full max-w-md" style={{ animation: "slideUp 0.2s ease-out" }}>
               <div className="p-4 rounded-lg" style={{ border: `1px solid ${colors.rose}30`, backgroundColor: `${colors.rose}05` }}>
                 <div className="flex items-start gap-3">
@@ -430,6 +457,25 @@ export function UploadFlow({ isOpen, onClose }: UploadFlowProps) {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* CANCELLED */}
+          {state === "cancelled" && (
+            <div className="flex flex-col items-center" style={{ animation: "slideUp 0.2s ease-out" }}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: `${colors.amber}15` }}>
+                <X className="w-8 h-8" style={{ color: colors.amber }} />
+              </div>
+              <h3 className="text-[16px] mb-2" style={{ fontWeight: 600, color: textPrimary }}>Upload Cancelled</h3>
+              <p className="text-[12px] mb-6" style={{ color: textSecondary }}>The upload was cancelled. You can start over or close this dialog.</p>
+              <div className="flex items-center gap-2">
+                <button onClick={handleReset}
+                  className="px-4 py-2 rounded-lg text-white text-[12px] transition-colors"
+                  style={{ fontWeight: 500, backgroundColor: colors.crystal }}>
+                  Start Over
+                </button>
+                <button onClick={onClose} className="text-[11px] transition-colors" style={{ color: textMuted }}>Close</button>
               </div>
             </div>
           )}

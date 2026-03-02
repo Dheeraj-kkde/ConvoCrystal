@@ -15,22 +15,49 @@ import {
   Plus,
   ArrowRight,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "./ThemeContext";
 import { useUser } from "./UserContext";
 
-// Mock data for returning user
+// ─── Motion presets ──────────────────────────────────────────────
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const fadeSlideUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 260, damping: 22 },
+  },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
+};
+
+// ─── Mock data ───────────────────────────────────────────────────
+
 const populatedStats = [
-  { label: "Total Documents", value: "24", change: "+3 this week", icon: FileText, color: "#5C6CF5" },
-  { label: "Uploaded", value: "18", change: "+2 this week", icon: Upload, color: "#10B981" },
-  { label: "Exported", value: "12", change: "+5 this week", icon: Download, color: "#00C9D6" },
-  { label: "AI Conversations", value: "47", change: "+8 this week", icon: MessageSquare, color: "#00C9D6" },
+  { label: "Total Documents", value: "24", numValue: 24, change: "+3 this week", icon: FileText, color: "#5C6CF5" },
+  { label: "Uploaded", value: "18", numValue: 18, change: "+2 this week", icon: Upload, color: "#10B981" },
+  { label: "Exported", value: "12", numValue: 12, change: "+5 this week", icon: Download, color: "#00C9D6" },
+  { label: "AI Conversations", value: "47", numValue: 47, change: "+8 this week", icon: MessageSquare, color: "#00C9D6" },
 ];
 
 const emptyStats = [
-  { label: "Total Documents", value: "0", change: "Upload to start", icon: FileText, color: "#5C6CF5" },
-  { label: "Uploaded", value: "0", change: "—", icon: Upload, color: "#10B981" },
-  { label: "Exported", value: "0", change: "—", icon: Download, color: "#00C9D6" },
-  { label: "AI Conversations", value: "0", change: "—", icon: MessageSquare, color: "#00C9D6" },
+  { label: "Total Documents", value: "0", numValue: 0, change: "Upload to start", icon: FileText, color: "#5C6CF5" },
+  { label: "Uploaded", value: "0", numValue: 0, change: "—", icon: Upload, color: "#10B981" },
+  { label: "Exported", value: "0", numValue: 0, change: "—", icon: Download, color: "#00C9D6" },
+  { label: "AI Conversations", value: "0", numValue: 0, change: "—", icon: MessageSquare, color: "#00C9D6" },
 ];
 
 const importantChats = [
@@ -92,7 +119,6 @@ const topSpeakers = [
   { name: "Marcus Webb", sessions: 7, initials: "MW", color: "#10B981" },
 ];
 
-// Confidence scoring data for the overview
 const confidenceOverview = [
   { transcript: "Q4 Strategy Review", overall: 94, faithfulness: 96, relevance: 92, precision: 94, date: "2h ago" },
   { transcript: "Product Sync — Sprint 14", overall: 88, faithfulness: 90, relevance: 87, precision: 86, date: "5h ago" },
@@ -101,10 +127,18 @@ const confidenceOverview = [
   { transcript: "1:1 — Engineering Lead", overall: 97, faithfulness: 98, relevance: 96, precision: 97, date: "3d ago" },
 ];
 
-function ConfidenceBar({ score, color, width = "w-16" }: { score: number; color: string; width?: string }) {
+// ─── Animated Confidence Bar ─────────────────────────────────────
+
+function AnimatedConfidenceBar({ score, color, width = "w-16", delay = 0 }: { score: number; color: string; width?: string; delay?: number }) {
   return (
     <div className={`${width} h-1.5 rounded-full`} style={{ backgroundColor: `${color}20` }}>
-      <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, backgroundColor: color }} />
+      <motion.div
+        className="h-full rounded-full"
+        style={{ backgroundColor: color }}
+        initial={{ width: "0%" }}
+        animate={{ width: `${score}%` }}
+        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      />
     </div>
   );
 }
@@ -113,11 +147,18 @@ function ConfidenceDot({ score }: { score: number }) {
   const color = score >= 85 ? "#10B981" : score >= 65 ? "#F59E0B" : "#F43F5E";
   return (
     <div className="flex items-center gap-1.5">
-      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+      <motion.div
+        className="w-1.5 h-1.5 rounded-full"
+        style={{ backgroundColor: color }}
+        animate={{ scale: [1, 1.4, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      />
       <span className="text-[10px] font-mono" style={{ color }}>{score}%</span>
     </div>
   );
 }
+
+// ─── Main Component ──────────────────────────────────────────────
 
 export function OverviewDashboard() {
   const { isDark, colors } = useTheme();
@@ -134,23 +175,26 @@ export function OverviewDashboard() {
     ? importantChats.filter((c) => c.starred)
     : importantChats;
 
-  // Calculate average confidence for populated state
   const avgConfidence = Math.round(
     confidenceOverview.reduce((sum, c) => sum + c.overall, 0) / confidenceOverview.length
   );
 
   return (
     <div
-      className="h-full overflow-y-auto"
+      className="h-full overflow-y-scroll"
       style={{
         backgroundColor: colors.bgBase,
-        scrollbarWidth: "thin",
-        scrollbarColor: `${colors.border} transparent`,
+        scrollbarGutter: "stable",
       }}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {/* Header */}
-        <div className="mb-4 sm:mb-6">
+        <motion.div
+          className="mb-4 sm:mb-6"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0, 0, 0.2, 1] }}
+        >
           <h1 className="text-[18px] sm:text-[20px] mb-1" style={{ fontWeight: 600, color: colors.textPrimary }}>
             Dashboard
           </h1>
@@ -159,119 +203,193 @@ export function OverviewDashboard() {
               ? "Welcome! Upload your first transcript to get started."
               : "Overview of your transcripts, conversations, and activity"}
           </p>
-        </div>
+        </motion.div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          {stats.map((stat) => (
-            <div
+        {/* Stats Grid — staggered entrance */}
+        <motion.div
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          {stats.map((stat, i) => (
+            <motion.div
               key={stat.label}
-              className="rounded-xl p-4 transition-colors"
+              variants={fadeSlideUp}
+              whileHover={{
+                y: -4,
+                boxShadow: `0 8px 24px ${stat.color}18`,
+                borderColor: `${stat.color}40`,
+                transition: { type: "spring", stiffness: 400, damping: 22 },
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="rounded-xl p-4 transition-colors cursor-default"
               style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
             >
               <div className="flex items-center justify-between mb-3">
-                <div
+                <motion.div
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
                   style={{ backgroundColor: `${stat.color}15` }}
+                  whileHover={{ scale: 1.15, rotate: 8 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 >
                   <stat.icon className="w-4 h-4" style={{ color: stat.color }} />
-                </div>
+                </motion.div>
                 {!isNewUser && (
-                  <div className="flex items-center gap-0.5 text-[10px]" style={{ color: "#10B981" }}>
+                  <motion.div
+                    className="flex items-center gap-0.5 text-[10px]"
+                    style={{ color: "#10B981" }}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
+                  >
                     <TrendingUp className="w-3 h-3" />
                     <span>{stat.change}</span>
-                  </div>
+                  </motion.div>
                 )}
               </div>
-              <div className="text-[22px]" style={{ fontWeight: 600, color: isNewUser ? colors.textMuted : colors.textPrimary }}>
+              <motion.div
+                className="text-[22px]"
+                style={{ fontWeight: 600, color: isNewUser ? colors.textMuted : colors.textPrimary }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.15 + i * 0.08, type: "spring", stiffness: 200, damping: 15 }}
+              >
                 {stat.value}
-              </div>
+              </motion.div>
               <div className="text-[11px] mt-0.5" style={{ color: colors.textMuted }}>
                 {stat.label}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* New User: Getting Started */}
-        {isNewUser && (
-          <div
-            className="rounded-xl p-6 mb-6"
-            style={{
-              backgroundColor: isDark ? "rgba(92,108,245,0.06)" : "rgba(92,108,245,0.04)",
-              border: `1px solid ${isDark ? "rgba(92,108,245,0.15)" : "rgba(92,108,245,0.12)"}`,
-            }}
-          >
-            <h3 className="text-[15px] mb-3" style={{ fontWeight: 600, color: colors.textPrimary }}>
-              Getting Started
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                { step: "1", title: "Upload a Transcript", desc: "Drop an audio, video, or text file to begin", icon: Upload, color: "#5C6CF5", done: false },
-                { step: "2", title: "Chat with AI", desc: "Ask questions and get citation-backed answers", icon: MessageSquare, color: "#00C9D6", done: false },
-                { step: "3", title: "Export Results", desc: "Download polished documents in any format", icon: Download, color: "#10B981", done: false },
-              ].map((item) => (
-                <div
-                  key={item.step}
-                  className="flex items-start gap-3 p-3 rounded-lg"
-                  style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
-                >
-                  <div className="relative shrink-0">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: `${item.color}12` }}
-                    >
-                      <item.icon className="w-5 h-5" style={{ color: item.color }} />
+        {/* New User: Getting Started — staggered */}
+        <AnimatePresence>
+          {isNewUser && (
+            <motion.div
+              className="rounded-xl p-6 mb-6"
+              style={{
+                backgroundColor: isDark ? "rgba(92,108,245,0.06)" : "rgba(92,108,245,0.04)",
+                border: `1px solid ${isDark ? "rgba(92,108,245,0.15)" : "rgba(92,108,245,0.12)"}`,
+              }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 20 }}
+            >
+              <h3 className="text-[15px] mb-3" style={{ fontWeight: 600, color: colors.textPrimary }}>
+                Getting Started
+              </h3>
+              <motion.div
+                className="grid grid-cols-1 sm:grid-cols-3 gap-3"
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+              >
+                {[
+                  { step: "1", title: "Upload a Transcript", desc: "Drop an audio, video, or text file to begin", icon: Upload, color: "#5C6CF5" },
+                  { step: "2", title: "Chat with AI", desc: "Ask questions and get citation-backed answers", icon: MessageSquare, color: "#00C9D6" },
+                  { step: "3", title: "Export Results", desc: "Download polished documents in any format", icon: Download, color: "#10B981" },
+                ].map((item) => (
+                  <motion.div
+                    key={item.step}
+                    variants={scaleIn}
+                    whileHover={{
+                      y: -3,
+                      boxShadow: `0 6px 20px ${item.color}15`,
+                      transition: { type: "spring", stiffness: 400, damping: 20 },
+                    }}
+                    className="flex items-start gap-3 p-3 rounded-lg cursor-default"
+                    style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
+                  >
+                    <div className="relative shrink-0">
+                      <motion.div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center"
+                        style={{ backgroundColor: `${item.color}12` }}
+                        animate={{ rotate: [0, 3, -3, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, delay: Number(item.step) * 0.5 }}
+                      >
+                        <item.icon className="w-5 h-5" style={{ color: item.color }} />
+                      </motion.div>
+                      <motion.div
+                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] text-white"
+                        style={{ backgroundColor: item.color, fontWeight: 700 }}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.5 + Number(item.step) * 0.15, type: "spring", stiffness: 500, damping: 15 }}
+                      >
+                        {item.step}
+                      </motion.div>
                     </div>
-                    <div
-                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] text-white"
-                      style={{ backgroundColor: item.color, fontWeight: 700 }}
-                    >
-                      {item.step}
+                    <div>
+                      <div className="text-[12px]" style={{ fontWeight: 600, color: colors.textPrimary }}>{item.title}</div>
+                      <div className="text-[11px] mt-0.5" style={{ color: colors.textSecondary }}>{item.desc}</div>
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-[12px]" style={{ fontWeight: 600, color: colors.textPrimary }}>{item.title}</div>
-                    <div className="text-[11px] mt-0.5" style={{ color: colors.textSecondary }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Confidence Scoring Overview — always visible (with data or empty) */}
-        <div
+        {/* Confidence Scoring Overview */}
+        <motion.div
           className="rounded-xl overflow-hidden mb-6"
           style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, type: "spring", stiffness: 200, damping: 22 }}
         >
           <div className="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2" style={{ borderBottom: `1px solid ${cardBorder}` }}>
             <div className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" style={{ color: colors.crystal }} />
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <BarChart3 className="w-4 h-4" style={{ color: colors.crystal }} />
+              </motion.div>
               <span className="text-[13px]" style={{ fontWeight: 600, color: colors.textPrimary }}>
                 Confidence Scoring
               </span>
             </div>
             {!isNewUser && (
-              <div className="flex items-center gap-2">
+              <motion.div
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+              >
                 <span className="text-[10px]" style={{ color: colors.textMuted }}>Average:</span>
-                <span
+                <motion.span
                   className="text-[12px] font-mono px-2 py-0.5 rounded"
                   style={{
                     fontWeight: 600,
                     color: avgConfidence >= 85 ? "#10B981" : avgConfidence >= 65 ? "#F59E0B" : "#F43F5E",
                     backgroundColor: avgConfidence >= 85 ? "rgba(16,185,129,0.1)" : avgConfidence >= 65 ? "rgba(245,158,11,0.1)" : "rgba(244,63,94,0.1)",
                   }}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.6, type: "spring", stiffness: 300, damping: 15 }}
                 >
                   {avgConfidence}%
-                </span>
-              </div>
+                </motion.span>
+              </motion.div>
             )}
           </div>
 
           {isNewUser ? (
-            <div className="px-6 py-10 text-center">
-              <BarChart3 className="w-10 h-10 mx-auto mb-3" style={{ color: colors.textMuted }} />
+            <motion.div
+              className="px-6 py-10 text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <BarChart3 className="w-10 h-10 mx-auto mb-3" style={{ color: colors.textMuted }} />
+              </motion.div>
               <div className="text-[13px] mb-1" style={{ fontWeight: 500, color: colors.textSecondary }}>
                 No confidence data yet
               </div>
@@ -281,7 +399,6 @@ export function OverviewDashboard() {
                 <span style={{ color: "#00C9D6" }}>Relevance</span>, and{" "}
                 <span style={{ color: "#5C6CF5" }}>Precision</span>.
               </p>
-              {/* Preview bars */}
               <div className="flex justify-center gap-6">
                 {[
                   { label: "Faithfulness", color: "#10B981" },
@@ -296,7 +413,7 @@ export function OverviewDashboard() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ) : (
             <div>
               {/* Score legend */}
@@ -307,20 +424,27 @@ export function OverviewDashboard() {
                   { label: "Precision", color: "#5C6CF5" },
                 ].map((m) => (
                   <div key={m.label} className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: m.color }} />
+                    <motion.div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: m.color }}
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: m.label === "Faithfulness" ? 0 : m.label === "Relevance" ? 0.3 : 0.6 }}
+                    />
                     <span className="text-[10px]" style={{ color: colors.textMuted }}>{m.label}</span>
                   </div>
                 ))}
               </div>
 
               {/* Score rows */}
-              {confidenceOverview.map((c) => (
+              {confidenceOverview.map((c, rowIdx) => (
                 <div key={c.transcript}>
-                  <button
+                  <motion.button
                     className="w-full text-left px-4 py-3 flex items-center gap-4 transition-colors"
                     onClick={() => setExpandedScore(expandedScore === c.transcript ? null : c.transcript)}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = cardHover)}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                    whileHover={{ backgroundColor: cardHover }}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.35 + rowIdx * 0.06, duration: 0.3 }}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="text-[12px] truncate" style={{ fontWeight: 500, color: colors.textPrimary }}>
@@ -329,69 +453,98 @@ export function OverviewDashboard() {
                       <div className="text-[10px] font-mono" style={{ color: colors.textMuted }}>{c.date}</div>
                     </div>
 
-                    {/* Mini score bars */}
+                    {/* Mini score bars — animated fill */}
                     <div className="hidden sm:flex items-center gap-3 shrink-0">
-                      <ConfidenceBar score={c.faithfulness} color="#10B981" />
-                      <ConfidenceBar score={c.relevance} color="#00C9D6" />
-                      <ConfidenceBar score={c.precision} color="#5C6CF5" />
+                      <AnimatedConfidenceBar score={c.faithfulness} color="#10B981" delay={0.4 + rowIdx * 0.1} />
+                      <AnimatedConfidenceBar score={c.relevance} color="#00C9D6" delay={0.45 + rowIdx * 0.1} />
+                      <AnimatedConfidenceBar score={c.precision} color="#5C6CF5" delay={0.5 + rowIdx * 0.1} />
                     </div>
 
                     {/* Overall score */}
-                    <div
+                    <motion.div
                       className="text-[11px] font-mono px-2 py-0.5 rounded shrink-0"
                       style={{
                         fontWeight: 600,
                         color: c.overall >= 85 ? "#10B981" : c.overall >= 65 ? "#F59E0B" : "#F43F5E",
                         backgroundColor: c.overall >= 85 ? "rgba(16,185,129,0.1)" : c.overall >= 65 ? "rgba(245,158,11,0.1)" : "rgba(244,63,94,0.1)",
                       }}
+                      whileHover={{ scale: 1.1 }}
                     >
                       {c.overall}%
-                    </div>
-                  </button>
+                    </motion.div>
+                  </motion.button>
 
                   {/* Expanded detail */}
-                  {expandedScore === c.transcript && (
-                    <div
-                      className="px-4 sm:px-6 py-3 grid grid-cols-1 sm:grid-cols-3 gap-4"
-                      style={{ backgroundColor: isDark ? "#0F1018" : "#F7F6F3", borderTop: `1px solid ${isDark ? "rgba(42,45,66,0.3)" : "rgba(226,224,219,0.3)"}` }}
-                    >
-                      {[
-                        { label: "Faithfulness", score: c.faithfulness, color: "#10B981", desc: "How accurately the AI represents the source" },
-                        { label: "Relevance", score: c.relevance, color: "#00C9D6", desc: "How well the answer addresses the question" },
-                        { label: "Precision", score: c.precision, color: "#5C6CF5", desc: "Specificity and exactness of the response" },
-                      ].map((m) => (
-                        <div key={m.label}>
-                          <div className="flex items-center gap-1.5 mb-1">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: m.color }} />
-                            <span className="text-[11px]" style={{ fontWeight: 500, color: colors.textPrimary }}>{m.label}</span>
-                          </div>
-                          <div className="w-full h-2 rounded-full mb-1" style={{ backgroundColor: `${m.color}15` }}>
-                            <div className="h-full rounded-full" style={{ width: `${m.score}%`, backgroundColor: m.color }} />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[9px]" style={{ color: colors.textMuted }}>{m.desc}</span>
-                            <span className="text-[10px] font-mono" style={{ fontWeight: 600, color: m.color }}>{m.score}%</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {expandedScore === c.transcript && (
+                      <motion.div
+                        className="px-4 sm:px-6 py-3 grid grid-cols-1 sm:grid-cols-3 gap-4"
+                        style={{ backgroundColor: isDark ? "#0F1018" : "#F7F6F3", borderTop: `1px solid ${isDark ? "rgba(42,45,66,0.3)" : "rgba(226,224,219,0.3)"}` }}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                      >
+                        {[
+                          { label: "Faithfulness", score: c.faithfulness, color: "#10B981", desc: "How accurately the AI represents the source" },
+                          { label: "Relevance", score: c.relevance, color: "#00C9D6", desc: "How well the answer addresses the question" },
+                          { label: "Precision", score: c.precision, color: "#5C6CF5", desc: "Specificity and exactness of the response" },
+                        ].map((m, mIdx) => (
+                          <motion.div
+                            key={m.label}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: mIdx * 0.08, type: "spring", stiffness: 300, damping: 20 }}
+                          >
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: m.color }} />
+                              <span className="text-[11px]" style={{ fontWeight: 500, color: colors.textPrimary }}>{m.label}</span>
+                            </div>
+                            <div className="w-full h-2 rounded-full mb-1" style={{ backgroundColor: `${m.color}15` }}>
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: m.color }}
+                                initial={{ width: "0%" }}
+                                animate={{ width: `${m.score}%` }}
+                                transition={{ duration: 0.6, delay: 0.1 + mIdx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-[9px]" style={{ color: colors.textMuted }}>{m.desc}</span>
+                              <span className="text-[10px] font-mono" style={{ fontWeight: 600, color: m.color }}>{m.score}%</span>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {/* Two column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Two column layout — staggered */}
+        <motion.div
+          className="grid grid-cols-1 lg:grid-cols-3 gap-4"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Important Chats — 2 cols */}
-          <div
+          <motion.div
             className="lg:col-span-2 rounded-xl overflow-hidden"
             style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
+            variants={fadeSlideUp}
           >
             <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: `1px solid ${cardBorder}` }}>
               <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" style={{ color: colors.crystal }} />
+                <motion.div
+                  animate={{ rotate: [0, 8, -8, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <MessageSquare className="w-4 h-4" style={{ color: colors.crystal }} />
+                </motion.div>
                 <span className="text-[13px]" style={{ fontWeight: 600, color: colors.textPrimary }}>
                   Important Conversations
                 </span>
@@ -425,29 +578,48 @@ export function OverviewDashboard() {
             </div>
 
             {isNewUser ? (
-              <div className="px-6 py-12 text-center">
-                <MessageSquare className="w-10 h-10 mx-auto mb-3" style={{ color: colors.textMuted }} />
+              <motion.div
+                className="px-6 py-12 text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <MessageSquare className="w-10 h-10 mx-auto mb-3" style={{ color: colors.textMuted }} />
+                </motion.div>
                 <div className="text-[13px] mb-1" style={{ fontWeight: 500, color: colors.textSecondary }}>
                   No conversations yet
                 </div>
                 <p className="text-[11px] max-w-xs mx-auto" style={{ color: colors.textMuted, lineHeight: 1.5 }}>
                   Upload a transcript and start chatting with AI to see your important conversations and their confidence scores here.
                 </p>
-              </div>
+              </motion.div>
             ) : (
               <div className="divide-y" style={{ borderColor: `${cardBorder}50` }}>
-                {filteredChats.map((chat) => (
-                  <button
+                {filteredChats.map((chat, chatIdx) => (
+                  <motion.button
                     key={chat.id}
                     className="w-full text-left px-4 py-3 transition-colors group"
                     style={{ borderColor: isDark ? "rgba(42,45,66,0.5)" : "rgba(226,224,219,0.5)" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = cardHover)}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + chatIdx * 0.07, type: "spring", stiffness: 260, damping: 22 }}
+                    whileHover={{ backgroundColor: cardHover, x: 2 }}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          {chat.starred && <Star className="w-3 h-3 text-[#F59E0B] fill-[#F59E0B]" />}
+                          {chat.starred && (
+                            <motion.span
+                              animate={{ rotate: [0, 10, -10, 0] }}
+                              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: chatIdx * 0.4 }}
+                            >
+                              <Star className="w-3 h-3 text-[#F59E0B] fill-[#F59E0B]" />
+                            </motion.span>
+                          )}
                           <span className="text-[12px] truncate" style={{ fontWeight: 500, color: colors.textPrimary }}>
                             {chat.title}
                           </span>
@@ -457,11 +629,10 @@ export function OverviewDashboard() {
                         </p>
                         <div className="flex items-center gap-3 mt-2 flex-wrap">
                           <ConfidenceDot score={chat.confidence} />
-                          {/* Sub-scores inline - hidden on mobile */}
                           <div className="hidden sm:flex items-center gap-2">
-                            <ConfidenceBar score={chat.subScores.faithfulness} color="#10B981" width="w-10" />
-                            <ConfidenceBar score={chat.subScores.relevance} color="#00C9D6" width="w-10" />
-                            <ConfidenceBar score={chat.subScores.precision} color="#5C6CF5" width="w-10" />
+                            <AnimatedConfidenceBar score={chat.subScores.faithfulness} color="#10B981" width="w-10" delay={0.3 + chatIdx * 0.05} />
+                            <AnimatedConfidenceBar score={chat.subScores.relevance} color="#00C9D6" width="w-10" delay={0.35 + chatIdx * 0.05} />
+                            <AnimatedConfidenceBar score={chat.subScores.precision} color="#5C6CF5" width="w-10" delay={0.4 + chatIdx * 0.05} />
                           </div>
                           <div className="flex items-center gap-1 text-[10px]" style={{ color: colors.textMuted }}>
                             <Users className="w-3 h-3" />
@@ -472,26 +643,37 @@ export function OverviewDashboard() {
                           </span>
                         </div>
                       </div>
-                      <ArrowUpRight
-                        className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ color: colors.crystal }}
-                      />
+                      <motion.div
+                        className="shrink-0"
+                        initial={{ opacity: 0, x: -4 }}
+                        whileHover={{ x: 2 }}
+                      >
+                        <ArrowUpRight
+                          className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                          style={{ color: colors.crystal }}
+                        />
+                      </motion.div>
                     </div>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Right column */}
-          <div className="flex flex-col gap-4">
+          <motion.div className="flex flex-col gap-4" variants={fadeSlideUp}>
             {/* Recent Activity */}
             <div
               className="rounded-xl overflow-hidden"
               style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
             >
               <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: `1px solid ${cardBorder}` }}>
-                <Clock className="w-4 h-4" style={{ color: colors.crystal }} />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                >
+                  <Clock className="w-4 h-4" style={{ color: colors.crystal }} />
+                </motion.div>
                 <span className="text-[13px]" style={{ fontWeight: 600, color: colors.textPrimary }}>
                   Recent Activity
                 </span>
@@ -499,7 +681,12 @@ export function OverviewDashboard() {
 
               {isNewUser ? (
                 <div className="px-4 py-8 text-center">
-                  <Clock className="w-8 h-8 mx-auto mb-2" style={{ color: colors.textMuted }} />
+                  <motion.div
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Clock className="w-8 h-8 mx-auto mb-2" style={{ color: colors.textMuted }} />
+                  </motion.div>
                   <div className="text-[11px]" style={{ color: colors.textMuted }}>
                     Your activity will appear here
                   </div>
@@ -507,17 +694,23 @@ export function OverviewDashboard() {
               ) : (
                 <div className="divide-y" style={{ borderColor: `${cardBorder}50` }}>
                   {recentActivity.map((item, i) => (
-                    <div
+                    <motion.div
                       key={i}
                       className="px-4 py-2.5 flex items-center gap-3"
                       style={{ borderColor: isDark ? "rgba(42,45,66,0.5)" : "rgba(226,224,219,0.5)" }}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 + i * 0.06, type: "spring", stiffness: 260, damping: 22 }}
+                      whileHover={{ x: 3, backgroundColor: cardHover }}
                     >
-                      <div
+                      <motion.div
                         className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
                         style={{ backgroundColor: `${colors.crystal}12` }}
+                        whileHover={{ scale: 1.2, rotate: 10 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 15 }}
                       >
                         <item.icon className="w-3 h-3" style={{ color: colors.crystal }} />
-                      </div>
+                      </motion.div>
                       <div className="flex-1 min-w-0">
                         <div className="text-[11px] truncate" style={{ color: colors.textPrimary }}>
                           <span style={{ color: colors.textMuted }}>{item.action}</span>{" "}
@@ -537,7 +730,7 @@ export function OverviewDashboard() {
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
@@ -549,7 +742,12 @@ export function OverviewDashboard() {
               style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
             >
               <div className="px-4 py-3 flex items-center gap-2" style={{ borderBottom: `1px solid ${cardBorder}` }}>
-                <BarChart3 className="w-4 h-4" style={{ color: colors.crystal }} />
+                <motion.div
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <BarChart3 className="w-4 h-4" style={{ color: colors.crystal }} />
+                </motion.div>
                 <span className="text-[13px]" style={{ fontWeight: 600, color: colors.textPrimary }}>
                   Top Speakers
                 </span>
@@ -557,45 +755,58 @@ export function OverviewDashboard() {
 
               {isNewUser ? (
                 <div className="px-4 py-8 text-center">
-                  <Users className="w-8 h-8 mx-auto mb-2" style={{ color: colors.textMuted }} />
+                  <motion.div
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Users className="w-8 h-8 mx-auto mb-2" style={{ color: colors.textMuted }} />
+                  </motion.div>
                   <div className="text-[11px]" style={{ color: colors.textMuted }}>
                     Speakers detected from your transcripts
                   </div>
                 </div>
               ) : (
                 <div className="p-4 space-y-3">
-                  {topSpeakers.map((speaker) => (
-                    <div key={speaker.name} className="flex items-center gap-3">
-                      <div
+                  {topSpeakers.map((speaker, spIdx) => (
+                    <motion.div
+                      key={speaker.name}
+                      className="flex items-center gap-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 + spIdx * 0.08, type: "spring", stiffness: 260, damping: 22 }}
+                    >
+                      <motion.div
                         className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[9px] shrink-0"
                         style={{ backgroundColor: speaker.color }}
+                        whileHover={{ scale: 1.15 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 15 }}
                       >
                         {speaker.initials}
-                      </div>
+                      </motion.div>
                       <div className="flex-1 min-w-0">
                         <div className="text-[11px]" style={{ fontWeight: 500, color: colors.textPrimary }}>
                           {speaker.name}
                         </div>
                         <div className="w-full h-1.5 rounded-full mt-1" style={{ backgroundColor: `${colors.border}` }}>
-                          <div
-                            className="h-full rounded-full transition-all"
-                            style={{
-                              width: `${(speaker.sessions / 18) * 100}%`,
-                              backgroundColor: speaker.color,
-                            }}
+                          <motion.div
+                            className="h-full rounded-full"
+                            style={{ backgroundColor: speaker.color }}
+                            initial={{ width: "0%" }}
+                            animate={{ width: `${(speaker.sessions / 18) * 100}%` }}
+                            transition={{ duration: 0.8, delay: 0.6 + spIdx * 0.12, ease: [0.22, 1, 0.36, 1] }}
                           />
                         </div>
                       </div>
                       <span className="text-[10px] font-mono shrink-0" style={{ color: colors.textMuted }}>
                         {speaker.sessions} sessions
                       </span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

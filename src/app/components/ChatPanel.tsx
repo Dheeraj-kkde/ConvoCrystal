@@ -3,6 +3,7 @@ import {
   Send, Square, RotateCcw, Download, Plus, Copy, ArrowUpRight,
   Quote, CheckCircle2, Loader2, ArrowRight, MessageSquarePlus, Wifi, WifiOff,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "./ThemeContext";
 import { ConfidencePanel } from "./ConfidenceBadge";
 import { useToast } from "./ToastSystem";
@@ -218,7 +219,6 @@ export function ChatPanel() {
   const citationBg = isDark ? "rgba(92,108,245,0.1)" : "rgba(92,108,245,0.08)";
   const citationText = colors.crystalLight;
   const citationBorder = isDark ? "rgba(42,45,66,0.6)" : "rgba(217,214,208,0.6)";
-  const scrollbarColor = `${colors.border} transparent`;
   const inputBg = isDark ? colors.bgPanel : "#FFFFFF";
   const inputBorder = colors.border;
   const promptBorder = colors.border;
@@ -254,24 +254,73 @@ export function ChatPanel() {
           <span className="text-[12px] truncate" style={{ color: colors.textSecondary }}>Q4 Strategy Review</span>
         </div>
         <div className="flex items-center gap-1">
-          <button className="p-1.5 rounded transition-colors" style={{ color: colors.textMuted }} title="New session" onClick={handleNewSession}><Plus className="w-3.5 h-3.5" /></button>
-          <button className="p-1.5 rounded transition-colors" style={{ color: colors.textMuted }} title="Clear" onClick={handleClear}><RotateCcw className="w-3.5 h-3.5" /></button>
-          <button className="p-1.5 rounded transition-colors" style={{ color: colors.textMuted }} title="Export chat" onClick={handleExportChat}><Download className="w-3.5 h-3.5" /></button>
+          <motion.button
+            className="p-1.5 rounded transition-colors"
+            style={{ color: colors.textMuted }}
+            title="New session"
+            aria-label="New session"
+            onClick={handleNewSession}
+            whileHover={{ scale: 1.15, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </motion.button>
+          <motion.button
+            className="p-1.5 rounded transition-colors"
+            style={{ color: colors.textMuted }}
+            title="Clear"
+            aria-label="Clear chat"
+            onClick={handleClear}
+            whileHover={{ scale: 1.15, rotate: -180 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </motion.button>
+          <motion.button
+            className="p-1.5 rounded transition-colors"
+            style={{ color: colors.textMuted }}
+            title="Export chat"
+            aria-label="Export chat"
+            onClick={handleExportChat}
+            whileHover={{ scale: 1.15, y: 2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          >
+            <Download className="w-3.5 h-3.5" />
+          </motion.button>
         </div>
       </div>
 
       {/* Messages */}
-      <div ref={scrollContainerRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 space-y-4" style={{ scrollbarWidth: "thin", scrollbarColor }}>
+      <div ref={scrollContainerRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 space-y-4">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full gap-3 opacity-60">
-            <MessageSquarePlus className="w-10 h-10" style={{ color: colors.crystal, opacity: 0.5 }} />
+          <motion.div
+            className="flex flex-col items-center justify-center h-full gap-3"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 0.6, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <MessageSquarePlus className="w-10 h-10" style={{ color: colors.crystal, opacity: 0.5 }} />
+            </motion.div>
             <p className="text-[13px]" style={{ color: colors.textMuted }}>No messages yet</p>
             <p className="text-[11px] text-center max-w-[200px]" style={{ color: colors.textMuted, opacity: 0.7 }}>Type a question below or pick a suggested prompt.</p>
-          </div>
+          </motion.div>
         )}
 
-        {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+        {messages.map((msg, idx) => (
+          <motion.div
+            key={msg.id}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 24, delay: idx > messages.length - 3 ? 0.05 : 0 }}
+          >
             <div className="relative group max-w-[88%] sm:max-w-[72%]"
               style={msg.role === "user"
                 ? { backgroundColor: colors.crystalMuted, color: "#FFFFFF", borderRadius: "12px 12px 4px 12px", padding: "10px 14px" }
@@ -280,13 +329,22 @@ export function ChatPanel() {
               onMouseEnter={() => setHoveredMessage(msg.id)} onMouseLeave={() => setHoveredMessage(null)}>
 
               {/* Hover actions */}
-              {msg.role === "assistant" && msg.status === "done" && hoveredMessage === msg.id && (
-                <div className="absolute -top-2 right-2 flex items-center gap-1 rounded-md p-0.5 shadow-lg z-10" style={{ backgroundColor: aiBubbleBg, border: `1px solid ${colors.border}` }}>
-                  <button className="p-1 rounded transition-colors" style={{ color: colors.textSecondary }} title="Copy" onClick={() => { navigator.clipboard.writeText(msg.content); addToast({ variant: "success", title: "Copied" }); }}><Copy className="w-3 h-3" /></button>
-                  <button className="p-1 rounded transition-colors" style={{ color: colors.textSecondary }} title="Push to editor"><ArrowUpRight className="w-3 h-3" /></button>
-                  <button className="p-1 rounded transition-colors" style={{ color: colors.textSecondary }} title="Cite"><Quote className="w-3 h-3" /></button>
-                </div>
-              )}
+              <AnimatePresence>
+                {msg.role === "assistant" && msg.status === "done" && hoveredMessage === msg.id && (
+                  <motion.div
+                    className="absolute -top-2 right-2 flex items-center gap-1 rounded-md p-0.5 shadow-lg z-10"
+                    style={{ backgroundColor: aiBubbleBg, border: `1px solid ${colors.border}` }}
+                    initial={{ opacity: 0, y: 4, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                  >
+                    <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="p-1 rounded transition-colors" style={{ color: colors.textSecondary }} title="Copy" onClick={() => { navigator.clipboard.writeText(msg.content); addToast({ variant: "success", title: "Copied" }); }}><Copy className="w-3 h-3" /></motion.button>
+                    <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="p-1 rounded transition-colors" style={{ color: colors.textSecondary }} title="Push to editor"><ArrowUpRight className="w-3 h-3" /></motion.button>
+                    <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="p-1 rounded transition-colors" style={{ color: colors.textSecondary }} title="Cite"><Quote className="w-3 h-3" /></motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Orchestrator stages */}
               {msg.role === "assistant" && (msg.status === "orchestrating" || msg.status === "pending") && (
@@ -316,20 +374,34 @@ export function ChatPanel() {
               {msg.citations && msg.status === "done" && <div className="flex flex-wrap gap-1.5 mt-2 pt-2" style={{ borderTop: `1px solid ${citationBorder}` }}>{msg.citations.map((c) => <span key={c.num} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono cursor-pointer hover:opacity-80" style={{ backgroundColor: citationBg, color: citationText }}>[{c.num}] {c.speaker} · {c.time}</span>)}</div>}
               {msg.confidence && msg.status === "done" && <ConfidencePanel confidence={msg.confidence} />}
             </div>
-          </div>
+          </motion.div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Suggested Prompts */}
       <div className="px-3 sm:px-4 pb-2 shrink-0">
-        <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-          {suggestedPrompts.map((prompt) => (
-            <button key={prompt} className="shrink-0 px-3 py-1 rounded-full text-[11px] transition-all duration-160 whitespace-nowrap"
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {suggestedPrompts.map((prompt, i) => (
+            <motion.button
+              key={prompt}
+              className="shrink-0 px-3 py-1 rounded-full text-[11px] whitespace-nowrap"
               style={{ color: promptText, border: `1px solid ${promptBorder}` }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = promptHoverBorder; e.currentTarget.style.color = promptHoverText; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = promptBorder; e.currentTarget.style.color = promptText; }}
-              onClick={() => setInputValue(prompt)}>{prompt}</button>
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + i * 0.06, type: "spring", stiffness: 260, damping: 22 }}
+              whileHover={{
+                scale: 1.04,
+                borderColor: promptHoverBorder,
+                color: promptHoverText,
+                y: -2,
+                boxShadow: `0 4px 12px ${colors.crystal}15`,
+              }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => setInputValue(prompt)}
+            >
+              {prompt}
+            </motion.button>
           ))}
         </div>
       </div>
@@ -345,9 +417,28 @@ export function ChatPanel() {
           <div className="flex items-center gap-1.5 shrink-0 mb-0.5">
             <span className="text-[9px] font-mono" style={{ color: colors.textMuted }}>{inputValue.length > 0 ? `${inputValue.length}` : ""}</span>
             {isStreaming ? (
-              <button onClick={handleInterrupt} className="p-1.5 rounded-md transition-colors" style={{ backgroundColor: colors.rose }} title="Stop generating (Esc)"><Square className="w-3 h-3 text-white" /></button>
+              <motion.button
+                onClick={handleInterrupt}
+                className="p-1.5 rounded-md transition-colors"
+                style={{ backgroundColor: colors.rose }}
+                title="Stop generating (Esc)"
+                animate={{ scale: [1, 1.06, 1] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Square className="w-3 h-3 text-white" />
+              </motion.button>
             ) : (
-              <button onClick={handleSend} className="p-1.5 rounded-md transition-colors disabled:opacity-30" disabled={!inputValue.trim()} style={{ backgroundColor: colors.crystal, boxShadow: inputValue.trim() ? "var(--shadow-crystal)" : "none" }}><Send className="w-3 h-3 text-white" /></button>
+              <motion.button
+                onClick={handleSend}
+                className="p-1.5 rounded-md transition-colors disabled:opacity-30"
+                disabled={!inputValue.trim()}
+                style={{ backgroundColor: colors.crystal, boxShadow: inputValue.trim() ? "var(--shadow-crystal)" : "none" }}
+                whileHover={inputValue.trim() ? { scale: 1.08 } : {}}
+                whileTap={inputValue.trim() ? { scale: 0.92 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              >
+                <Send className="w-3 h-3 text-white" />
+              </motion.button>
             )}
           </div>
         </div>

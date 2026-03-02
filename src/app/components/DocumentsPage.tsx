@@ -107,11 +107,10 @@ export function DocumentsPage() {
 
   return (
     <div
-      className="h-full overflow-y-auto"
+      className="h-full overflow-y-scroll"
       style={{
         backgroundColor: colors.bgBase,
-        scrollbarWidth: "thin",
-        scrollbarColor: `${colors.border} transparent`,
+        scrollbarGutter: "stable",
       }}
       onClick={() => setShowContextMenu(null)}
     >

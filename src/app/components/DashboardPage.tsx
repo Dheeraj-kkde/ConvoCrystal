@@ -138,7 +138,7 @@ export function DashboardPage() {
       : showEditorDrawer ? 0.5 : 0;
 
     return (
-      <div className="flex flex-col h-full overflow-hidden relative">
+      <div className="flex flex-col h-full overflow-y-scroll relative" style={{ scrollbarGutter: "stable" }}>
         <div className="flex-1 overflow-hidden">
           <ChatPanel />
         </div>
@@ -201,7 +201,7 @@ export function DashboardPage() {
       : showEditorDrawer ? 0.4 : 0;
 
     return (
-      <div className="flex h-full overflow-hidden relative">
+      <div className="flex h-full overflow-y-scroll relative" style={{ scrollbarGutter: "stable" }}>
         <div className="h-full overflow-hidden w-full" style={{ borderRight: `1px solid ${colors.border}` }}>
           <ChatPanel />
         </div>
@@ -261,7 +261,7 @@ export function DashboardPage() {
 
   // Desktop: Resizable split
   return (
-    <div className="flex h-full overflow-hidden relative">
+    <div className="flex h-full overflow-y-scroll relative" style={{ scrollbarGutter: "stable" }}>
       <div
         className="h-full overflow-hidden"
         style={{

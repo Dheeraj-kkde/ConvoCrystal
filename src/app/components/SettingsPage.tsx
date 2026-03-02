@@ -640,11 +640,10 @@ export function SettingsPage() {
 
   return (
     <div
-      className="h-full overflow-y-auto"
+      className="h-full overflow-y-scroll"
       style={{
         backgroundColor: colors.bgBase,
-        scrollbarWidth: "thin",
-        scrollbarColor: `${colors.border} transparent`,
+        scrollbarGutter: "stable",
       }}
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
@@ -663,8 +662,8 @@ export function SettingsPage() {
           {/* Sidebar nav */}
           <div className="w-full md:w-56 shrink-0">
             <div
-              className="rounded-xl overflow-hidden md:sticky md:top-6 flex md:flex-col overflow-x-auto md:overflow-x-visible"
-              style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}`, scrollbarWidth: "none" }}
+              className="rounded-xl overflow-hidden md:sticky md:top-6 flex md:flex-col overflow-x-auto md:overflow-x-visible scrollbar-none"
+              style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}` }}
             >
               {sections.map((section) => (
                 <button

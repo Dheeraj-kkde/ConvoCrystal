@@ -2,7 +2,7 @@
  * Upload processing stage adapter — dual-mode (WebSocket or simulation).
  *
  * When VITE_WS_URL is set, listens to WS for server-sent processing stage
- * updates (queued → parsing → extracting → analyzing → scoring → complete).
+ * updates (queued → parsing → extracting → analyzing → scoring → indexing → complete).
  * Otherwise simulates stages client-side with realistic timing.
  */
 import { useRef, useCallback, useState } from "react";
@@ -10,7 +10,7 @@ import { useWebSocket, type WSStatus } from "./useWebSocket";
 
 // ─── Types ───────────────────────────────────────────────────────
 
-export type ProcessingStage = "queued" | "parsing" | "extracting" | "analyzing" | "scoring";
+export type ProcessingStage = "queued" | "parsing" | "extracting" | "analyzing" | "scoring" | "indexing";
 
 interface ProcessorCallbacks {
   onStageAdvance: (stageIndex: number) => void;
@@ -26,7 +26,7 @@ type WSInbound =
 // ─── Hook ────────────────────────────────────────────────────────
 
 const HAS_WS = !!import.meta.env.VITE_WS_URL;
-const STAGE_COUNT = 5;
+const STAGE_COUNT = 6;
 
 export function useUploadProcessor(uploadId: string | null) {
   const callbacksRef = useRef<ProcessorCallbacks | null>(null);

@@ -373,8 +373,8 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
       </AnimatePresence>
 
       <div
-        className="h-12 px-4 flex items-center justify-between shrink-0 z-50 transition-colors duration-300"
-        style={{ backgroundColor: colors.bgBase, borderBottom: `1px solid ${colors.border}` }}
+        className="px-4 flex items-center justify-between shrink-0 z-50 transition-colors duration-300"
+        style={{ height: "var(--topbar-h, 56px)", backgroundColor: colors.bgBase, borderBottom: `1px solid ${colors.border}` }}
       >
         {/* Left */}
         <div className="flex items-center gap-3">
@@ -425,77 +425,145 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
         {/* Right */}
         <div className="flex items-center gap-0.5 sm:gap-1">
           {/* Search trigger */}
-          <button
+          <motion.button
             onClick={() => setSearchOpen(true)}
-            className="p-1.5 rounded-md transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-md transition-colors shrink-0"
             style={{ color: colors.textMuted }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
             title="Search (⌘K)"
+            aria-label="Search"
           >
-            <Search className="w-4 h-4" />
-          </button>
+            <motion.span
+              className="inline-flex"
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Search className="w-4 h-4" />
+            </motion.span>
+          </motion.button>
 
           {/* Onboarding */}
           {onOnboarding && (
             <button
               onClick={onOnboarding}
-              className="p-1.5 rounded-md transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-md transition-colors shrink-0"
               style={{ color: colors.textMuted }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
               title="Product tour"
+              aria-label="Product tour"
             >
-              <HelpCircle className="w-4 h-4" />
+              <motion.span
+                className="inline-flex"
+                whileHover={{ scale: 1.15, rotate: 15 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <HelpCircle className="w-4 h-4" />
+              </motion.span>
             </button>
           )}
 
           {/* Theme toggle */}
           <button
             onClick={toggle}
-            className="p-1.5 rounded-md transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-md transition-colors shrink-0"
             style={{ color: colors.textMuted }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
             title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {isDark ? (
-              <Sun className="w-4 h-4" style={{ color: colors.textMuted }} />
-            ) : (
-              <Moon className="w-4 h-4" style={{ color: colors.textMuted }} />
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              {isDark ? (
+                <motion.span
+                  key="sun"
+                  className="inline-flex"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Sun className="w-4 h-4" style={{ color: colors.textMuted }} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="moon"
+                  className="inline-flex"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Moon className="w-4 h-4" style={{ color: colors.textMuted }} />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
 
           <div className="w-px h-4 mx-0.5 sm:mx-1 hidden sm:block" style={{ backgroundColor: colors.border }} />
 
           {/* Notifications — mobile bell */}
           <button
-            className="relative p-1.5 rounded-md transition-colors sm:hidden"
+            className="relative w-8 h-8 flex items-center justify-center rounded-md transition-colors sm:hidden shrink-0"
             style={{ color: colors.textMuted }}
             onClick={() => setMobileNotifsOpen(true)}
+            aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}
           >
-            <Bell className="w-4 h-4" />
+            <motion.span
+              className="inline-flex"
+              style={{ transformOrigin: "top center" }}
+              animate={unreadCount > 0 ? {
+                rotate: [0, 12, -12, 8, -8, 0],
+              } : {}}
+              transition={{ duration: 0.5, repeat: unreadCount > 0 ? Infinity : 0, repeatDelay: 5 }}
+            >
+              <Bell className="w-4 h-4" />
+            </motion.span>
             {unreadCount > 0 && (
-              <div className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-[9px] text-white px-0.5 border-2" style={{ backgroundColor: colors.crystal, fontWeight: 700, borderColor: colors.bgBase }}>
+              <motion.div
+                className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] rounded-full flex items-center justify-center text-[8px] text-white px-[3px] pointer-events-none"
+                style={{ backgroundColor: colors.crystal, fontWeight: 700, boxShadow: `0 0 0 1.5px ${colors.bgBase}` }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15 }}
+              >
                 {unreadCount > 9 ? "9+" : unreadCount}
-              </div>
+              </motion.div>
             )}
           </button>
 
           {/* Notifications — desktop dropdown */}
           <div ref={notifRef} className="relative hidden sm:block">
             <button
-              className="relative p-1.5 rounded-md transition-colors"
+              className="relative w-8 h-8 flex items-center justify-center rounded-md transition-colors shrink-0"
               style={{ color: notificationsOpen ? colors.crystal : colors.textMuted }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hoverNeutral}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
               onClick={() => setNotificationsOpen(!notificationsOpen)}
             >
-              <Bell className="w-4 h-4" />
+              <motion.span
+                className="inline-flex"
+                style={{ transformOrigin: "top center" }}
+                animate={unreadCount > 0 ? {
+                  rotate: [0, 12, -12, 8, -8, 0],
+                } : {}}
+                transition={{ duration: 0.5, repeat: unreadCount > 0 ? Infinity : 0, repeatDelay: 5 }}
+              >
+                <Bell className="w-4 h-4" />
+              </motion.span>
               {unreadCount > 0 && (
-                <div className="absolute -top-1 -right-1 min-w-[16px] h-[16px] rounded-full flex items-center justify-center text-[9px] text-white px-0.5 border-2" style={{ backgroundColor: colors.crystal, fontWeight: 700, borderColor: colors.bgBase }}>
+                <motion.div
+                  className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] rounded-full flex items-center justify-center text-[8px] text-white px-[3px] pointer-events-none"
+                  style={{ backgroundColor: colors.crystal, fontWeight: 700, boxShadow: `0 0 0 1.5px ${colors.bgBase}` }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                >
                   {unreadCount > 9 ? "9+" : unreadCount}
-                </div>
+                </motion.div>
               )}
             </button>
 
@@ -535,7 +603,7 @@ export function TopBar({ onUpload, onVersions, onOnboarding }: TopBarProps) {
                   </div>
 
                   {/* Notification items */}
-                  <div className="max-h-72 overflow-y-auto" style={{ scrollbarWidth: "thin", scrollbarColor: `${colors.border} transparent` }}>
+                  <div className="max-h-72 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="flex flex-col items-center justify-center py-8">
                         <Bell className="w-6 h-6 mb-2" style={{ color: colors.textMuted, opacity: 0.3 }} />

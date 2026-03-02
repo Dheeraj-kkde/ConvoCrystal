@@ -1,0 +1,4104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvoCrystal — Design System v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — CSS CUSTOM PROPERTIES
+   ConvoCrystal Design System v1.0
+═══════════════════════════════════════════════════════════════ */
+:root {
+  /* ── CRYSTAL PALETTE (PRIMARY) ── */
+  --crystal-50:  #F0F4FF;
+  --crystal-100: #E0EAFF;
+  --crystal-200: #C7D7FE;
+  --crystal-300: #A4BBFD;
+  --crystal-400: #7C94FB;
+  --crystal-500: #5C6CF5;   /* CORE BRAND */
+  --crystal-600: #4A52E8;
+  --crystal-700: #3B3FD0;
+  --crystal-800: #3134A8;
+  --crystal-900: #2C2F84;
+  --crystal-950: #1A1C52;
+
+  /* ── ICE PALETTE (SECONDARY — cool teal) ── */
+  --ice-50:  #EFFEFF;
+  --ice-100: #CAFEFF;
+  --ice-200: #94FDFF;
+  --ice-300: #52F4FF;
+  --ice-400: #18E4F0;
+  --ice-500: #00C9D6;   /* CORE ICE */
+  --ice-600: #00A0AF;
+  --ice-700: #007E8A;
+  --ice-800: #076470;
+  --ice-900: #0B525D;
+  --ice-950: #043840;
+
+  /* ── NEUTRAL PALETTE ── */
+  --void-0:   #FFFFFF;
+  --void-25:  #FAFAFA;
+  --void-50:  #F6F6F8;
+  --void-100: #EDEDF1;
+  --void-150: #E4E4EA;
+  --void-200: #D5D5DE;
+  --void-300: #B5B5C2;
+  --void-400: #8E8E9E;
+  --void-500: #6B6B7B;
+  --void-600: #52525F;
+  --void-700: #3C3C47;
+  --void-750: #2E2E38;
+  --void-800: #222229;
+  --void-850: #1A1A21;
+  --void-900: #14141A;
+  --void-950: #0C0C11;
+  --void-1000: #070709;
+
+  /* ── SEMANTIC COLORS ── */
+  --semantic-success-subtle: #ECFDF5;
+  --semantic-success-light:  #A7F3D0;
+  --semantic-success-base:   #10B981;
+  --semantic-success-strong: #065F46;
+
+  --semantic-warning-subtle: #FFFBEB;
+  --semantic-warning-light:  #FDE68A;
+  --semantic-warning-base:   #F59E0B;
+  --semantic-warning-strong: #92400E;
+
+  --semantic-danger-subtle: #FEF2F2;
+  --semantic-danger-light:  #FECACA;
+  --semantic-danger-base:   #EF4444;
+  --semantic-danger-strong: #991B1B;
+
+  --semantic-info-subtle: #EFF6FF;
+  --semantic-info-light:  #BFDBFE;
+  --semantic-info-base:   #3B82F6;
+  --semantic-info-strong: #1E3A8A;
+
+  /* ── CONFIDENCE SCORE GRADIENT ── */
+  --conf-critical: #EF4444;
+  --conf-low:      #F97316;
+  --conf-medium:   #EAB308;
+  --conf-good:     #84CC16;
+  --conf-excellent:#10B981;
+
+  /* ── LIGHT MODE SEMANTIC ASSIGNMENTS ── */
+  --bg-base:        var(--void-0);
+  --bg-subtle:      var(--void-50);
+  --bg-muted:       var(--void-100);
+  --bg-emphasis:    var(--void-150);
+  --bg-overlay:     rgba(0,0,0,0.04);
+
+  --border-default: var(--void-150);
+  --border-strong:  var(--void-200);
+  --border-accent:  var(--crystal-400);
+
+  --text-primary:   var(--void-900);
+  --text-secondary: var(--void-600);
+  --text-tertiary:  var(--void-400);
+  --text-inverse:   var(--void-0);
+  --text-accent:    var(--crystal-600);
+  --text-link:      var(--crystal-600);
+
+  --surface-card:   var(--void-0);
+  --surface-panel:  var(--void-25);
+  --surface-inset:  var(--void-50);
+
+  /* ── TYPOGRAPHY ── */
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Lora', serif;
+  --font-mono:    'DM Mono', monospace;
+
+  /* 9-Step Type Scale — Major Third (1.250x) */
+  --text-xs:   0.64rem;   /* 10.24px */
+  --text-sm:   0.8rem;    /* 12.8px  */
+  --text-base: 1rem;      /* 16px    */
+  --text-md:   1.25rem;   /* 20px    */
+  --text-lg:   1.563rem;  /* 25px    */
+  --text-xl:   1.953rem;  /* 31.25px */
+  --text-2xl:  2.441rem;  /* 39px    */
+  --text-3xl:  3.052rem;  /* 48.8px  */
+  --text-4xl:  3.815rem;  /* 61px    */
+
+  --leading-tight:  1.15;
+  --leading-snug:   1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed:1.75;
+  --leading-loose:  2.0;
+
+  --tracking-tight:  -0.035em;
+  --tracking-snug:   -0.02em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+  --tracking-widest:  0.15em;
+
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+  --weight-black:   800;
+
+  /* ── 8PX SPATIAL SYSTEM ── */
+  --space-0:   0px;
+  --space-px:  1px;
+  --space-0-5: 2px;
+  --space-1:   4px;
+  --space-1-5: 6px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-7:   28px;
+  --space-8:   32px;
+  --space-9:   36px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-14:  56px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+  --space-40:  160px;
+  --space-48:  192px;
+  --space-64:  256px;
+
+  /* ── BORDER RADIUS ── */
+  --radius-none:  0px;
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    12px;
+  --radius-xl:    16px;
+  --radius-2xl:   24px;
+  --radius-3xl:   32px;
+  --radius-full:  9999px;
+
+  /* ── SHADOWS ── */
+  --shadow-xs:  0 1px 2px rgba(0,0,0,0.06);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.05);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  --shadow-xl:  0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
+  --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.18);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.06);
+  --shadow-crystal: 0 0 0 1px rgba(92,108,245,0.15), 0 4px 24px rgba(92,108,245,0.12);
+  --shadow-crystal-lg: 0 0 0 1px rgba(92,108,245,0.2), 0 8px 40px rgba(92,108,245,0.18);
+  --shadow-ice: 0 0 24px rgba(0,201,214,0.15), 0 0 8px rgba(0,201,214,0.08);
+
+  /* ── TRANSITIONS / MOTION ── */
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth:      cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate:  cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate:  cubic-bezier(0.4, 0, 1, 1);
+  --ease-sharp:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --duration-instant: 60ms;
+  --duration-fast:    120ms;
+  --duration-normal:  200ms;
+  --duration-slow:    320ms;
+  --duration-slower:  500ms;
+  --duration-crawl:   800ms;
+
+  /* ── LAYOUT / BREAKPOINTS ── */
+  --bp-mobile: 375px;
+  --bp-tablet: 768px;
+  --bp-laptop: 1024px;
+  --bp-desktop: 1280px;
+  --bp-wide: 1440px;
+
+  --sidebar-w:     240px;
+  --panel-right-w: 360px;
+  --topbar-h:      56px;
+  --toolbar-h:     48px;
+
+  /* ── Z-INDEX SCALE ── */
+  --z-below:   -1;
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+}
+
+/* ── DARK MODE OVERRIDES ── */
+[data-theme="dark"] {
+  --bg-base:        var(--void-900);
+  --bg-subtle:      var(--void-850);
+  --bg-muted:       var(--void-800);
+  --bg-emphasis:    var(--void-750);
+  --bg-overlay:     rgba(255,255,255,0.04);
+
+  --border-default: var(--void-750);
+  --border-strong:  var(--void-700);
+  --border-accent:  var(--crystal-500);
+
+  --text-primary:   var(--void-50);
+  --text-secondary: var(--void-300);
+  --text-tertiary:  var(--void-500);
+  --text-inverse:   var(--void-900);
+  --text-accent:    var(--crystal-400);
+  --text-link:      var(--crystal-400);
+
+  --surface-card:   var(--void-850);
+  --surface-panel:  var(--void-900);
+  --surface-inset:  var(--void-800);
+
+  --shadow-crystal: 0 0 0 1px rgba(92,108,245,0.3), 0 4px 24px rgba(92,108,245,0.2);
+  --shadow-crystal-lg: 0 0 0 1px rgba(92,108,245,0.35), 0 8px 40px rgba(92,108,245,0.25);
+  --shadow-ice: 0 0 24px rgba(0,201,214,0.25), 0 0 8px rgba(0,201,214,0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  line-height: var(--leading-normal);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOCUMENT LAYOUT
+═══════════════════════════════════════════════════════════════ */
+.ds-cover {
+  background: var(--void-950);
+  color: var(--void-50);
+  padding: var(--space-16) var(--space-16) var(--space-20);
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ds-cover::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(ellipse, rgba(92,108,245,0.18) 0%, transparent 70%);
+  top: -300px; right: -200px;
+  pointer-events: none;
+}
+
+.ds-cover::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(0,201,214,0.1) 0%, transparent 70%);
+  bottom: -200px; left: -100px;
+  pointer-events: none;
+}
+
+.cover-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--void-500);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  position: relative; z-index: 1;
+}
+
+.cover-body {
+  position: relative; z-index: 1;
+  max-width: 900px;
+}
+
+.cover-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--crystal-400);
+  margin-bottom: var(--space-6);
+}
+
+.cover-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--void-0);
+  margin-bottom: var(--space-4);
+}
+
+.cover-title span {
+  background: linear-gradient(135deg, var(--crystal-400), var(--ice-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-sub {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--void-400);
+  margin-bottom: var(--space-12);
+  font-style: italic;
+}
+
+.cover-stats {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.cover-stat {
+  border: 1px solid var(--void-800);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.cover-stat strong {
+  display: block;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--void-100);
+  margin-bottom: var(--space-px);
+}
+
+.cover-stat span { color: var(--void-500); }
+
+.cover-footer {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+
+.cover-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: var(--void-500);
+  border: 1px solid var(--void-800);
+  border-radius: var(--radius-full);
+  padding: var(--space-1-5) var(--space-4);
+}
+
+/* ── NAV BAR ── */
+.ds-nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: rgba(250,250,250,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 var(--space-8);
+  height: var(--topbar-h);
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.ds-nav::-webkit-scrollbar { display: none; }
+
+.nav-brand {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  margin-right: var(--space-6);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-brand span {
+  color: var(--crystal-500);
+}
+
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-default);
+  margin-right: var(--space-6);
+  flex-shrink: 0;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 0 var(--space-4);
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color var(--duration-fast) var(--ease-smooth);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.nav-link:hover { color: var(--crystal-600); }
+
+.nav-link.active { color: var(--crystal-600); border-bottom: 2px solid var(--crystal-500); }
+
+/* ── SECTION WRAPPER ── */
+.ds-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-20) var(--space-8);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--crystal-500);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  min-width: 32px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+.section-desc {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-align: right;
+  max-width: 200px;
+  line-height: var(--leading-relaxed);
+}
+
+/* ── LABELS ── */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-4);
+}
+
+/* ─── DEMO BACKGROUND ─── */
+.demo-bg {
+  background: var(--bg-muted);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+}
+
+.demo-bg-dark {
+  background: var(--void-900);
+  border: 1px solid var(--void-750);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 1 — COLOR SYSTEM
+══════════════════════════════════════════════════════════════ */
+.color-grid {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.palette-row {
+  margin-bottom: var(--space-8);
+}
+
+.palette-swatches {
+  display: flex;
+  gap: 3px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.swatch {
+  flex: 1;
+  height: 72px;
+  position: relative;
+  cursor: pointer;
+  transition: flex var(--duration-slow) var(--ease-spring);
+}
+
+.swatch:hover { flex: 2.5; }
+
+.swatch-label {
+  position: absolute;
+  bottom: 6px; left: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: var(--weight-medium);
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+  white-space: nowrap;
+}
+
+.swatch:hover .swatch-label { opacity: 1; }
+
+.palette-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* Semantic color cards */
+.semantic-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.semantic-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+}
+
+.semantic-card-header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: white;
+}
+
+.semantic-card-body {
+  padding: var(--space-4);
+  background: var(--surface-card);
+}
+
+.semantic-card-body p {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.semantic-card-body strong {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+/* Confidence Score Gradient strip */
+.conf-strip {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  align-items: center;
+}
+
+.conf-dot {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  color: white;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 2 — TYPOGRAPHY FRAMEWORK
+══════════════════════════════════════════════════════════════ */
+.type-scale {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.type-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 180px;
+  align-items: baseline;
+  gap: var(--space-6);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.type-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+
+.type-meta strong { color: var(--text-secondary); display: block; font-size: 11px; }
+
+.type-token {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--crystal-600);
+  text-align: right;
+}
+
+.font-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.font-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.font-card-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-4);
+}
+
+.font-card-specimen {
+  margin-bottom: var(--space-4);
+}
+
+.font-card-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: var(--leading-relaxed);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 3 — SPATIAL SYSTEM
+══════════════════════════════════════════════════════════════ */
+.space-tokens {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-3);
+}
+
+.space-token {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.space-visual {
+  background: linear-gradient(135deg, var(--crystal-400), var(--ice-400));
+  border-radius: var(--radius-sm);
+  margin: 0 auto var(--space-3);
+  opacity: 0.8;
+}
+
+.space-token-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.space-token-val {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 4 — COMPONENT LIBRARY
+══════════════════════════════════════════════════════════════ */
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth),
+    transform var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn:active { transform: scale(0.98); }
+
+/* Primary */
+.btn-primary {
+  background: var(--crystal-500);
+  color: white;
+  padding: var(--space-3) var(--space-6);
+  box-shadow: var(--shadow-crystal);
+}
+.btn-primary:hover {
+  background: var(--crystal-600);
+  box-shadow: var(--shadow-crystal-lg);
+  transform: translateY(-1px);
+}
+
+/* Secondary */
+.btn-secondary {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--border-default);
+}
+.btn-secondary:hover { background: var(--bg-emphasis); border-color: var(--border-strong); }
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: var(--space-3) var(--space-5);
+}
+.btn-ghost:hover { background: var(--bg-overlay); color: var(--text-primary); }
+
+/* Ice (Secondary accent) */
+.btn-ice {
+  background: transparent;
+  color: var(--ice-600);
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--ice-400);
+  box-shadow: var(--shadow-ice);
+}
+.btn-ice:hover { background: var(--ice-50); }
+
+/* Danger */
+.btn-danger {
+  background: var(--semantic-danger-base);
+  color: white;
+  padding: var(--space-3) var(--space-6);
+}
+.btn-danger:hover { background: #DC2626; }
+
+/* Button sizes */
+.btn-sm { padding: var(--space-2) var(--space-4); font-size: 11px; }
+.btn-lg { padding: var(--space-4) var(--space-8); font-size: var(--text-base); }
+.btn-xl { padding: var(--space-5) var(--space-10); font-size: var(--text-md); }
+.btn-icon { padding: var(--space-3); aspect-ratio: 1; border-radius: var(--radius-md); }
+.btn-icon-sm { padding: var(--space-2); aspect-ratio: 1; }
+
+/* ── CHAT BUBBLES ── */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 480px;
+}
+
+.chat-message {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.chat-message.user { flex-direction: row-reverse; }
+
+.chat-avatar {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: var(--weight-bold);
+  color: white;
+}
+
+.avatar-ai {
+  background: linear-gradient(135deg, var(--crystal-500), var(--ice-500));
+}
+
+.avatar-user {
+  background: var(--void-700);
+}
+
+.chat-bubble {
+  max-width: calc(100% - 48px);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  position: relative;
+}
+
+.bubble-ai {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  border-top-left-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.bubble-user {
+  background: var(--crystal-500);
+  color: white;
+  border-top-right-radius: var(--radius-sm);
+}
+
+.bubble-streaming {
+  background: var(--surface-card);
+  border: 1px solid var(--border-accent);
+  box-shadow: var(--shadow-crystal);
+}
+
+.streaming-cursor {
+  display: inline-block;
+  width: 2px; height: 14px;
+  background: var(--crystal-500);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.bubble-meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+  text-align: right;
+}
+
+.bubble-user .bubble-meta { color: rgba(255,255,255,0.5); }
+
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  border-top-left-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.typing-dot {
+  width: 6px; height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--text-tertiary);
+  animation: typing-bounce 1.4s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+  40% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── FILE UPLOAD CARD ── */
+.upload-card {
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-8);
+  text-align: center;
+  background: var(--bg-subtle);
+  transition:
+    border-color var(--duration-normal) var(--ease-smooth),
+    background var(--duration-normal) var(--ease-smooth),
+    box-shadow var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+}
+
+.upload-card:hover, .upload-card.dragover {
+  border-color: var(--crystal-400);
+  background: var(--crystal-50);
+  box-shadow: var(--shadow-crystal);
+}
+
+.upload-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--crystal-100), var(--ice-100));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin: 0 auto var(--space-4);
+}
+
+.upload-card h4 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.upload-card p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-5);
+}
+
+.upload-formats {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.format-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  background: var(--bg-muted);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+}
+
+/* Upload progress */
+.upload-progress-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.upload-file-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.file-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--crystal-500), var(--ice-500));
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.file-meta { flex: 1; }
+
+.file-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.file-size {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--crystal-500), var(--ice-400));
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-smooth);
+  animation: shimmer-progress 1.5s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer-progress {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* ── PROCESSING STAGE INDICATOR ── */
+.processing-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.stage-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  position: relative;
+}
+
+.stage-item::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 52px;
+  width: 2px;
+  height: calc(100% - 28px);
+  background: var(--border-default);
+}
+
+.stage-item:last-child::before { display: none; }
+
+.stage-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.stage-pending .stage-icon {
+  background: var(--bg-muted);
+  color: var(--text-tertiary);
+  border: 2px solid var(--border-default);
+}
+
+.stage-active .stage-icon {
+  background: linear-gradient(135deg, var(--crystal-500), var(--ice-500));
+  color: white;
+  box-shadow: var(--shadow-crystal);
+  animation: pulse-stage 2s ease-in-out infinite;
+}
+
+.stage-done .stage-icon {
+  background: var(--semantic-success-base);
+  color: white;
+}
+
+@keyframes pulse-stage {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(92,108,245,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(92,108,245,0); }
+}
+
+.stage-content { flex: 1; }
+
+.stage-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.stage-pending .stage-name { color: var(--text-tertiary); }
+
+.stage-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.stage-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.stage-active .stage-time { color: var(--crystal-600); }
+.stage-done .stage-time { color: var(--semantic-success-base); }
+
+/* ── CONFIDENCE SCORE BADGE ── */
+.conf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-full);
+  padding: var(--space-1-5) var(--space-4) var(--space-1-5) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+}
+
+.conf-badge-dot {
+  width: 8px; height: 8px;
+  border-radius: var(--radius-full);
+}
+
+.conf-excellent { background: #ECFDF5; color: #065F46; }
+.conf-excellent .conf-badge-dot { background: #10B981; }
+.conf-good { background: #F0FDF4; color: #166534; }
+.conf-good .conf-badge-dot { background: #84CC16; }
+.conf-medium { background: #FEFCE8; color: #713F12; }
+.conf-medium .conf-badge-dot { background: #EAB308; }
+.conf-low { background: #FFF7ED; color: #9A3412; }
+.conf-low .conf-badge-dot { background: #F97316; }
+.conf-critical { background: #FEF2F2; color: #991B1B; }
+.conf-critical .conf-badge-dot { background: #EF4444; }
+
+/* Gauge style */
+.conf-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.gauge-ring {
+  width: 80px; height: 80px;
+  position: relative;
+}
+
+.gauge-ring svg { transform: rotate(-90deg); }
+
+.gauge-val {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
+}
+
+.gauge-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* ── VERSION TIMELINE ── */
+.version-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.version-timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--crystal-400), var(--ice-400));
+  opacity: 0.3;
+}
+
+.timeline-item {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-3);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-smooth);
+  position: relative;
+}
+
+.timeline-item:hover { background: var(--bg-overlay); }
+.timeline-item.active { background: linear-gradient(135deg, rgba(92,108,245,0.06), rgba(0,201,214,0.04)); }
+
+.timeline-node {
+  width: 18px; height: 18px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--border-default);
+  background: var(--surface-card);
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  position: relative; z-index: 1;
+}
+
+.timeline-item.active .timeline-node {
+  background: var(--crystal-500);
+  border-color: var(--crystal-500);
+  box-shadow: var(--shadow-crystal);
+}
+
+.timeline-content { flex: 1; min-width: 0; }
+
+.timeline-sha {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--crystal-600);
+  background: var(--crystal-50);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  display: inline-block;
+  margin-bottom: var(--space-1);
+}
+
+.timeline-msg {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.timeline-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--crystal-100);
+  color: var(--crystal-700);
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+/* ── LIVE EDITOR TOOLBAR ── */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-default);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  height: var(--toolbar-h);
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-default);
+  margin: 0 var(--space-2);
+  flex-shrink: 0;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-family: var(--font-mono);
+  font-weight: var(--weight-bold);
+  transition:
+    background var(--duration-fast) var(--ease-smooth),
+    color var(--duration-fast) var(--ease-smooth);
+  flex-shrink: 0;
+}
+
+.toolbar-btn:hover { background: var(--bg-muted); color: var(--text-primary); }
+.toolbar-btn.active { background: var(--crystal-100); color: var(--crystal-700); }
+
+.toolbar-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: 11px;
+  color: var(--crystal-600);
+  background: var(--crystal-50);
+  border: 1px solid var(--crystal-200);
+  border-radius: var(--radius-full);
+  padding: var(--space-1-5) var(--space-4);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.toolbar-ai-btn:hover { background: var(--crystal-100); box-shadow: var(--shadow-crystal); }
+
+.toolbar-group { display: flex; align-items: center; gap: 2px; }
+
+/* ── TEXT INPUT / FORM ── */
+.input-field {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  outline: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.input-field::placeholder { color: var(--text-tertiary); }
+
+.input-field:focus {
+  border-color: var(--crystal-400);
+  box-shadow: 0 0 0 3px rgba(92,108,245,0.12);
+}
+
+.input-field.input-error {
+  border-color: var(--semantic-danger-base);
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+}
+
+.input-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.input-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+}
+
+/* ── BADGE / TAG ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  white-space: nowrap;
+}
+
+.badge-crystal { background: var(--crystal-100); color: var(--crystal-700); }
+.badge-ice { background: var(--ice-100); color: var(--ice-700); }
+.badge-success { background: var(--semantic-success-subtle); color: var(--semantic-success-strong); }
+.badge-warning { background: var(--semantic-warning-subtle); color: var(--semantic-warning-strong); }
+.badge-danger { background: var(--semantic-danger-subtle); color: var(--semantic-danger-strong); }
+.badge-neutral { background: var(--bg-muted); color: var(--text-secondary); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-normal) var(--ease-smooth);
+}
+
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+.card-desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.card-footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── TRANSCRIPT CARD ── */
+.transcript-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.transcript-card:hover {
+  border-color: var(--crystal-300);
+  box-shadow: var(--shadow-crystal);
+  transform: translateY(-1px);
+}
+
+.tc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.tc-platform {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+.tc-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+  line-height: var(--leading-snug);
+}
+
+.tc-meta {
+  display: flex;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tc-tags {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ── AVATAR / PRESENCE ── */
+.avatar {
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: white;
+  flex-shrink: 0;
+}
+
+.avatar-xs { width: 20px; height: 20px; font-size: 8px; }
+.avatar-sm { width: 28px; height: 28px; font-size: 11px; }
+.avatar-md { width: 36px; height: 36px; font-size: 14px; }
+.avatar-lg { width: 48px; height: 48px; font-size: 18px; }
+
+.avatar-stack {
+  display: flex;
+}
+
+.avatar-stack .avatar {
+  border: 2px solid var(--surface-card);
+  margin-left: -8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.avatar-stack .avatar:first-child { margin-left: 0; }
+
+.avatar-count {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+  border: 2px solid var(--surface-card);
+  margin-left: -8px;
+  font-size: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── TOAST / NOTIFICATION ── */
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: var(--void-900);
+  border: 1px solid var(--void-750);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
+  min-width: 300px;
+  max-width: 420px;
+  box-shadow: var(--shadow-xl);
+  animation: slide-in-toast 0.3s var(--ease-decelerate);
+}
+
+@keyframes slide-in-toast {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-icon {
+  width: 20px; height: 20px;
+  border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.toast-success .toast-icon { background: var(--semantic-success-base); }
+.toast-warning .toast-icon { background: var(--semantic-warning-base); }
+.toast-danger .toast-icon { background: var(--semantic-danger-base); }
+.toast-info .toast-icon { background: var(--crystal-500); }
+
+.toast-body { flex: 1; }
+
+.toast-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--void-50);
+  margin-bottom: 2px;
+}
+
+.toast-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--void-400);
+  line-height: var(--leading-relaxed);
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--void-500);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── MODAL ── */
+.modal-backdrop {
+  background: rgba(7,7,9,0.7);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--shadow-2xl);
+  animation: modal-in 0.2s var(--ease-spring);
+}
+
+@keyframes modal-in {
+  from { transform: scale(0.95) translateY(8px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+/* ── DROPDOWN MENU ── */
+.dropdown {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-xl);
+  min-width: 200px;
+  animation: dropdown-in 0.15s var(--ease-decelerate);
+}
+
+@keyframes dropdown-in {
+  from { transform: translateY(-4px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-smooth);
+}
+
+.dropdown-item:hover { background: var(--bg-muted); }
+.dropdown-item.danger { color: var(--semantic-danger-base); }
+.dropdown-item.danger:hover { background: var(--semantic-danger-subtle); }
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-default);
+  margin: var(--space-2) 0;
+}
+
+.dropdown-label {
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ── SKELETON LOADER ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-emphasis) 50%, var(--bg-muted) 75%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ── TOGGLE / SWITCH ── */
+.toggle {
+  width: 44px; height: 24px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  position: relative;
+  cursor: pointer;
+  transition: background var(--duration-normal) var(--ease-smooth);
+}
+
+.toggle.on {
+  background: var(--crystal-500);
+  border-color: var(--crystal-500);
+}
+
+.toggle-thumb {
+  width: 18px; height: 18px;
+  border-radius: var(--radius-full);
+  background: white;
+  position: absolute;
+  top: 2px; left: 2px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+.toggle.on .toggle-thumb { transform: translateX(20px); }
+
+/* ── TOOLTIP ── */
+.tooltip {
+  background: var(--void-850);
+  color: var(--void-100);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  white-space: nowrap;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  animation: tooltip-in 0.1s var(--ease-decelerate);
+}
+
+@keyframes tooltip-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PROGRESS RING ── */
+.progress-ring-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.progress-ring-wrap svg {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-val {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+/* ── SEARCH BAR ── */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.search-bar:focus-within {
+  border-color: var(--crystal-400);
+  box-shadow: 0 0 0 3px rgba(92,108,245,0.1);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.search-bar input::placeholder { color: var(--text-tertiary); }
+
+.search-kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+}
+
+/* ── STAT CARD ── */
+.stat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-3);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.stat-delta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.delta-positive { color: var(--semantic-success-base); }
+.delta-negative { color: var(--semantic-danger-base); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+}
+
+.empty-icon {
+  width: 64px; height: 64px;
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(135deg, var(--crystal-100), var(--ice-100));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: var(--space-5);
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.empty-desc {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  max-width: 300px;
+  margin-bottom: var(--space-6);
+  line-height: var(--leading-relaxed);
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-default);
+  gap: 0;
+}
+
+.tab-item {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: var(--space-3) var(--space-6);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+  white-space: nowrap;
+}
+
+.tab-item:hover { color: var(--text-secondary); }
+.tab-item.active { color: var(--crystal-600); border-bottom-color: var(--crystal-500); }
+
+/* ── PILL FILTER ── */
+.pill-filter {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--bg-muted);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-5);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  white-space: nowrap;
+}
+
+.pill:hover { border-color: var(--crystal-300); color: var(--crystal-600); }
+.pill.active {
+  background: var(--crystal-500);
+  color: white;
+  border-color: var(--crystal-500);
+}
+
+/* ── INLINE AI REFINEMENT POPOVER ── */
+.ai-popover {
+  background: var(--void-900);
+  border: 1px solid var(--void-700);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  box-shadow: var(--shadow-xl);
+  animation: dropdown-in 0.15s var(--ease-decelerate);
+  flex-wrap: wrap;
+}
+
+.ai-popover-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--void-200);
+  background: var(--void-800);
+  border: 1px solid var(--void-700);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  white-space: nowrap;
+}
+
+.ai-popover-btn:hover {
+  background: var(--crystal-500);
+  border-color: var(--crystal-500);
+  color: white;
+}
+
+.ai-popover-divider {
+  width: 1px; height: 16px;
+  background: var(--void-700);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 5 — LAYOUT PATTERNS
+══════════════════════════════════════════════════════════════ */
+.layout-demo {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--bg-subtle);
+  height: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-topbar {
+  height: 40px;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.layout-sidebar {
+  width: 160px;
+  background: var(--bg-subtle);
+  border-right: 1px solid var(--border-default);
+  padding: var(--space-3);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.layout-sidebar-item {
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: var(--bg-muted);
+}
+
+.layout-sidebar-item.active {
+  background: linear-gradient(135deg, var(--crystal-100), var(--ice-100));
+}
+
+.layout-main {
+  flex: 1;
+  padding: var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.layout-panel {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.layout-panel.accent {
+  border-color: var(--crystal-200);
+  background: var(--crystal-50);
+  color: var(--crystal-600);
+}
+
+/* Breakpoint table */
+.bp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-top: var(--space-6);
+}
+
+.bp-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-muted);
+  color: var(--text-tertiary);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-size: 10px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.bp-table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  vertical-align: top;
+  line-height: var(--leading-relaxed);
+}
+
+.bp-table td:first-child { color: var(--crystal-600); font-weight: var(--weight-medium); }
+.bp-table tr:last-child td { border-bottom: none; }
+.bp-table tr:hover td { background: var(--bg-overlay); }
+
+/* ══════════════════════════════════════════════════════════════
+   § 6 — MOTION PRINCIPLES
+══════════════════════════════════════════════════════════════ */
+.motion-demo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.motion-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.motion-card-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.motion-card-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-5);
+  line-height: var(--leading-relaxed);
+}
+
+/* Token streaming animation */
+.token-stream {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+.token {
+  display: inline;
+  animation: token-appear 0.08s var(--ease-decelerate) both;
+}
+
+@keyframes token-appear {
+  from { opacity: 0; filter: blur(4px); transform: translateY(2px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+
+.token:nth-child(1)  { animation-delay: 0.0s; }
+.token:nth-child(2)  { animation-delay: 0.08s; }
+.token:nth-child(3)  { animation-delay: 0.16s; }
+.token:nth-child(4)  { animation-delay: 0.24s; }
+.token:nth-child(5)  { animation-delay: 0.32s; }
+.token:nth-child(6)  { animation-delay: 0.40s; }
+.token:nth-child(7)  { animation-delay: 0.48s; }
+.token:nth-child(8)  { animation-delay: 0.56s; }
+.token:nth-child(9)  { animation-delay: 0.64s; }
+.token:nth-child(10) { animation-delay: 0.72s; }
+.token:nth-child(11) { animation-delay: 0.80s; }
+.token:nth-child(12) { animation-delay: 0.88s; }
+.token:nth-child(13) { animation-delay: 0.96s; }
+.token:nth-child(14) { animation-delay: 1.04s; }
+.token:nth-child(15) { animation-delay: 1.12s; }
+.token:nth-child(16) { animation-delay: 1.20s; }
+.token:nth-child(17) { animation-delay: 1.28s; }
+
+/* Ease curve display */
+.ease-curves {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-3);
+}
+
+.ease-item {
+  text-align: center;
+}
+
+.ease-preview {
+  width: 60px; height: 60px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  margin: 0 auto var(--space-2);
+  display: flex; align-items: flex-end; justify-content: flex-start;
+  padding: 4px;
+  background: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.ease-dot {
+  width: 8px; height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--crystal-500);
+  animation: ease-demo 2s infinite;
+}
+
+@keyframes ease-demo {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(40px) translateY(-40px); }
+}
+
+.ease-name {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Panel slide transition demo */
+.panel-slide-demo {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  height: 180px;
+  display: flex;
+  position: relative;
+  background: var(--bg-subtle);
+}
+
+.panel-slide-left {
+  flex: 2;
+  border-right: 1px solid var(--border-default);
+  background: var(--surface-card);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.panel-slide-right {
+  flex: 1;
+  background: var(--crystal-50);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--crystal-600);
+  text-transform: uppercase;
+  animation: panel-breathe 3s ease-in-out infinite;
+}
+
+@keyframes panel-breathe {
+  0%, 100% { flex: 1; }
+  50% { flex: 1.5; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 7 — ACCESSIBILITY
+══════════════════════════════════════════════════════════════ */
+.contrast-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.contrast-pair {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+}
+
+.contrast-demo {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 100px;
+}
+
+.contrast-meta {
+  padding: var(--space-4);
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-default);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contrast-ratio {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-lg);
+}
+
+.wcag-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+}
+
+.wcag-aaa { background: var(--semantic-success-base); color: white; }
+.wcag-aa { background: var(--semantic-info-base); color: white; }
+.wcag-fail { background: var(--semantic-danger-base); color: white; }
+
+/* ── TOKEN CODE BLOCK ── */
+.token-block {
+  background: var(--void-950);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--void-800);
+}
+
+.token-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--void-800);
+  background: var(--void-900);
+}
+
+.token-block-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--void-400);
+}
+
+.token-block-lang {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--crystal-400);
+  background: rgba(92,108,245,0.1);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+}
+
+.token-block-body {
+  padding: var(--space-6);
+  overflow-x: auto;
+}
+
+.token-block-body pre {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--void-200);
+  white-space: pre;
+}
+
+.tk { color: #93C5FD; }  /* key */
+.tv { color: #86EFAC; }  /* value string */
+.tn { color: #FCA5A5; }  /* number */
+.tc { color: #6B7280; font-style: italic; }  /* comment */
+.tp { color: var(--ice-400); }  /* property */
+.ts { color: #E2E8F0; }  /* symbol */
+
+/* ═══════════ COMPONENT SECTION GRID ═══════════ */
+.comp-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.comp-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.comp-section {
+  margin-bottom: var(--space-12);
+}
+
+.comp-section-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.flex-row { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.flex-col { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* ═══════ FIGMA DOCUMENTATION TABLE ═══════ */
+.figma-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-top: var(--space-4);
+}
+
+.figma-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-muted);
+  color: var(--text-tertiary);
+  font-size: 10px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border-default);
+}
+
+.figma-table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+  vertical-align: top;
+}
+
+.figma-table tr:hover td { background: var(--bg-overlay); }
+
+.figma-table td:first-child { color: var(--crystal-600); font-weight: var(--weight-medium); }
+.figma-table td:last-child { color: var(--text-tertiary); font-size: 10px; }
+
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  z-index: var(--z-modal);
+  background: var(--void-900);
+  color: var(--void-100);
+  border: 1px solid var(--void-700);
+  border-radius: var(--radius-full);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-xl);
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.theme-toggle:hover { background: var(--crystal-500); border-color: var(--crystal-500); }
+
+/* ── MISC ── */
+.divider {
+  height: 1px;
+  background: var(--border-default);
+  margin: var(--space-6) 0;
+}
+
+.inner-divider {
+  height: 1px;
+  background: var(--border-default);
+  margin: var(--space-4) 0;
+}
+
+.subsection {
+  margin-top: var(--space-10);
+}
+
+.subsection-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+  color: var(--text-primary);
+  margin-bottom: var(--space-6);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     COVER
+════════════════════════════════════════════════════════════════ -->
+<div class="ds-cover">
+  <div class="cover-meta">
+    <span>ConvoCrystal · Design System</span>
+    <span>v1.0 · Production-Ready · 2026</span>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-eyebrow">Design System Documentation</div>
+    <h1 class="cover-title">Convo<span>Crystal</span><br>DS</h1>
+    <p class="cover-sub">A comprehensive, scalable design system for AI-powered meeting intelligence — modern, minimal, and technically precise.</p>
+
+    <div class="cover-stats">
+      <div class="cover-stat"><strong>7</strong><span>Sections</span></div>
+      <div class="cover-stat"><strong>33+</strong><span>Components</span></div>
+      <div class="cover-stat"><strong>9</strong><span>Type Steps</span></div>
+      <div class="cover-stat"><strong>8px</strong><span>Grid Base</span></div>
+      <div class="cover-stat"><strong>3</strong><span>Export Formats</span></div>
+      <div class="cover-stat"><strong>WCAG AA</strong><span>Compliant</span></div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-tag">Syne + Lora + DM Mono</div>
+    <div class="cover-tag">Crystal Blue + Ice Teal</div>
+    <div class="cover-tag">Light + Dark Mode</div>
+    <div class="cover-tag">Design Tokens · CSS Vars · Figma Docs</div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="ds-nav">
+  <span class="nav-brand">Convo<span>Crystal</span></span>
+  <div class="nav-divider"></div>
+  <a href="#colors" class="nav-link">01 Colors</a>
+  <a href="#typography" class="nav-link">02 Type</a>
+  <a href="#spacing" class="nav-link">03 Space</a>
+  <a href="#components" class="nav-link">04 Components</a>
+  <a href="#layout" class="nav-link">05 Layout</a>
+  <a href="#motion" class="nav-link">06 Motion</a>
+  <a href="#accessibility" class="nav-link">07 A11y</a>
+  <a href="#tokens" class="nav-link">Tokens</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 1 — COLOR SYSTEM
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="colors">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Color System</h2>
+    <div class="section-desc">Primary + secondary + semantic + neutrals. Light and dark mode equivalents.</div>
+  </div>
+
+  <!-- Crystal Primary -->
+  <div class="palette-row">
+    <div class="label">Crystal Blue — Primary Brand Palette</div>
+    <div class="palette-swatches">
+      <div class="swatch" style="background:#F0F4FF"><div class="swatch-label" style="color:#3B3FD0">50<br>#F0F4FF</div></div>
+      <div class="swatch" style="background:#E0EAFF"><div class="swatch-label" style="color:#3B3FD0">100<br>#E0EAFF</div></div>
+      <div class="swatch" style="background:#C7D7FE"><div class="swatch-label" style="color:#3B3FD0">200<br>#C7D7FE</div></div>
+      <div class="swatch" style="background:#A4BBFD"><div class="swatch-label" style="color:#3B3FD0">300<br>#A4BBFD</div></div>
+      <div class="swatch" style="background:#7C94FB"><div class="swatch-label" style="color:white">400<br>#7C94FB</div></div>
+      <div class="swatch" style="background:#5C6CF5"><div class="swatch-label" style="color:white">500 ★<br>#5C6CF5</div></div>
+      <div class="swatch" style="background:#4A52E8"><div class="swatch-label" style="color:white">600<br>#4A52E8</div></div>
+      <div class="swatch" style="background:#3B3FD0"><div class="swatch-label" style="color:white">700<br>#3B3FD0</div></div>
+      <div class="swatch" style="background:#3134A8"><div class="swatch-label" style="color:white">800<br>#3134A8</div></div>
+      <div class="swatch" style="background:#2C2F84"><div class="swatch-label" style="color:white">900<br>#2C2F84</div></div>
+      <div class="swatch" style="background:#1A1C52"><div class="swatch-label" style="color:white">950<br>#1A1C52</div></div>
+    </div>
+    <div class="palette-meta"><span>Crystal-500 #5C6CF5 — core brand, interactive elements, focus rings</span><span>11 steps · CSS: --crystal-{n}</span></div>
+  </div>
+
+  <!-- Ice Secondary -->
+  <div class="palette-row">
+    <div class="label">Ice Teal — Secondary / Accent Palette</div>
+    <div class="palette-swatches">
+      <div class="swatch" style="background:#EFFEFF"><div class="swatch-label" style="color:#007E8A">50<br>#EFFEFF</div></div>
+      <div class="swatch" style="background:#CAFEFF"><div class="swatch-label" style="color:#007E8A">100</div></div>
+      <div class="swatch" style="background:#94FDFF"><div class="swatch-label" style="color:#007E8A">200</div></div>
+      <div class="swatch" style="background:#52F4FF"><div class="swatch-label" style="color:#076470">300</div></div>
+      <div class="swatch" style="background:#18E4F0"><div class="swatch-label" style="color:white">400</div></div>
+      <div class="swatch" style="background:#00C9D6"><div class="swatch-label" style="color:white">500 ★<br>#00C9D6</div></div>
+      <div class="swatch" style="background:#00A0AF"><div class="swatch-label" style="color:white">600</div></div>
+      <div class="swatch" style="background:#007E8A"><div class="swatch-label" style="color:white">700</div></div>
+      <div class="swatch" style="background:#076470"><div class="swatch-label" style="color:white">800</div></div>
+      <div class="swatch" style="background:#0B525D"><div class="swatch-label" style="color:white">900</div></div>
+      <div class="swatch" style="background:#043840"><div class="swatch-label" style="color:white">950</div></div>
+    </div>
+    <div class="palette-meta"><span>Ice-500 #00C9D6 — streaming indicators, active states, gradient endpoints</span><span>11 steps · CSS: --ice-{n}</span></div>
+  </div>
+
+  <!-- Neutrals -->
+  <div class="palette-row">
+    <div class="label">Void — Neutral Palette (15 steps, both modes)</div>
+    <div class="palette-swatches">
+      <div class="swatch" style="background:#FFFFFF; border:1px solid #EDEDF1"><div class="swatch-label" style="color:#6B6B7B">0 White</div></div>
+      <div class="swatch" style="background:#FAFAFA"><div class="swatch-label" style="color:#6B6B7B">25</div></div>
+      <div class="swatch" style="background:#F6F6F8"><div class="swatch-label" style="color:#6B6B7B">50</div></div>
+      <div class="swatch" style="background:#EDEDF1"><div class="swatch-label" style="color:#6B6B7B">100</div></div>
+      <div class="swatch" style="background:#D5D5DE"><div class="swatch-label" style="color:#3C3C47">200</div></div>
+      <div class="swatch" style="background:#B5B5C2"><div class="swatch-label" style="color:white">300</div></div>
+      <div class="swatch" style="background:#8E8E9E"><div class="swatch-label" style="color:white">400</div></div>
+      <div class="swatch" style="background:#6B6B7B"><div class="swatch-label" style="color:white">500</div></div>
+      <div class="swatch" style="background:#52525F"><div class="swatch-label" style="color:white">600</div></div>
+      <div class="swatch" style="background:#3C3C47"><div class="swatch-label" style="color:white">700</div></div>
+      <div class="swatch" style="background:#222229"><div class="swatch-label" style="color:white">800</div></div>
+      <div class="swatch" style="background:#14141A"><div class="swatch-label" style="color:white">900</div></div>
+      <div class="swatch" style="background:#0C0C11"><div class="swatch-label" style="color:white">950</div></div>
+      <div class="swatch" style="background:#070709"><div class="swatch-label" style="color:white">1000</div></div>
+    </div>
+    <div class="palette-meta"><span>Void-0 through Void-1000 — backgrounds, text, borders, surfaces</span><span>14 steps · CSS: --void-{n}</span></div>
+  </div>
+
+  <!-- Semantic -->
+  <div class="subsection">
+    <div class="label">Semantic Colors</div>
+    <div class="semantic-grid">
+      <div class="semantic-card">
+        <div class="semantic-card-header" style="background:#10B981">✓ Success</div>
+        <div class="semantic-card-body">
+          <strong>States: saved, complete, online</strong>
+          <p>Base: #10B981 · Light: #A7F3D0<br>Subtle: #ECFDF5 · Strong: #065F46</p>
+        </div>
+      </div>
+      <div class="semantic-card">
+        <div class="semantic-card-header" style="background:#F59E0B">⚠ Warning</div>
+        <div class="semantic-card-body">
+          <strong>States: processing, low confidence</strong>
+          <p>Base: #F59E0B · Light: #FDE68A<br>Subtle: #FFFBEB · Strong: #92400E</p>
+        </div>
+      </div>
+      <div class="semantic-card">
+        <div class="semantic-card-header" style="background:#EF4444">✕ Danger</div>
+        <div class="semantic-card-body">
+          <strong>States: error, delete, failed</strong>
+          <p>Base: #EF4444 · Light: #FECACA<br>Subtle: #FEF2F2 · Strong: #991B1B</p>
+        </div>
+      </div>
+      <div class="semantic-card">
+        <div class="semantic-card-header" style="background:#3B82F6">ℹ Info</div>
+        <div class="semantic-card-body">
+          <strong>States: informational, neutral alerts</strong>
+          <p>Base: #3B82F6 · Light: #BFDBFE<br>Subtle: #EFF6FF · Strong: #1E3A8A</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confidence Gradient -->
+  <div class="subsection">
+    <div class="label">Confidence Score Gradient</div>
+    <div class="conf-strip">
+      <div class="conf-dot" style="background:#EF4444">0–20</div>
+      <div class="conf-dot" style="background:#F97316">21–40</div>
+      <div class="conf-dot" style="background:#EAB308">41–60</div>
+      <div class="conf-dot" style="background:#84CC16">61–80</div>
+      <div class="conf-dot" style="background:#10B981">81–100</div>
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);margin-left:var(--space-4)">Critical · Low · Medium · Good · Excellent</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 2 — TYPOGRAPHY
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="typography">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Typography Framework</h2>
+    <div class="section-desc">9-step Major Third scale with three-font pairing system</div>
+  </div>
+
+  <!-- Font Pairing -->
+  <div class="font-pair">
+    <div class="font-card">
+      <div class="font-card-name">Display — Syne</div>
+      <div class="font-card-specimen">
+        <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;line-height:1;letter-spacing:-0.03em;color:var(--text-primary)">Aa</div>
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text-primary);margin-top:8px">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz</div>
+      </div>
+      <div class="font-card-desc">Used for: headings, UI labels, button text, navigation, metric values. Geometric, modern, confident. Weights: 400–800. Strong at large sizes for dashboards and data-dense interfaces.</div>
+    </div>
+    <div class="font-card">
+      <div class="font-card-name">Body — Lora</div>
+      <div class="font-card-specimen">
+        <div style="font-family:'Lora',serif;font-size:48px;font-weight:400;line-height:1;letter-spacing:-0.01em;color:var(--text-primary)">Aa</div>
+        <div style="font-family:'Lora',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-top:8px">"Meeting context shapes every<br>word in this analysis."</div>
+      </div>
+      <div class="font-card-desc">Used for: body copy, chat messages, transcript text, documentation prose. Lora's serif warmth softens data-heavy layouts and makes long-form reading comfortable. Italic weight adds editorial dimension to AI output.</div>
+    </div>
+    <div class="font-card">
+      <div class="font-card-name">Mono — DM Mono</div>
+      <div class="font-card-specimen">
+        <div style="font-family:'DM Mono',monospace;font-size:36px;font-weight:400;line-height:1;letter-spacing:-0.02em;color:var(--text-primary)">01</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-tertiary);margin-top:8px;line-height:1.8">--crystal-500: #5C6CF5;<br>token · badge · timestamp</div>
+      </div>
+      <div class="font-card-desc">Used for: code, tokens, timestamps, metadata, version hashes, API references, labels, keyboard shortcuts. DM Mono is technically legible without feeling cold — perfect for confidence scores and processing stages.</div>
+    </div>
+  </div>
+
+  <!-- Type Scale -->
+  <div class="subsection">
+    <div class="subsection-title">9-Step Scale — Major Third (×1.250)</div>
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-meta"><strong>text-4xl</strong>Scale step 9 · 61px</div>
+        <div style="font-family:'Syne',sans-serif;font-size:var(--text-4xl);font-weight:800;letter-spacing:-0.035em;line-height:1.1;color:var(--text-primary)">Aa Meeting</div>
+        <div class="type-token">--text-4xl<br>3.815rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-3xl</strong>Scale step 8 · 48.8px</div>
+        <div style="font-family:'Syne',sans-serif;font-size:var(--text-3xl);font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:var(--text-primary)">Aa Analysis</div>
+        <div class="type-token">--text-3xl<br>3.052rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-2xl</strong>Scale step 7 · 39px</div>
+        <div style="font-family:'Syne',sans-serif;font-size:var(--text-2xl);font-weight:700;letter-spacing:-0.025em;line-height:1.15;color:var(--text-primary)">Aa Transcript</div>
+        <div class="type-token">--text-2xl<br>2.441rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-xl</strong>Scale step 6 · 31.25px</div>
+        <div style="font-family:'Syne',sans-serif;font-size:var(--text-xl);font-weight:700;letter-spacing:-0.02em;line-height:1.2;color:var(--text-primary)">Aa Document Version</div>
+        <div class="type-token">--text-xl<br>1.953rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-lg</strong>Scale step 5 · 25px</div>
+        <div style="font-family:'Syne',sans-serif;font-size:var(--text-lg);font-weight:600;letter-spacing:-0.01em;line-height:1.3;color:var(--text-primary)">Aa Section Heading</div>
+        <div class="type-token">--text-lg<br>1.563rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-md</strong>Scale step 4 · 20px</div>
+        <div style="font-family:'Syne',sans-serif;font-size:var(--text-md);font-weight:600;line-height:1.35;color:var(--text-primary)">Aa Card Title or Stat Value</div>
+        <div class="type-token">--text-md<br>1.25rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-base</strong>Scale step 3 · 16px</div>
+        <div style="font-family:'Lora',serif;font-size:var(--text-base);line-height:1.6;color:var(--text-primary)">Aa Body copy — The analysis identified three key decisions made during this sprint retrospective meeting.</div>
+        <div class="type-token">--text-base<br>1rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-sm</strong>Scale step 2 · 12.8px</div>
+        <div style="font-family:'Lora',serif;font-size:var(--text-sm);line-height:1.6;color:var(--text-secondary)">Aa Secondary body — Supporting text, chat messages, card descriptions, and tooltip content.</div>
+        <div class="type-token">--text-sm<br>0.8rem</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>text-xs</strong>Scale step 1 · 10.24px</div>
+        <div style="font-family:'DM Mono',monospace;font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary)">Aa METADATA · LABELS · BADGES · TIMESTAMPS · TOKENS · STAGE NAMES</div>
+        <div class="type-token">--text-xs<br>0.64rem</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 3 — SPATIAL SYSTEM
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="spacing">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Spatial System</h2>
+    <div class="section-desc">8px grid · 22 tokens from 2px to 256px</div>
+  </div>
+
+  <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);margin-bottom:var(--space-8);line-height:1.8">All spacing is based on an 8px base unit. Token naming follows the Tailwind convention: --space-1 = 4px, --space-2 = 8px, --space-4 = 16px. Half-steps (--space-0-5, --space-1-5) exist for tight UI contexts. This system ensures visual rhythm across all three panels of the three-panel layout.</p>
+
+  <div class="space-tokens">
+    <div class="space-token"><div class="space-visual" style="width:2px;height:2px;min-height:2px"></div><span class="space-token-name">--space-0-5</span><span class="space-token-val">2px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:4px;height:4px;min-height:4px"></div><span class="space-token-name">--space-1</span><span class="space-token-val">4px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:6px;height:6px;min-height:6px"></div><span class="space-token-name">--space-1-5</span><span class="space-token-val">6px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:8px;height:8px;min-height:8px"></div><span class="space-token-name">--space-2</span><span class="space-token-val">8px ★</span></div>
+    <div class="space-token"><div class="space-visual" style="width:12px;height:12px;min-height:12px"></div><span class="space-token-name">--space-3</span><span class="space-token-val">12px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:16px;height:16px;min-height:16px"></div><span class="space-token-name">--space-4</span><span class="space-token-val">16px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:20px;height:20px;min-height:20px"></div><span class="space-token-name">--space-5</span><span class="space-token-val">20px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:24px;height:24px;min-height:24px"></div><span class="space-token-name">--space-6</span><span class="space-token-val">24px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:32px;height:32px;min-height:32px"></div><span class="space-token-name">--space-8</span><span class="space-token-val">32px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:40px;height:40px;min-height:40px"></div><span class="space-token-name">--space-10</span><span class="space-token-val">40px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:48px;height:48px;min-height:48px"></div><span class="space-token-name">--space-12</span><span class="space-token-val">48px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:56px;height:56px;min-height:56px"></div><span class="space-token-name">--space-14</span><span class="space-token-val">56px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:64px;height:64px;min-height:64px"></div><span class="space-token-name">--space-16</span><span class="space-token-val">64px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:80px;height:80px;min-height:80px"></div><span class="space-token-name">--space-20</span><span class="space-token-val">80px</span></div>
+    <div class="space-token"><div class="space-visual" style="width:96px;height:96px;min-height:96px"></div><span class="space-token-name">--space-24</span><span class="space-token-val">96px</span></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 4 — COMPONENT LIBRARY
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="components">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Component Library</h2>
+    <div class="section-desc">33 production-ready components</div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-01 — C-06 · Buttons</div>
+    <div class="flex-col">
+      <div class="flex-row">
+        <button class="btn btn-primary">✦ Analyze Transcript</button>
+        <button class="btn btn-secondary">View History</button>
+        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-ice">⟳ Reprocess</button>
+        <button class="btn btn-danger">Delete</button>
+      </div>
+      <div class="flex-row">
+        <button class="btn btn-primary btn-sm">✦ Analyze</button>
+        <button class="btn btn-primary">Analyze Transcript</button>
+        <button class="btn btn-primary btn-lg">✦ Start Analysis</button>
+        <button class="btn btn-primary btn-icon">✦</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT BUBBLES -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-07 — C-09 · Chat Bubbles + Typing Indicator</div>
+    <div class="comp-grid-2">
+      <div class="chat-container">
+        <div class="chat-message">
+          <div class="avatar avatar-sm avatar-ai">C</div>
+          <div>
+            <div class="chat-bubble bubble-ai">What were the key decisions made in the Q3 planning session?</div>
+            <div class="bubble-meta">ConvoCrystal AI · 9:14 AM</div>
+          </div>
+        </div>
+        <div class="chat-message user">
+          <div class="avatar avatar-sm avatar-user">AS</div>
+          <div>
+            <div class="chat-bubble bubble-user">Three decisions: budget approved, timeline adjusted by 2 weeks, and Julia owns the API redesign.</div>
+            <div class="bubble-meta">You · 9:15 AM</div>
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="avatar avatar-sm avatar-ai">C</div>
+          <div>
+            <div class="chat-bubble bubble-streaming">Analyzing sentiment around the API redesign decision… <span class="streaming-cursor"></span></div>
+            <div class="bubble-meta">Streaming · now</div>
+          </div>
+        </div>
+        <div class="chat-message">
+          <div class="avatar avatar-sm avatar-ai">C</div>
+          <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-col">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Bubble Variants</span>
+          </div>
+          <div class="flex-col" style="gap:var(--space-2)">
+            <div class="chat-bubble bubble-ai" style="max-width:100%">AI response — default state</div>
+            <div class="chat-bubble bubble-user" style="max-width:100%">User message — crystal fill</div>
+            <div class="chat-bubble bubble-streaming" style="max-width:100%">AI streaming — accent border <span class="streaming-cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILE UPLOAD CARD -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-10 — C-11 · File Upload Card + Progress</div>
+    <div class="comp-grid-2">
+      <div class="upload-card">
+        <div class="upload-icon">📄</div>
+        <h4>Drop transcript here</h4>
+        <p>Drag & drop or click to browse</p>
+        <div class="upload-formats">
+          <span class="format-chip">.txt</span>
+          <span class="format-chip">.vtt</span>
+          <span class="format-chip">.srt</span>
+          <span class="format-chip">.docx</span>
+          <span class="format-chip">.json</span>
+        </div>
+        <p style="margin-top:var(--space-4);font-size:10px">Max 50MB per file</p>
+      </div>
+      <div class="flex-col">
+        <div class="upload-progress-card">
+          <div class="upload-file-info">
+            <div class="file-icon">📄</div>
+            <div class="file-meta">
+              <div class="file-name">q3-planning-meeting.vtt</div>
+              <div class="file-size">2.4 MB · VTT transcript</div>
+            </div>
+            <button class="btn btn-ghost btn-icon-sm" style="font-size:16px">✕</button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:68%;animation:none;background:linear-gradient(90deg,var(--crystal-500),var(--ice-400))"></div>
+          </div>
+          <div class="progress-meta"><span>Uploading… 68%</span><span>1.6 MB / 2.4 MB</span></div>
+        </div>
+        <div class="upload-progress-card">
+          <div class="upload-file-info">
+            <div class="file-icon" style="background:linear-gradient(135deg,var(--semantic-success-base),#059669)">✓</div>
+            <div class="file-meta">
+              <div class="file-name">team-standup-aug12.txt</div>
+              <div class="file-size">128 KB · Ready for analysis</div>
+            </div>
+            <span class="badge badge-success">Done</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%;animation:none;background:var(--semantic-success-base)"></div></div>
+          <div class="progress-meta"><span style="color:var(--semantic-success-base)">Upload complete</span><span>0.12 MB</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROCESSING STAGES -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-12 · Processing Stage Indicator</div>
+    <div class="comp-grid-2">
+      <div class="demo-bg">
+        <div class="processing-stages">
+          <div class="stage-item stage-done">
+            <div class="stage-icon">✓</div>
+            <div class="stage-content">
+              <div class="stage-name">Upload Complete</div>
+              <div class="stage-desc">File validated and stored securely</div>
+            </div>
+            <div class="stage-time">0.8s</div>
+          </div>
+          <div class="stage-item stage-done">
+            <div class="stage-icon">✓</div>
+            <div class="stage-content">
+              <div class="stage-name">Parsing Transcript</div>
+              <div class="stage-desc">Speaker labels and timestamps extracted</div>
+            </div>
+            <div class="stage-time">2.1s</div>
+          </div>
+          <div class="stage-item stage-active">
+            <div class="stage-icon">◎</div>
+            <div class="stage-content">
+              <div class="stage-name">AI Analysis</div>
+              <div class="stage-desc">Generating summary, action items, decisions…</div>
+            </div>
+            <div class="stage-time">→ 18s</div>
+          </div>
+          <div class="stage-item stage-pending">
+            <div class="stage-icon">○</div>
+            <div class="stage-content">
+              <div class="stage-name">Quality Scoring</div>
+              <div class="stage-desc">Confidence and completeness analysis</div>
+            </div>
+            <div class="stage-time">—</div>
+          </div>
+          <div class="stage-item stage-pending">
+            <div class="stage-icon">○</div>
+            <div class="stage-content">
+              <div class="stage-name">Embedding &amp; Index</div>
+              <div class="stage-desc">Preparing semantic search vectors</div>
+            </div>
+            <div class="stage-time">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex-col">
+        <div class="card">
+          <div class="label" style="margin-bottom:var(--space-4)">Stage States</div>
+          <div class="flex-col" style="gap:var(--space-3)">
+            <div style="display:flex;align-items:center;gap:var(--space-3)">
+              <div class="stage-icon stage-done" style="width:24px;height:24px;border-radius:50%;background:var(--semantic-success-base);color:white;display:flex;align-items:center;justify-content:center;font-size:11px">✓</div>
+              <span style="font-family:var(--font-mono);font-size:11px">Done — success green</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-3)">
+              <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--crystal-500),var(--ice-500));display:flex;align-items:center;justify-content:center;font-size:9px;color:white;animation:pulse-stage 2s ease-in-out infinite">◎</div>
+              <span style="font-family:var(--font-mono);font-size:11px">Active — crystal gradient + pulse</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-3)">
+              <div style="width:24px;height:24px;border-radius:50%;background:var(--bg-muted);border:2px solid var(--border-default);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-tertiary)">○</div>
+              <span style="font-family:var(--font-mono);font-size:11px">Pending — neutral muted</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIDENCE SCORE BADGES + GAUGES -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-13 — C-14 · Confidence Score Badges + Gauge</div>
+    <div class="comp-grid-2">
+      <div class="flex-col">
+        <div class="flex-row" style="flex-wrap:wrap">
+          <span class="conf-badge conf-excellent"><span class="conf-badge-dot"></span>Excellent · 94%</span>
+          <span class="conf-badge conf-good"><span class="conf-badge-dot"></span>Good · 76%</span>
+          <span class="conf-badge conf-medium"><span class="conf-badge-dot"></span>Medium · 58%</span>
+          <span class="conf-badge conf-low"><span class="conf-badge-dot"></span>Low · 33%</span>
+          <span class="conf-badge conf-critical"><span class="conf-badge-dot"></span>Critical · 12%</span>
+        </div>
+      </div>
+      <div class="flex-row" style="justify-content:space-around">
+        <div class="conf-gauge">
+          <div class="gauge-ring">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32" fill="none" stroke="#EDEDF1" stroke-width="8"/>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="#10B981" stroke-width="8" stroke-dasharray="201" stroke-dashoffset="20" stroke-linecap="round"/>
+            </svg>
+            <div class="gauge-val" style="color:#10B981">94</div>
+          </div>
+          <div class="gauge-label">Confidence</div>
+        </div>
+        <div class="conf-gauge">
+          <div class="gauge-ring">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32" fill="none" stroke="#EDEDF1" stroke-width="8"/>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="#5C6CF5" stroke-width="8" stroke-dasharray="201" stroke-dashoffset="50" stroke-linecap="round"/>
+            </svg>
+            <div class="gauge-val" style="color:#5C6CF5">75</div>
+          </div>
+          <div class="gauge-label">Quality</div>
+        </div>
+        <div class="conf-gauge">
+          <div class="gauge-ring">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32" fill="none" stroke="#EDEDF1" stroke-width="8"/>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="#EAB308" stroke-width="8" stroke-dasharray="201" stroke-dashoffset="120" stroke-linecap="round"/>
+            </svg>
+            <div class="gauge-val" style="color:#EAB308">40</div>
+          </div>
+          <div class="gauge-label">Coverage</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERSION TIMELINE -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-15 · Version Timeline</div>
+    <div class="comp-grid-2">
+      <div class="demo-bg">
+        <div class="version-timeline">
+          <div class="timeline-item active">
+            <div class="timeline-node"></div>
+            <div class="timeline-content">
+              <div class="timeline-sha">a3f8c2d</div>
+              <div class="timeline-msg">Add executive summary section</div>
+              <div class="timeline-meta"><span>You · 2 min ago</span></div>
+            </div>
+            <span class="timeline-badge">HEAD · main</span>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-node"></div>
+            <div class="timeline-content">
+              <div class="timeline-sha">8b1d4e9</div>
+              <div class="timeline-msg">Refine action items for clarity</div>
+              <div class="timeline-meta"><span>Sarah K. · 1h ago</span></div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-node"></div>
+            <div class="timeline-content">
+              <div class="timeline-sha">2c7f1a3</div>
+              <div class="timeline-msg">Initial AI-generated draft</div>
+              <div class="timeline-meta"><span>ConvoCrystal AI · 2h ago</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Branch Selector</div>
+          <div class="badge badge-crystal">main</div>
+        </div>
+        <div class="flex-col" style="gap:var(--space-2)">
+          <div class="dropdown-item" style="border-radius:var(--radius-md);background:var(--crystal-50)">
+            <span>⎇</span><span style="flex:1;font-family:var(--font-mono);font-size:12px;color:var(--crystal-700)">main</span>
+            <span style="font-size:10px;color:var(--crystal-500)">HEAD</span>
+          </div>
+          <div class="dropdown-item">
+            <span>⎇</span><span style="flex:1;font-family:var(--font-mono);font-size:12px">feature/exec-summary</span>
+          </div>
+          <div class="dropdown-item">
+            <span>⎇</span><span style="flex:1;font-family:var(--font-mono);font-size:12px">draft/client-version</span>
+          </div>
+          <div class="inner-divider" style="margin:0"></div>
+          <button class="btn btn-ghost" style="justify-content:flex-start;padding:var(--space-3) var(--space-4);font-size:12px">+ New branch from HEAD</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE EDITOR TOOLBAR -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-16 · Live Editor Toolbar</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="editor-toolbar">
+        <div class="toolbar-group">
+          <button class="toolbar-btn" title="Bold"><strong>B</strong></button>
+          <button class="toolbar-btn active" title="Italic"><em>I</em></button>
+          <button class="toolbar-btn" title="Underline"><u>U</u></button>
+          <button class="toolbar-btn" title="Strike">S̶</button>
+        </div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-group">
+          <button class="toolbar-btn" title="H1">H1</button>
+          <button class="toolbar-btn" title="H2">H2</button>
+          <button class="toolbar-btn" title="H3">H3</button>
+        </div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-group">
+          <button class="toolbar-btn" title="Bullet list">≡</button>
+          <button class="toolbar-btn" title="Numbered list">1.</button>
+          <button class="toolbar-btn" title="Block quote">❝</button>
+          <button class="toolbar-btn" title="Code block">&lt;/&gt;</button>
+        </div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-group">
+          <button class="toolbar-btn" title="Link">🔗</button>
+          <button class="toolbar-btn" title="Image">🖼</button>
+        </div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-group">
+          <button class="toolbar-btn" title="Undo">↺</button>
+          <button class="toolbar-btn" title="Redo">↻</button>
+        </div>
+        <button class="toolbar-ai-btn">✦ AI Refine</button>
+      </div>
+      <div style="padding:var(--space-6);font-family:var(--font-body);font-size:var(--text-sm);color:var(--text-primary);line-height:var(--leading-relaxed);min-height:100px;border:none;outline:none">
+        The team agreed on a <span style="background:rgba(92,108,245,0.15);border-radius:3px;padding:1px 3px">two-week timeline adjustment</span> to accommodate the API redesign scope. Julia will own delivery and report progress bi-weekly.<span class="streaming-cursor" style="margin-left:4px"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI REFINEMENT POPOVER -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-17 · Inline AI Refinement Popover</div>
+    <div class="demo-bg">
+      <p style="font-family:var(--font-body);font-size:var(--text-sm);margin-bottom:var(--space-4);color:var(--text-secondary)">Select text to trigger the AI refinement popover:</p>
+      <div class="ai-popover" style="width:fit-content">
+        <button class="ai-popover-btn">✦ Refine</button>
+        <button class="ai-popover-btn">⟷ Expand</button>
+        <button class="ai-popover-btn">▸ Shorten</button>
+        <div class="ai-popover-divider"></div>
+        <button class="ai-popover-btn">~ Rephrase</button>
+        <button class="ai-popover-btn">↑ Formalize</button>
+        <button class="ai-popover-btn">↓ Simplify</button>
+        <div class="ai-popover-divider"></div>
+        <button class="ai-popover-btn">→ Push to doc</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGES, TAGS, STATUS -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-18 — C-20 · Badges · Status Tags · Pills</div>
+    <div class="flex-col" style="gap:var(--space-5)">
+      <div class="flex-row">
+        <span class="badge badge-crystal">Crystal</span>
+        <span class="badge badge-ice">Ice</span>
+        <span class="badge badge-success">✓ Complete</span>
+        <span class="badge badge-warning">⚠ Processing</span>
+        <span class="badge badge-danger">✕ Failed</span>
+        <span class="badge badge-neutral">Draft</span>
+      </div>
+      <div class="pill-filter">
+        <div class="pill active">All</div>
+        <div class="pill">Zoom</div>
+        <div class="pill">Teams</div>
+        <div class="pill">Meet</div>
+        <div class="pill">Manual</div>
+        <div class="pill">Starred</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSCRIPT CARD -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-21 · Transcript Card</div>
+    <div class="comp-grid-3">
+      <div class="transcript-card">
+        <div class="tc-header">
+          <div class="tc-platform" style="background:#EFF6FF;font-size:16px">📹</div>
+          <div style="display:flex;gap:var(--space-2);align-items:center">
+            <span class="conf-badge conf-excellent" style="font-size:9px;padding:2px 8px"><span class="conf-badge-dot"></span>94%</span>
+          </div>
+        </div>
+        <div class="tc-title">Q3 Sprint Planning — Engineering</div>
+        <div class="tc-meta">
+          <span>Aug 15, 2025</span>
+          <span>·</span>
+          <span>52 min</span>
+          <span>·</span>
+          <span>6 participants</span>
+        </div>
+        <div class="tc-tags">
+          <span class="badge badge-crystal">Sprint</span>
+          <span class="badge badge-neutral">Engineering</span>
+          <span class="badge badge-success">Analyzed</span>
+        </div>
+      </div>
+      <div class="transcript-card">
+        <div class="tc-header">
+          <div class="tc-platform" style="background:#EFFEFF;font-size:16px">💬</div>
+          <div style="display:flex;gap:var(--space-2);align-items:center">
+            <span class="conf-badge conf-medium" style="font-size:9px;padding:2px 8px"><span class="conf-badge-dot"></span>58%</span>
+          </div>
+        </div>
+        <div class="tc-title">Client Discovery — Acme Corp</div>
+        <div class="tc-meta">
+          <span>Aug 14, 2025</span>
+          <span>·</span>
+          <span>38 min</span>
+          <span>·</span>
+          <span>4 participants</span>
+        </div>
+        <div class="tc-tags">
+          <span class="badge badge-ice">Client</span>
+          <span class="badge badge-warning">⟳ Processing</span>
+        </div>
+      </div>
+      <div class="transcript-card">
+        <div class="tc-header">
+          <div class="tc-platform" style="background:#FEF2F2;font-size:16px">🎙</div>
+          <div style="display:flex;gap:var(--space-2);align-items:center">
+            <span class="conf-badge conf-low" style="font-size:9px;padding:2px 8px"><span class="conf-badge-dot"></span>33%</span>
+          </div>
+        </div>
+        <div class="tc-title">All-Hands August — Full Company</div>
+        <div class="tc-meta">
+          <span>Aug 10, 2025</span>
+          <span>·</span>
+          <span>1h 12min</span>
+          <span>·</span>
+          <span>28 participants</span>
+        </div>
+        <div class="tc-tags">
+          <span class="badge badge-neutral">All-Hands</span>
+          <span class="badge badge-danger">Review needed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST, MODAL, DROPDOWN, TOOLTIP -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-22 — C-25 · Toast · Modal · Dropdown · Tooltip</div>
+    <div class="comp-grid-2">
+      <div class="flex-col">
+        <div class="toast toast-success">
+          <div class="toast-icon">✓</div>
+          <div class="toast-body">
+            <div class="toast-title">Analysis complete</div>
+            <div class="toast-desc">Q3 Planning extracted 8 action items and 3 key decisions.</div>
+          </div>
+          <button class="toast-close">✕</button>
+        </div>
+        <div class="toast toast-warning">
+          <div class="toast-icon">⚠</div>
+          <div class="toast-body">
+            <div class="toast-title">Low confidence detected</div>
+            <div class="toast-desc">Transcript audio quality may affect analysis accuracy.</div>
+          </div>
+          <button class="toast-close">✕</button>
+        </div>
+        <div class="toast toast-info">
+          <div class="toast-icon">✦</div>
+          <div class="toast-body">
+            <div class="toast-title">AI refining selection</div>
+            <div class="toast-desc">Streaming improved version of paragraph 3…</div>
+          </div>
+          <button class="toast-close">✕</button>
+        </div>
+      </div>
+      <div class="flex-col">
+        <div class="dropdown" style="width:220px">
+          <div class="dropdown-label">Actions</div>
+          <div class="dropdown-item">↓ Export as PDF</div>
+          <div class="dropdown-item">⎘ Duplicate</div>
+          <div class="dropdown-item">⎆ Push to Notion</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item">⊙ Share link</div>
+          <div class="dropdown-item danger">⊘ Delete transcript</div>
+        </div>
+        <div class="tooltip" style="width:fit-content">Confidence score reflects transcript audio clarity and AI certainty</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARD, SEARCH, AVATAR -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-26 — C-29 · Stat Cards · Search · Avatars · Toggle</div>
+    <div class="comp-grid-3">
+      <div class="stat-card">
+        <div class="stat-label">Total Analyzed</div>
+        <div class="stat-value">2,481</div>
+        <div class="stat-delta delta-positive">↑ 12% this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg. Confidence</div>
+        <div class="stat-value" style="color:var(--semantic-success-base)">87<span style="font-size:var(--text-xl)">%</span></div>
+        <div class="stat-delta delta-positive">↑ 4pts vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Action Items Open</div>
+        <div class="stat-value" style="color:var(--semantic-warning-base)">34</div>
+        <div class="stat-delta delta-negative">↑ 8 new this week</div>
+      </div>
+    </div>
+    <div style="margin-top:var(--space-6)" class="flex-col">
+      <div class="search-bar">
+        <span style="color:var(--text-tertiary);font-size:16px">⌕</span>
+        <input type="text" placeholder="Search transcripts, decisions, action items…">
+        <span class="search-kbd">⌘K</span>
+      </div>
+      <div class="flex-row" style="justify-content:space-between;align-items:center">
+        <div class="avatar-stack">
+          <div class="avatar avatar-md" style="background:var(--crystal-500)">AS</div>
+          <div class="avatar avatar-md" style="background:#7C3AED">JK</div>
+          <div class="avatar avatar-md" style="background:#059669">MP</div>
+          <div class="avatar avatar-md avatar-count" style="background:var(--bg-muted);color:var(--text-secondary)">+4</div>
+        </div>
+        <div class="flex-row" style="align-items:center;gap:var(--space-4)">
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">Dark Mode</span>
+          <div class="toggle">
+            <div class="toggle-thumb"></div>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">AI Assist</span>
+          <div class="toggle on">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS, EMPTY STATE, SKELETON -->
+  <div class="comp-section">
+    <div class="comp-section-title">C-30 — C-33 · Tabs · Empty State · Skeleton · Modal</div>
+    <div class="comp-grid-2">
+      <div class="flex-col">
+        <div class="tabs">
+          <div class="tab-item active">Summary</div>
+          <div class="tab-item">Action Items</div>
+          <div class="tab-item">Decisions</div>
+          <div class="tab-item">Questions</div>
+        </div>
+        <div class="flex-col" style="gap:var(--space-2);margin-top:var(--space-2)">
+          <div class="skeleton" style="height:16px;width:90%"></div>
+          <div class="skeleton" style="height:16px;width:75%"></div>
+          <div class="skeleton" style="height:16px;width:85%"></div>
+          <div class="skeleton" style="height:16px;width:60%"></div>
+        </div>
+      </div>
+      <div class="flex-col">
+        <div class="empty-state" style="padding:var(--space-8)">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-title">No transcripts found</div>
+          <div class="empty-desc">Upload your first meeting transcript to start extracting insights automatically.</div>
+          <button class="btn btn-primary">✦ Upload Transcript</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 5 — RESPONSIVE LAYOUT
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="layout">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Responsive Layout Patterns</h2>
+    <div class="section-desc">Three-panel adaptive collapse across 4 breakpoints</div>
+  </div>
+
+  <!-- Desktop layout -->
+  <div class="subsection">
+    <div class="subsection-title">Desktop — Full Three-Panel (≥1280px)</div>
+    <div class="layout-demo">
+      <div class="layout-topbar">
+        <div class="skeleton" style="width:80px;height:20px;background:var(--void-200)"></div>
+        <div style="flex:1"></div>
+        <div class="skeleton" style="width:160px;height:20px;background:var(--void-200)"></div>
+        <div class="skeleton" style="width:32px;height:32px;border-radius:50%;background:var(--void-200)"></div>
+      </div>
+      <div class="layout-body">
+        <div class="layout-sidebar">
+          <div class="layout-sidebar-item active"></div>
+          <div class="layout-sidebar-item"></div>
+          <div class="layout-sidebar-item"></div>
+          <div class="layout-sidebar-item"></div>
+          <div class="layout-sidebar-item"></div>
+        </div>
+        <div class="layout-main">
+          <div class="layout-panel" style="flex:1.2">Transcript Panel</div>
+          <div class="layout-panel accent" style="flex:1.5">Analysis Panel</div>
+          <div class="layout-panel" style="flex:1">Chat Panel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Laptop -->
+  <div class="subsection">
+    <div class="subsection-title">Laptop — Two Panel (1024px–1279px) · Chat collapses to overlay drawer</div>
+    <div class="layout-demo" style="max-width:700px">
+      <div class="layout-topbar">
+        <div class="skeleton" style="width:80px;height:20px;background:var(--void-200)"></div>
+        <div style="flex:1"></div>
+        <button class="btn btn-ghost btn-sm" style="font-size:12px">💬 Chat</button>
+      </div>
+      <div class="layout-body">
+        <div class="layout-sidebar" style="width:140px">
+          <div class="layout-sidebar-item active"></div>
+          <div class="layout-sidebar-item"></div>
+          <div class="layout-sidebar-item"></div>
+        </div>
+        <div class="layout-main">
+          <div class="layout-panel" style="flex:1">Transcript Panel</div>
+          <div class="layout-panel accent" style="flex:1.5">Analysis Panel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tablet -->
+  <div class="subsection">
+    <div class="subsection-title">Tablet — Single Focus (768px–1023px) · Sidebar becomes bottom nav, panels tab-switched</div>
+    <div class="layout-demo" style="max-width:420px">
+      <div class="layout-topbar">
+        <div class="skeleton" style="width:80px;height:20px;background:var(--void-200)"></div>
+      </div>
+      <div class="layout-body">
+        <div class="layout-main">
+          <div class="layout-panel accent" style="flex:1">Analysis Panel (active tab)</div>
+        </div>
+      </div>
+      <div style="height:44px;border-top:1px solid var(--border-default);display:flex;align-items:center;justify-content:space-around;padding:0 var(--space-4)">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--crystal-600);text-align:center">📄<br>TRANSCRIPT</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);text-align:center">✦<br>ANALYSIS</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);text-align:center">💬<br>CHAT</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);text-align:center">📋<br>DOCS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breakpoint Table -->
+  <table class="bp-table">
+    <thead>
+      <tr>
+        <th>Breakpoint</th>
+        <th>Range</th>
+        <th>Panel Behavior</th>
+        <th>Sidebar</th>
+        <th>Navigation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mobile</td>
+        <td>375px–767px</td>
+        <td>Single panel, full-screen. Panels accessed via bottom navigation bar (4 tabs). Chat is full-screen overlay triggered by FAB.</td>
+        <td>Hidden</td>
+        <td>Bottom tab bar · 4 items</td>
+      </tr>
+      <tr>
+        <td>Tablet</td>
+        <td>768px–1023px</td>
+        <td>Single panel with tab-switching (Transcript / Analysis / Chat). Smooth slide transition between panels. Chat visible as slide-up sheet.</td>
+        <td>Hidden</td>
+        <td>Top tab bar or bottom nav</td>
+      </tr>
+      <tr>
+        <td>Laptop</td>
+        <td>1024px–1279px</td>
+        <td>Two panels: Transcript + Analysis. Chat collapses to resizable drawer overlay, triggered by toolbar button. Sidebar fixed at 200px.</td>
+        <td>Fixed 200px</td>
+        <td>Left sidebar</td>
+      </tr>
+      <tr>
+        <td>Desktop</td>
+        <td>1280px–1439px</td>
+        <td>Full three-panel layout. Transcript : Analysis : Chat at ratio 1 : 1.5 : 1 by default. All panels resizable with drag handles.</td>
+        <td>Fixed 240px</td>
+        <td>Left sidebar + topbar</td>
+      </tr>
+      <tr>
+        <td>Wide</td>
+        <td>≥1440px</td>
+        <td>Three panels with generous padding. Optional fourth panel (version history or insights) can be revealed. Max content width 1600px.</td>
+        <td>Fixed 280px</td>
+        <td>Left sidebar + topbar</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 6 — MOTION PRINCIPLES
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="motion">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Motion Principles</h2>
+    <div class="section-desc">Token streaming · Panel transitions · Editor micro-interactions</div>
+  </div>
+
+  <div class="motion-demo">
+    <!-- Token Streaming -->
+    <div class="motion-card">
+      <div class="motion-card-title">✦ Token Streaming Animation</div>
+      <div class="motion-card-desc">Each LLM token fades in with a subtle blur-to-sharp transition over 80ms. Tokens appear sequentially with staggered delay. The cursor blinks at 1s intervals between bursts.</div>
+      <div class="chat-bubble bubble-streaming" style="max-width:100%">
+        <div class="token-stream">
+          <span class="token">The </span><span class="token">analysis </span><span class="token">reveals </span><span class="token">three </span><span class="token">critical </span><span class="token">decisions </span><span class="token">made </span><span class="token">during </span><span class="token">the </span><span class="token">meeting, </span><span class="token">each </span><span class="token">with </span><span class="token">clear </span><span class="token">ownership </span><span class="token">and </span><span class="token">timeline </span><span class="token">expectations</span><span class="token">.</span>
+        </div>
+        <span class="streaming-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Panel transition -->
+    <div class="motion-card">
+      <div class="motion-card-title">⟷ Panel Slide Transition</div>
+      <div class="motion-card-desc">When panels collapse at tablet/mobile breakpoints, the active panel slides in from the right using translateX with cubic-bezier decelerate easing over 320ms. No opacity transition — pure transform only for GPU compositing.</div>
+      <div class="panel-slide-demo">
+        <div class="panel-slide-left">Analysis Panel</div>
+        <div class="panel-slide-right">Chat</div>
+      </div>
+    </div>
+
+    <!-- Upload drag -->
+    <div class="motion-card">
+      <div class="motion-card-title">↑ Drag & Drop Response</div>
+      <div class="motion-card-desc">The upload zone responds to drag events with border-color → crystal-400, background tint, and a subtle box-shadow bloom. Duration: 200ms smooth ease. File icon scales up 1.1× on valid drop target hover.</div>
+      <div class="upload-card" id="upload-demo">
+        <div class="upload-icon" style="transform:scale(1.1);transition:transform 0.2s var(--ease-spring)">📄</div>
+        <h4>Drop here</h4>
+        <p style="color:var(--crystal-500)">Valid file type detected</p>
+      </div>
+    </div>
+
+    <!-- Micro-interactions -->
+    <div class="motion-card">
+      <div class="motion-card-title">◉ Editor Micro-interactions</div>
+      <div class="motion-card-desc">Toolbar buttons respond to click with scale(0.95) over 60ms (instant), releasing with spring ease to scale(1). Commit button pulses on unsaved changes. AI Refine button shimmers on hover.</div>
+      <div class="flex-row" style="flex-wrap:wrap;gap:var(--space-3)">
+        <button class="toolbar-btn active" onclick="this.style.transform='scale(0.9)';setTimeout(()=>this.style.transform='scale(1)',150)"><strong>B</strong></button>
+        <button class="btn btn-primary" onclick="this.style.transform='scale(0.96)';setTimeout(()=>this.style.transform='',150)">✦ Commit</button>
+        <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-thumb"></div></div>
+        <button class="toolbar-ai-btn">✦ AI Refine</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Easing curves -->
+  <div class="subsection">
+    <div class="subsection-title">Easing Curve Reference</div>
+    <div class="ease-curves">
+      <div class="ease-item">
+        <div class="ease-preview"><div class="ease-dot" style="animation-timing-function:cubic-bezier(0.34,1.56,0.64,1)"></div></div>
+        <div class="ease-name">Spring</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);margin-top:4px">0.34,1.56,0.64,1</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary)">Toggles, panels</div>
+      </div>
+      <div class="ease-item">
+        <div class="ease-preview"><div class="ease-dot" style="animation-timing-function:cubic-bezier(0.4,0,0.2,1)"></div></div>
+        <div class="ease-name">Smooth</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);margin-top:4px">0.4,0,0.2,1</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary)">Hover states, color</div>
+      </div>
+      <div class="ease-item">
+        <div class="ease-preview"><div class="ease-dot" style="animation-timing-function:cubic-bezier(0,0,0.2,1)"></div></div>
+        <div class="ease-name">Decelerate</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);margin-top:4px">0,0,0.2,1</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary)">Enter animations</div>
+      </div>
+      <div class="ease-item">
+        <div class="ease-preview"><div class="ease-dot" style="animation-timing-function:cubic-bezier(0.4,0,1,1)"></div></div>
+        <div class="ease-name">Accelerate</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);margin-top:4px">0.4,0,1,1</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary)">Exit animations</div>
+      </div>
+      <div class="ease-item">
+        <div class="ease-preview"><div class="ease-dot" style="animation-timing-function:cubic-bezier(0.25,0.46,0.45,0.94)"></div></div>
+        <div class="ease-name">Sharp</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);margin-top:4px">0.25,0.46,0.45,0.94</div>
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary)">Drawer open</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     § 7 — ACCESSIBILITY
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="accessibility">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Accessibility Standards</h2>
+    <div class="section-desc">WCAG 2.1 AA compliance · Contrast ratios · Focus patterns</div>
+  </div>
+
+  <div class="contrast-grid">
+    <div class="contrast-pair">
+      <div class="contrast-demo" style="background:#5C6CF5">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;color:white">ConvoCrystal</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,0.85)">White on Crystal-500</div>
+      </div>
+      <div class="contrast-meta">
+        <div>
+          <div class="contrast-ratio" style="color:#5C6CF5">4.82:1</div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)">White on #5C6CF5</div>
+        </div>
+        <span class="wcag-badge wcag-aa">AA</span>
+      </div>
+    </div>
+    <div class="contrast-pair">
+      <div class="contrast-demo" style="background:#14141A">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;color:#F6F6F8">Dark Mode Text</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:#8E8E9E">Void-50 on Void-900</div>
+      </div>
+      <div class="contrast-meta">
+        <div>
+          <div class="contrast-ratio" style="color:var(--text-primary)">14.5:1</div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)">#F6F6F8 on #14141A</div>
+        </div>
+        <span class="wcag-badge wcag-aaa">AAA</span>
+      </div>
+    </div>
+    <div class="contrast-pair">
+      <div class="contrast-demo" style="background:#FFFFFF">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;color:#14141A">Light Mode Text</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:#6B6B7B">Void-900 on White</div>
+      </div>
+      <div class="contrast-meta">
+        <div>
+          <div class="contrast-ratio" style="color:var(--text-primary)">19.8:1</div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)">#14141A on #FFFFFF</div>
+        </div>
+        <span class="wcag-badge wcag-aaa">AAA</span>
+      </div>
+    </div>
+    <div class="contrast-pair">
+      <div class="contrast-demo" style="background:#FFFFFF">
+        <div style="font-family:'DM Mono',monospace;font-size:14px;color:#52525F">Secondary text color</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:#8E8E9E">Void-600 on White</div>
+      </div>
+      <div class="contrast-meta">
+        <div>
+          <div class="contrast-ratio" style="color:var(--text-primary)">5.74:1</div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)">#52525F on #FFFFFF</div>
+        </div>
+        <span class="wcag-badge wcag-aa">AA</span>
+      </div>
+    </div>
+    <div class="contrast-pair">
+      <div class="contrast-demo" style="background:#F6F6F8">
+        <div style="font-family:'DM Mono',monospace;font-size:14px;color:#8E8E9E">Tertiary / muted text</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#B5B5C2">Void-400 on Void-50</div>
+      </div>
+      <div class="contrast-meta">
+        <div>
+          <div class="contrast-ratio" style="color:var(--semantic-danger-base)">3.0:1</div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)">#8E8E9E on #F6F6F8</div>
+        </div>
+        <span class="wcag-badge wcag-fail">Decorative only</span>
+      </div>
+    </div>
+    <div class="contrast-pair">
+      <div class="contrast-demo" style="background:#0C0C11">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;color:#5C6CF5">Crystal on void-950</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#3C3C47">Dark mode accent</div>
+      </div>
+      <div class="contrast-meta">
+        <div>
+          <div class="contrast-ratio" style="color:var(--text-primary)">4.51:1</div>
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)">#5C6CF5 on #0C0C11</div>
+        </div>
+        <span class="wcag-badge wcag-aa">AA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- A11y Rules -->
+  <div class="subsection">
+    <table class="figma-table">
+      <thead>
+        <tr>
+          <th>Rule</th>
+          <th>Requirement</th>
+          <th>Implementation</th>
+          <th>Test</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Focus Rings</td>
+          <td>All interactive elements must have visible focus ring</td>
+          <td>3px offset, crystal-400 color, 2px border-radius. Never use outline:none without alternative.</td>
+          <td>Tab through full app flow</td>
+        </tr>
+        <tr>
+          <td>Color Independence</td>
+          <td>Never use color alone to convey state</td>
+          <td>Confidence badges always include text label. Processing stages always include icon + label.</td>
+          <td>Grayscale screenshot test</td>
+        </tr>
+        <tr>
+          <td>Motion Reduced</td>
+          <td>Respect prefers-reduced-motion</td>
+          <td>All animations gated behind @media (prefers-reduced-motion: no-preference). Token streaming degrades to instant render.</td>
+          <td>Enable OS reduced motion</td>
+        </tr>
+        <tr>
+          <td>Target Sizes</td>
+          <td>Minimum 44×44px touch targets on mobile</td>
+          <td>All buttons and icons pad to minimum 44px on mobile breakpoint. Icon buttons use btn-icon with padding expansion.</td>
+          <td>Mobile touch test</td>
+        </tr>
+        <tr>
+          <td>ARIA Labels</td>
+          <td>All icon-only buttons need aria-label</td>
+          <td>aria-label on all toolbar-btn. Processing stages use aria-live="polite" for status updates. Chat uses aria-live="assertive".</td>
+          <td>Screen reader (NVDA/VoiceOver)</td>
+        </tr>
+        <tr>
+          <td>Headings Hierarchy</td>
+          <td>Logical heading structure without skipping levels</td>
+          <td>H1 = page title, H2 = section, H3 = subsection, H4 = card title. Decorative headings use aria-hidden.</td>
+          <td>Heading map browser extension</td>
+        </tr>
+        <tr>
+          <td>Text Resize</td>
+          <td>Content readable at 200% zoom without horizontal scroll</td>
+          <td>All layouts use relative units (rem, %). Panel layout reflows to stacked at 200% zoom equivalent.</td>
+          <td>Browser zoom to 200%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DESIGN TOKENS — THREE EXPORT FORMATS
+════════════════════════════════════════════════════════════════ -->
+<section class="ds-section" id="tokens">
+  <div class="section-header">
+    <span class="section-num">EX</span>
+    <h2 class="section-title">Export Formats</h2>
+    <div class="section-desc">Design Tokens JSON · CSS Variables · Figma Docs</div>
+  </div>
+
+  <!-- JSON TOKENS -->
+  <div class="subsection">
+    <div class="subsection-title">Format 1 — Design Tokens (JSON)</div>
+    <div class="token-block">
+      <div class="token-block-header">
+        <span class="token-block-title">convocrystal.tokens.json</span>
+        <span class="token-block-lang">JSON · W3C Design Tokens Format</span>
+      </div>
+      <div class="token-block-body">
+        <pre>{
+  <tk>"color"</tk>: {
+    <tk>"crystal"</tk>: {
+      <tk>"50"</tk>:  { <tp>"$value"</tp>: <tv>"#F0F4FF"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Lightest tint, subtle backgrounds"</tv> },
+      <tk>"500"</tk>: { <tp>"$value"</tp>: <tv>"#5C6CF5"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Core brand — buttons, focus, active"</tv> },
+      <tk>"600"</tk>: { <tp>"$value"</tp>: <tv>"#4A52E8"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Hover state for primary actions"</tv> },
+      <tk>"950"</tk>: { <tp>"$value"</tp>: <tv>"#1A1C52"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Dark mode surface emphasis"</tv> }
+    },
+    <tk>"ice"</tk>: {
+      <tk>"500"</tk>: { <tp>"$value"</tp>: <tv>"#00C9D6"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Secondary accent — streaming, ice"</tv> }
+    },
+    <tk>"void"</tk>: {
+      <tk>"0"</tk>:   { <tp>"$value"</tp>: <tv>"#FFFFFF"</tv>, <tp>"$type"</tp>: <tv>"color"</tv> },
+      <tk>"900"</tk>: { <tp>"$value"</tp>: <tv>"#14141A"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Dark mode base background"</tv> },
+      <tk>"950"</tk>: { <tp>"$value"</tp>: <tv>"#0C0C11"</tv>, <tp>"$type"</tp>: <tv>"color"</tv> }
+    },
+    <tk>"semantic"</tk>: {
+      <tk>"success"</tk>: { <tp>"$value"</tp>: <tv>"#10B981"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Complete, saved, online states"</tv> },
+      <tk>"warning"</tk>: { <tp>"$value"</tp>: <tv>"#F59E0B"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tp>: <tv>"Processing, low confidence"</tv> },
+      <tk>"danger"</tk>:  { <tp>"$value"</tp>: <tv>"#EF4444"</tv>, <tp>"$type"</tp>: <tv>"color"</tv>, <tp>"$description"</tv>: <tv>"Error, delete, failed states"</tv> }
+    }
+  },
+  <tk>"typography"</tk>: {
+    <tk>"fontFamily"</tk>: {
+      <tk>"display"</tk>: { <tp>"$value"</tp>: <tv>"'Syne', sans-serif"</tv>,   <tp>"$type"</tp>: <tv>"fontFamily"</tv>, <tp>"$description"</tp>: <tv>"Headings, UI labels, stats"</tv> },
+      <tk>"body"</tk>:    { <tp>"$value"</tp>: <tv>"'Lora', serif"</tv>,          <tp>"$type"</tp>: <tv>"fontFamily"</tv>, <tp>"$description"</tp>: <tv>"Body copy, chat, transcripts"</tv> },
+      <tk>"mono"</tk>:    { <tp>"$value"</tp>: <tv>"'DM Mono', monospace"</tv>, <tp>"$type"</tp>: <tv>"fontFamily"</tv>, <tp>"$description"</tp>: <tv>"Code, tokens, metadata"</tv> }
+    },
+    <tk>"fontSize"</tk>: {
+      <tk>"xs"</tk>:   { <tp>"$value"</tp>: <tv>"0.64rem"</tv>,  <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"sm"</tk>:   { <tp>"$value"</tp>: <tv>"0.8rem"</tv>,   <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"base"</tk>: { <tp>"$value"</tp>: <tv>"1rem"</tv>,     <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"md"</tk>:   { <tp>"$value"</tp>: <tv>"1.25rem"</tv>,  <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"lg"</tk>:   { <tp>"$value"</tp>: <tv>"1.563rem"</tv>, <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"xl"</tk>:   { <tp>"$value"</tp>: <tv>"1.953rem"</tv>, <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"2xl"</tk>:  { <tp>"$value"</tp>: <tv>"2.441rem"</tv>, <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"3xl"</tk>:  { <tp>"$value"</tp>: <tv>"3.052rem"</tv>, <tp>"$type"</tp>: <tv>"dimension"</tv> },
+      <tk>"4xl"</tk>:  { <tp>"$value"</tp>: <tv>"3.815rem"</tv>, <tp>"$type"</tp>: <tv>"dimension"</tv> }
+    }
+  },
+  <tk>"spacing"</tk>: {
+    <tk>"2"</tk>:  { <tp>"$value"</tp>: <tn>8</tn>,   <tp>"$type"</tp>: <tv>"dimension"</tv>, <tp>"$description"</tp>: <tv>"Base unit — 8px grid foundation"</tv> },
+    <tk>"4"</tk>:  { <tp>"$value"</tp>: <tn>16</tn>,  <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"6"</tk>:  { <tp>"$value"</tp>: <tn>24</tn>,  <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"8"</tk>:  { <tp>"$value"</tp>: <tn>32</tn>,  <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"12"</tk>: { <tp>"$value"</tp>: <tn>48</tn>,  <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"16"</tk>: { <tp>"$value"</tp>: <tn>64</tn>,  <tp>"$type"</tp>: <tv>"dimension"</tv> }
+  },
+  <tk>"borderRadius"</tk>: {
+    <tk>"sm"</tk>:   { <tp>"$value"</tp>: <tn>4</tn>,    <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"md"</tk>:   { <tp>"$value"</tp>: <tn>8</tn>,    <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"lg"</tk>:   { <tp>"$value"</tp>: <tn>12</tn>,   <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"xl"</tk>:   { <tp>"$value"</tp>: <tn>16</tn>,   <tp>"$type"</tp>: <tv>"dimension"</tv> },
+    <tk>"full"</tk>: { <tp>"$value"</tp>: <tn>9999</tn>, <tp>"$type"</tp>: <tv>"dimension"</tv> }
+  },
+  <tk>"motion"</tk>: {
+    <tk>"duration"</tk>: {
+      <tk>"instant"</tk>: { <tp>"$value"</tp>: <tv>"60ms"</tv>,  <tp>"$type"</tp>: <tv>"duration"</tv>, <tp>"$description"</tp>: <tv>"Click feedback, scale transforms"</tv> },
+      <tk>"fast"</tk>:    { <tp>"$value"</tp>: <tv>"120ms"</tv>, <tp>"$type"</tp>: <tv>"duration"</tv>, <tp>"$description"</tp>: <tv>"Hover state color changes"</tv> },
+      <tk>"normal"</tk>:  { <tp>"$value"</tp>: <tv>"200ms"</tv>, <tp>"$type"</tp>: <tv>"duration"</tv>, <tp>"$description"</tp>: <tv>"UI state transitions"</tv> },
+      <tk>"slow"</tk>:    { <tp>"$value"</tp>: <tv>"320ms"</tv>, <tp>"$type"</tp>: <tv>"duration"</tv>, <tp>"$description"</tp>: <tv>"Panel slides, modals"</tv> },
+      <tk>"token"</tk>:   { <tp>"$value"</tp>: <tv>"80ms"</tv>,  <tp>"$type"</tp>: <tv>"duration"</tv>, <tp>"$description"</tp>: <tv>"LLM token stream appear"</tv> }
+    },
+    <tk>"easing"</tk>: {
+      <tk>"spring"</tk>:     { <tp>"$value"</tp>: <tv>"cubic-bezier(0.34, 1.56, 0.64, 1)"</tv>,  <tp>"$description"</tp>: <tv>"Toggles, reveals, fun"</tv> },
+      <tk>"smooth"</tk>:     { <tp>"$value"</tp>: <tv>"cubic-bezier(0.4, 0, 0.2, 1)"</tv>,       <tp>"$description"</tp>: <tv>"Standard transitions"</tv> },
+      <tk>"decelerate"</tk>: { <tp>"$value"</tp>: <tv>"cubic-bezier(0, 0, 0.2, 1)"</tv>,         <tp>"$description"</tp>: <tv>"Enter from offscreen"</tv> },
+      <tk>"accelerate"</tk>: { <tp>"$value"</tp>: <tv>"cubic-bezier(0.4, 0, 1, 1)"</tv>,         <tp>"$description"</tp>: <tv>"Exit to offscreen"</tv> }
+    }
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS VARIABLES -->
+  <div class="subsection">
+    <div class="subsection-title">Format 2 — CSS Custom Properties</div>
+    <div class="token-block">
+      <div class="token-block-header">
+        <span class="token-block-title">convocrystal.css</span>
+        <span class="token-block-lang">CSS · Custom Properties</span>
+      </div>
+      <div class="token-block-body">
+        <pre><tc>/* ConvoCrystal Design System v1.0 — CSS Variables */</tc>
+<tc>/* Usage: import this file first, then reference vars throughout */</tc>
+
+<tk>:root</tk> {
+  <tc>/* ── Crystal Primary ── */</tc>
+  <tp>--crystal-50</tp>: <tv>#F0F4FF</tv>;  <tp>--crystal-100</tp>: <tv>#E0EAFF</tv>;  <tp>--crystal-200</tp>: <tv>#C7D7FE</tv>;
+  <tp>--crystal-300</tp>: <tv>#A4BBFD</tv>;  <tp>--crystal-400</tp>: <tv>#7C94FB</tv>;  <tp>--crystal-500</tp>: <tv>#5C6CF5</tv>;
+  <tp>--crystal-600</tp>: <tv>#4A52E8</tv>;  <tp>--crystal-700</tp>: <tv>#3B3FD0</tv>;  <tp>--crystal-800</tp>: <tv>#3134A8</tv>;
+  <tp>--crystal-900</tp>: <tv>#2C2F84</tv>;  <tp>--crystal-950</tp>: <tv>#1A1C52</tv>;
+
+  <tc>/* ── Ice Secondary ── */</tc>
+  <tp>--ice-500</tp>: <tv>#00C9D6</tv>;  <tp>--ice-400</tp>: <tv>#18E4F0</tv>;  <tp>--ice-600</tp>: <tv>#00A0AF</tv>;
+
+  <tc>/* ── Void Neutrals ── */</tc>
+  <tp>--void-0</tp>: <tv>#FFFFFF</tv>;    <tp>--void-50</tp>: <tv>#F6F6F8</tv>;   <tp>--void-100</tp>: <tv>#EDEDF1</tv>;
+  <tp>--void-200</tp>: <tv>#D5D5DE</tv>;  <tp>--void-400</tp>: <tv>#8E8E9E</tv>;  <tp>--void-600</tp>: <tv>#52525F</tv>;
+  <tp>--void-700</tp>: <tv>#3C3C47</tv>;  <tp>--void-800</tp>: <tv>#222229</tv>;  <tp>--void-900</tp>: <tv>#14141A</tv>;
+  <tp>--void-950</tp>: <tv>#0C0C11</tv>;
+
+  <tc>/* ── Semantic Assignments ── */</tc>
+  <tp>--bg-base</tp>:     <tv>var(--void-0)</tv>;
+  <tp>--bg-subtle</tp>:   <tv>var(--void-50)</tv>;
+  <tp>--bg-muted</tp>:    <tv>var(--void-100)</tv>;
+  <tp>--text-primary</tp>: <tv>var(--void-900)</tv>;
+  <tp>--text-secondary</tp>: <tv>var(--void-600)</tv>;
+  <tp>--text-tertiary</tp>: <tv>var(--void-400)</tv>;
+  <tp>--text-accent</tp>:  <tv>var(--crystal-600)</tv>;
+  <tp>--border-default</tp>: <tv>var(--void-150, #E4E4EA)</tv>;
+
+  <tc>/* ── Typography ── */</tc>
+  <tp>--font-display</tp>: <tv>'Syne', sans-serif</tv>;
+  <tp>--font-body</tp>:    <tv>'Lora', serif</tv>;
+  <tp>--font-mono</tp>:    <tv>'DM Mono', monospace</tv>;
+
+  <tc>/* ── Type Scale (Major Third × 1.250) ── */</tc>
+  <tp>--text-xs</tp>: <tn>0.64rem</tn>;  <tp>--text-sm</tp>: <tn>0.8rem</tn>;   <tp>--text-base</tp>: <tn>1rem</tn>;
+  <tp>--text-md</tp>: <tn>1.25rem</tn>; <tp>--text-lg</tp>: <tn>1.563rem</tn>; <tp>--text-xl</tp>:   <tn>1.953rem</tn>;
+  <tp>--text-2xl</tp>: <tn>2.441rem</tn>; <tp>--text-3xl</tp>: <tn>3.052rem</tn>; <tp>--text-4xl</tp>: <tn>3.815rem</tn>;
+
+  <tc>/* ── Spacing (8px grid) ── */</tc>
+  <tp>--space-1</tp>: <tn>4px</tn>;  <tp>--space-2</tp>: <tn>8px</tn>;  <tp>--space-3</tp>: <tn>12px</tn>; <tp>--space-4</tp>: <tn>16px</tn>;
+  <tp>--space-5</tp>: <tn>20px</tn>; <tp>--space-6</tp>: <tn>24px</tn>; <tp>--space-8</tp>: <tn>32px</tn>; <tp>--space-10</tp>: <tn>40px</tn>;
+  <tp>--space-12</tp>: <tn>48px</tn>; <tp>--space-16</tp>: <tn>64px</tn>; <tp>--space-20</tp>: <tn>80px</tn>;
+
+  <tc>/* ── Border Radius ── */</tc>
+  <tp>--radius-sm</tp>: <tn>4px</tn>;  <tp>--radius-md</tp>: <tn>8px</tn>;   <tp>--radius-lg</tp>: <tn>12px</tn>;
+  <tp>--radius-xl</tp>: <tn>16px</tn>; <tp>--radius-2xl</tp>: <tn>24px</tn>; <tp>--radius-full</tp>: <tn>9999px</tn>;
+
+  <tc>/* ── Shadows ── */</tc>
+  <tp>--shadow-sm</tp>: <tv>0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05)</tv>;
+  <tp>--shadow-crystal</tp>: <tv>0 0 0 1px rgba(92,108,245,.15), 0 4px 24px rgba(92,108,245,.12)</tv>;
+  <tp>--shadow-ice</tp>: <tv>0 0 24px rgba(0,201,214,.15), 0 0 8px rgba(0,201,214,.08)</tv>;
+
+  <tc>/* ── Motion ── */</tc>
+  <tp>--ease-spring</tp>:     <tv>cubic-bezier(0.34, 1.56, 0.64, 1)</tv>;
+  <tp>--ease-smooth</tp>:     <tv>cubic-bezier(0.4, 0, 0.2, 1)</tv>;
+  <tp>--ease-decelerate</tp>: <tv>cubic-bezier(0, 0, 0.2, 1)</tv>;
+  <tp>--ease-accelerate</tp>: <tv>cubic-bezier(0.4, 0, 1, 1)</tv>;
+  <tp>--duration-instant</tp>: <tv>60ms</tv>;  <tp>--duration-fast</tp>: <tv>120ms</tv>;
+  <tp>--duration-normal</tp>:  <tv>200ms</tv>; <tp>--duration-slow</tp>: <tv>320ms</tv>;
+}
+
+<tc>/* ── Dark Mode ── */</tc>
+<tk>[data-theme="dark"]</tk> {
+  <tp>--bg-base</tp>:         <tv>var(--void-900)</tv>;
+  <tp>--bg-subtle</tp>:       <tv>var(--void-850, #1A1A21)</tv>;
+  <tp>--bg-muted</tp>:        <tv>var(--void-800)</tv>;
+  <tp>--text-primary</tp>:    <tv>var(--void-50)</tv>;
+  <tp>--text-secondary</tp>:  <tv>var(--void-300, #B5B5C2)</tv>;
+  <tp>--text-tertiary</tv>:  <tv>var(--void-500, #6B6B7B)</tv>;
+  <tp>--text-accent</tp>:     <tv>var(--crystal-400)</tv>;
+  <tp>--border-default</tp>:  <tv>var(--void-750, #2E2E38)</tv>;
+  <tp>--surface-card</tp>:    <tv>var(--void-850, #1A1A21)</tv>;
+  <tp>--shadow-crystal</tp>:  <tv>0 0 0 1px rgba(92,108,245,.3), 0 4px 24px rgba(92,108,245,.2)</tv>;
+}
+
+<tc>/* ── Reduced Motion ── */</tc>
+<tk>@media (prefers-reduced-motion: reduce)</tk> {
+  <tk>*, *::before, *::after</tk> {
+    <tp>animation-duration</tp>: <tn>0.01ms</tn> <tv>!important</tv>;
+    <tp>transition-duration</tp>: <tn>0.01ms</tn> <tv>!important</tv>;
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIGMA DOCUMENTATION -->
+  <div class="subsection">
+    <div class="subsection-title">Format 3 — Figma Component Documentation</div>
+    <div class="card">
+      <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);margin-bottom:var(--space-6);line-height:1.8">Each component in the Figma library is structured with: <strong style="color:var(--text-secondary)">Component name → Variant group → Properties → Auto-layout specs → Spacing annotations → Token references → State documentation</strong>.</p>
+      <table class="figma-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Variants / Props</th>
+            <th>Auto-Layout</th>
+            <th>Token References</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Button</td>
+            <td>Variant: primary|secondary|ghost|ice|danger · Size: sm|md|lg|xl · State: default|hover|active|disabled|loading · Icon: left|right|none</td>
+            <td>Horizontal · gap=8 · H-fill · min-w=auto</td>
+            <td>--crystal-500 · --font-display · --radius-md · --shadow-crystal</td>
+          </tr>
+          <tr>
+            <td>ChatBubble</td>
+            <td>Sender: ai|user · State: default|streaming|typing · HasAvatar: yes|no</td>
+            <td>Horizontal · gap=12 · max-w=80%</td>
+            <td>--crystal-500 (user) · --surface-card (ai) · --border-accent (streaming)</td>
+          </tr>
+          <tr>
+            <td>ConfidenceBadge</td>
+            <td>Level: excellent|good|medium|low|critical · Type: badge|gauge|inline</td>
+            <td>Horizontal pill · gap=6 · hug contents</td>
+            <td>--conf-excellent → --conf-critical · --font-mono</td>
+          </tr>
+          <tr>
+            <td>ProcessingStage</td>
+            <td>Status: done|active|pending · ShowConnector: yes|no</td>
+            <td>Horizontal · gap=16 · fill width</td>
+            <td>--semantic-success-base · --crystal-500 · --bg-muted</td>
+          </tr>
+          <tr>
+            <td>FileUploadCard</td>
+            <td>State: idle|dragover|uploading|done|error · ShowProgress: yes|no</td>
+            <td>Vertical center · gap=16 · fill width</td>
+            <td>--border-default → --crystal-400 · --shadow-crystal</td>
+          </tr>
+          <tr>
+            <td>EditorToolbar</td>
+            <td>ActiveTools: bold|italic|h1|h2|quote|code · ShowAIBtn: yes|no</td>
+            <td>Horizontal · gap=2 · h=48 · fill width</td>
+            <td>--surface-card · --border-default · --toolbar-h=48px</td>
+          </tr>
+          <tr>
+            <td>VersionTimeline</td>
+            <td>ActiveItem: (index) · ShowBranch: yes|no · Items: 1–∞</td>
+            <td>Vertical · gap=0 · fill width</td>
+            <td>--crystal-500 (active node) · --shadow-crystal · --font-mono</td>
+          </tr>
+          <tr>
+            <td>TranscriptCard</td>
+            <td>Platform: zoom|teams|meet|manual · ConfLevel: excellent|good|medium|low|critical</td>
+            <td>Vertical · gap=12 · fill width · p=20</td>
+            <td>--surface-card · --radius-xl · --shadow-crystal (hover)</td>
+          </tr>
+          <tr>
+            <td>Toast</td>
+            <td>Type: success|warning|danger|info · ShowAction: yes|no</td>
+            <td>Horizontal · gap=12 · min-w=300 · p=16x20</td>
+            <td>--void-900 (bg) · --shadow-xl · Semantic colors per type</td>
+          </tr>
+          <tr>
+            <td>StatCard</td>
+            <td>DeltaDirection: positive|negative|neutral · ShowSparkline: yes|no</td>
+            <td>Vertical · gap=8 · fill width · p=24</td>
+            <td>--font-display (value) · --semantic-success/danger-base (delta)</td>
+          </tr>
+          <tr>
+            <td>AIPopover</td>
+            <td>Actions: refine|expand|shorten|rephrase|formalize|simplify|push</td>
+            <td>Horizontal wrap · gap=8 · p=12 · hug</td>
+            <td>--void-900 (dark) · --crystal-500 (hover) · --shadow-xl</td>
+          </tr>
+          <tr>
+            <td>Avatar / Stack</td>
+            <td>Size: xs|sm|md|lg · Color: 8 preset gradients · Stacked: yes|no</td>
+            <td>Circle (aspect 1:1) · Stack overlap=-8px</td>
+            <td>--radius-full · Gradient colors from palette · border=surface-card</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Figma setup guide -->
+    <div class="card" style="margin-top:var(--space-6);background:var(--void-950);color:var(--void-200);border-color:var(--void-800)">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:var(--tracking-wider);text-transform:uppercase;color:var(--void-500);margin-bottom:var(--space-4)">Figma Library Setup Guide</div>
+      <div style="font-family:var(--font-mono);font-size:12px;line-height:2;color:var(--void-400)">
+        <div><span style="color:var(--crystal-400)">01.</span> Create a new Figma file → "ConvoCrystal DS"</div>
+        <div><span style="color:var(--crystal-400)">02.</span> Page 1: <span style="color:var(--void-200)">🎨 Foundations</span> — Colors (all swatches labeled), Type scale specimens, Spacing grid, Shadows/Radius</div>
+        <div><span style="color:var(--crystal-400)">03.</span> Page 2: <span style="color:var(--void-200)">⚙ Components</span> — All 33 components with all variant states in a grid</div>
+        <div><span style="color:var(--crystal-400)">04.</span> Page 3: <span style="color:var(--void-200)">📐 Layout</span> — 5 breakpoint frames, three-panel layout at each breakpoint</div>
+        <div><span style="color:var(--crystal-400)">05.</span> Page 4: <span style="color:var(--void-200)">🌙 Dark Mode</span> — All components and layouts in dark theme</div>
+        <div><span style="color:var(--crystal-400)">06.</span> Import JSON via: <span style="color:var(--ice-400)">Plugins → Tokens Studio → Import convocrystal.tokens.json</span></div>
+        <div><span style="color:var(--crystal-400)">07.</span> Link fonts: Syne (400-800), Lora (400 + italic), DM Mono (300-500)</div>
+        <div><span style="color:var(--crystal-400)">08.</span> Enable Variables: <span style="color:var(--ice-400)">Local variables → Create from tokens</span> → Group by color, spacing, typography</div>
+        <div><span style="color:var(--crystal-400)">09.</span> Publish as team library → Enable for all project files</div>
+        <div style="margin-top:var(--space-2)"><span style="color:var(--crystal-400)">10.</span> For auto-layout: All components use 8px grid. Card padding: space-6 (24px). Modal padding: space-8 (32px). Toolbar height: 48px fixed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<div style="max-width:1200px;margin:0 auto;padding:var(--space-12) var(--space-8);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-4)">
+  <div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:var(--text-md);color:var(--text-primary)">Convo<span style="color:var(--crystal-500)">Crystal</span> DS</div>
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary);margin-top:var(--space-1)">Design System v1.0 · Production-Ready · 7 Sections · 33+ Components · WCAG AA</div>
+  </div>
+  <div style="display:flex;gap:var(--space-3);flex-wrap:wrap">
+    <span class="badge badge-crystal">Syne + Lora + DM Mono</span>
+    <span class="badge badge-ice">#5C6CF5 + #00C9D6</span>
+    <span class="badge badge-success">WCAG AA ✓</span>
+    <span class="badge badge-neutral">8px Grid</span>
+  </div>
+</div>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" onclick="document.body.toggleAttribute('data-theme') || document.body.setAttribute('data-theme','dark'); this.querySelector('.toggle-icon').textContent = document.body.getAttribute('data-theme') ? '☀' : '☾'">
+  <span class="toggle-icon">☾</span> Toggle Dark Mode
+</button>
+
+<script>
+// Interactive demos
+document.querySelectorAll('.swatch').forEach(s => {
+  s.addEventListener('click', () => {
+    const hex = s.style.background;
+    if (navigator.clipboard) navigator.clipboard.writeText(hex);
+  });
+});
+
+// Upload card drag demo
+const uploadDemo = document.getElementById('upload-demo');
+if (uploadDemo) {
+  uploadDemo.addEventListener('mouseenter', () => uploadDemo.classList.add('dragover'));
+  uploadDemo.addEventListener('mouseleave', () => uploadDemo.classList.remove('dragover'));
+}
+
+// Toggle dark mode properly
+const themeToggle = document.querySelector('.theme-toggle');
+themeToggle.addEventListener('click', () => {
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.body.removeAttribute('data-theme');
+  } else {
+    document.body.setAttribute('data-theme', 'dark');
+  }
+  themeToggle.querySelector('.toggle-icon').textContent = document.body.getAttribute('data-theme') === 'dark' ? '☀' : '☾';
+});
+
+// Token streaming re-animation on click
+document.querySelectorAll('.token').forEach((t, i) => {
+  t.style.animationDelay = `${i * 0.08}s`;
+});
+</script>
+</body>
+</html>
